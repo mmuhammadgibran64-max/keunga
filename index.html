@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Sistem Keuangan Gibran</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body style="font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #f0f2f5; margin: 0;">
+    <div style="background: white; padding: 40px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center;">
+        <h2>Selamat Datang</h2>
+        <p>Silakan login untuk masuk ke Dashboard</p>
+        
+        <div id="g_id_onload"
+             data-client_id="594310366887-a3dsvn8plp139boru5kepf2o1c6ubkkv.apps.googleusercontent.com"
+             data-callback="handleCredentialResponse">
+        </div>
+        <div class="g_id_signin" data-type="standard"></div>
+    </div>
+
+    <script>
+        function handleCredentialResponse(response) {
+            const payload = JSON.parse(atob(response.credential.split('.')[1]));
+            // Simpan data login ke memori browser
+            localStorage.setItem('userName', payload.name);
+            localStorage.setItem('userEmail', payload.email);
+            localStorage.setItem('userPic', payload.picture);
+            
+            // Pindah ke halaman dashboard.html
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+</html>
