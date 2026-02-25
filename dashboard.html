@@ -5,16 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Keuangan Gibran</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #e9ecef; padding: 20px; }
-        .container { max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .form-section { border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
-        h3 { margin: 0 0 15px 0; color: #333; border-bottom: 2px solid #28a745; padding-bottom: 5px; }
-        label { display: block; margin: 10px 0 5px; font-weight: bold; font-size: 14px; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; margin-top: 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; transition: 0.3s; }
-        .btn-green { background: #28a745; }
-        .btn-blue { background: #007bff; }
-        #g_id_signin { display: flex; justify-content: center; margin-bottom: 25px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; padding: 20px; }
+        .container { max-width: 550px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .form-section { border: 1px solid #eee; padding: 20px; border-radius: 12px; margin-bottom: 25px; background: #fff; }
+        h3 { margin: 0 0 15px 0; color: #333; border-left: 4px solid #28a745; padding-left: 10px; font-size: 18px; }
+        label { display: block; margin: 15px 0 5px; font-weight: 600; font-size: 13px; color: #555; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; background: #f9f9f9; }
+        input[readonly] { background: #e9ecef; cursor: not-allowed; }
+        button { width: 100%; padding: 14px; margin-top: 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; font-size: 16px; }
+        .btn-green { background: #28a745; box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2); }
+        .btn-blue { background: #007bff; box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2); }
+        /* Style tombol login biar nggak menonjol banget */
+        .login-wrapper { display: flex; justify-content: center; margin-bottom: 30px; transform: scale(0.9); }
     </style>
 </head>
 <body>
@@ -24,13 +26,15 @@
          data-client_id="845248187858-v5f617m11f.apps.googleusercontent.com"
          data-callback="handleCredentialResponse">
     </div>
-    <div id="g_id_signin" class="g_id_signin" data-type="standard"></div>
+    <div class="login-wrapper">
+        <div id="g_id_signin" class="g_id_signin" data-type="standard"></div>
+    </div>
 
     <div class="form-section">
         <h3>💰 FORM SETORAN</h3>
         <form id="formSetoran">
             <label>Nama yang Setor</label>
-            <input type="text" name="nama" id="nama_setor" placeholder="Nama otomatis terisi setelah login" readonly>
+            <input type="text" name="nama" id="nama_setor" placeholder="Silahkan Login Google di atas" readonly>
             
             <label>Tanggal Setor</label>
             <input type="date" name="tanggal" required>
@@ -52,7 +56,7 @@
         <h3>📋 FORM LAPORAN</h3>
         <form id="formLaporan">
             <label>Nama yang Lapor</label>
-            <input type="text" name="nama" id="nama_lapor" placeholder="Nama otomatis terisi setelah login" readonly>
+            <input type="text" name="nama" id="nama_lapor" placeholder="Silahkan Login Google di atas" readonly>
             
             <label>Tanggal Lapor</label>
             <input type="date" name="tanggal" required>
@@ -74,18 +78,16 @@
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 
 <script>
-    // LINK APPS SCRIPT KEUANGAN GIBRAN
     const scriptURL = "https://script.google.com/macros/s/AKfycbwrstO8ggfEpfGAQjkGmEKo6CKLyG7YfxemvZ1Sn1H55ULFFOoSN2Fv-HFLrxw9Uobz/exec";
 
-    // 1. Fungsi saat login berhasil
     function handleCredentialResponse(response) {
         const payload = JSON.parse(atob(response.credential.split('.')[1]));
         
-        // Langsung isi nama ke semua form input
+        // Isi nama otomatis
         document.getElementById('nama_setor').value = payload.name;
         document.getElementById('nama_lapor').value = payload.name;
 
-        // Kirim data login ke sheet register.html
+        // Log login
         fetch(scriptURL + "?sheet=register.html", {
             method: "POST",
             body: JSON.stringify({
@@ -94,15 +96,17 @@
                 email: payload.email
             })
         });
+
+        // Sembunyikan tombol login setelah berhasil masuk (BIAR BERSIH!)
+        document.querySelector('.login-wrapper').style.display = 'none';
     }
 
-    // 2. Fungsi kirim data form
     function kirimKeSheet(formId, sheetTarget) {
         const form = document.getElementById(formId);
-        const namaUser = document.getElementById(formId === 'formSetoran' ? 'nama_setor' : 'nama_lapor').value;
+        const currentName = document.getElementById(formId === 'formSetoran' ? 'nama_setor' : 'nama_lapor').value;
 
-        if(!namaUser) {
-            alert("Woi, Login Google dulu biar namanya muncul!");
+        if(!currentName) {
+            alert("Waduh, login Google dulu dong!");
             return;
         }
 
@@ -114,13 +118,12 @@
             body: formData
         })
         .then(() => {
-            alert("Siap! Data " + sheetTarget + " udah masuk ke Sheet.");
+            alert("Mantap! Data terkirim ke " + sheetTarget);
             form.reset();
-            // Isi balik nama setelah reset form
-            document.getElementById('nama_setor').value = namaUser;
-            document.getElementById('nama_lapor').value = namaUser;
+            document.getElementById('nama_setor').value = currentName;
+            document.getElementById('nama_lapor').value = currentName;
         })
-        .catch(err => alert("Waduh gagal kirim: " + err));
+        .catch(err => alert("Gagal kirim data: " + err));
     }
 </script>
 
