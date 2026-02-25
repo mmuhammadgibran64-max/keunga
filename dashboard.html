@@ -3,125 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Keuangan Gibran</title>
+    <title>Dashboard Multi-Fungsi Gibran</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; padding: 20px; }
-        .container { max-width: 550px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .form-section { border: 1px solid #eee; padding: 20px; border-radius: 12px; margin-bottom: 25px; background: #fff; }
-        h3 { margin: 0 0 15px 0; color: #333; border-left: 4px solid #28a745; padding-left: 10px; font-size: 18px; }
-        label { display: block; margin: 15px 0 5px; font-weight: 600; font-size: 13px; color: #555; }
-        input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; background: #f9f9f9; }
-        input[readonly] { background: #e9ecef; cursor: not-allowed; }
-        button { width: 100%; padding: 14px; margin-top: 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; font-size: 16px; }
-        .btn-green { background: #28a745; box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2); }
-        .btn-blue { background: #007bff; box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2); }
-        /* Style tombol login biar nggak menonjol banget */
-        .login-wrapper { display: flex; justify-content: center; margin-bottom: 30px; transform: scale(0.9); }
+        :root { --primary: #007bff; --success: #28a745; --bg: #f4f7f6; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+        .container { max-width: 650px; margin: auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+        
+        h2 { text-align: center; color: #333; margin-bottom: 30px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
+        .section { background: #fff; border: 1px solid #eee; padding: 20px; border-radius: 15px; margin-bottom: 25px; transition: 0.3s; }
+        .section:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        
+        label { display: block; margin: 15px 0 5px; font-weight: 600; color: #444; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; background: #fafafa; }
+        input[readonly] { background: #e9ecef; }
+        
+        button { width: 100%; padding: 14px; margin-top: 15px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; color: white; font-size: 16px; transition: 0.3s; }
+        .btn-setoran { background: var(--success); }
+        .btn-laporan { background: var(--primary); }
+        .btn-upload { background: #6f42c1; }
+        button:active { transform: scale(0.98); }
+
+        #login-area { display: flex; justify-content: center; margin-bottom: 30px; }
+        .preview-img { width: 100%; max-height: 200px; object-fit: contain; margin-top: 10px; display: none; border-radius: 10px; border: 1px dashed #ccc; }
+        .status-msg { font-size: 12px; color: var(--success); margin-top: 5px; display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="g_id_onload"
-         data-client_id="845248187858-v5f617m11f.apps.googleusercontent.com"
-         data-callback="handleCredentialResponse">
-    </div>
-    
+    <h2>🚀 Dashboard Gibran</h2>
 
-    <div class="form-section">
-        <h3>💰 FORM SETORAN</h3>
-        <form id="formSetoran">
-            <label>Nama yang Setor</label>
-            <input type="text" name="nama" id="nama_setor" placeholder="Silahkan Login Google di atas" readonly>
+    <div id="login-area">
+        <div id="g_id_onload" data-client_id="845248187858-v5f617m11f.apps.googleusercontent.com" data-callback="handleCredentialResponse"></div>
+        <div class="g_id_signin" data-type="standard"></div>
+    </div>
+
+    <div class="section">
+        <h3>💰 Transaksi & Laporan</h3>
+        <form id="formUtama">
+            <label>User Aktif</label>
+            <input type="text" id="userName" name="nama" placeholder="Login Google Dulu" readonly>
             
-            <label>Tanggal Setor</label>
-            <input type="date" name="tanggal" required>
-            
-            <label>Setor Ke Siapa</label>
+            <label>Tipe Data</label>
+            <select id="tipeData" name="tipe">
+                <option value="Form Setoran">Setoran Keuangan</option>
+                <option value="Form Laporan">Laporan Kerja</option>
+            </select>
+
+            <label>Tujuan</label>
             <select name="tujuan">
                 <option value="Bu Ami">Bu Ami</option>
                 <option value="Bu Tati">Bu Tati</option>
             </select>
+
+            <label>Keterangan</label>
+            <textarea name="keterangan" rows="3" placeholder="Isi detail di sini..."></textarea>
+
+            <input type="hidden" name="fileUrl" id="fileUrl">
             
-            <label>Keterangan/Bukti</label>
-            <input type="text" name="keterangan" placeholder="Contoh: Setoran Mingguan">
-            
-            <button type="button" class="btn-green" onclick="kirimKeSheet('formSetoran', 'Form Setoran')">Kirim Setoran</button>
+            <button type="button" class="btn-setoran" onclick="kirimSemua()">Kirim Data & Laporan</button>
         </form>
     </div>
 
-    <div class="form-section">
-        <h3>📋 FORM LAPORAN</h3>
-        <form id="formLaporan">
-            <label>Nama yang Lapor</label>
-            <input type="text" name="nama" id="nama_lapor" placeholder="Silahkan Login Google di atas" readonly>
-            
-            <label>Tanggal Lapor</label>
-            <input type="date" name="tanggal" required>
-            
-            <label>Lapor Ke Siapa</label>
-            <select name="tujuan">
-                <option value="Bu Ami">Bu Ami</option>
-                <option value="Bu Tati">Bu Tati</option>
-            </select>
-            
-            <label>Keterangan/Bukti</label>
-            <input type="text" name="keterangan" placeholder="Contoh: Laporan harian">
-            
-            <button type="button" class="btn-blue" onclick="kirimKeSheet('formLaporan', 'Form Laporan')">Kirim Laporan</button>
-        </form>
+    <div class="section">
+        <h3>📸 Upload Bukti / Foto</h3>
+        <p style="font-size: 12px; color: #777;">Upload foto bukti di sini sebelum klik Kirim di atas.</p>
+        <input type="file" id="filePicker" accept="image/*, application/pdf">
+        <img id="imgPreview" class="preview-img">
+        <div id="uploadStatus" class="status-msg">✅ File Terupload!</div>
+        <button type="button" class="btn-upload" id="uploadBtn" onclick="uploadKeCloudinary()">Upload ke Cloud</button>
     </div>
+
 </div>
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 
 <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbwrstO8ggfEpfGAQjkGmEKo6CKLyG7YfxemvZ1Sn1H55ULFFOoSN2Fv-HFLrxw9Uobz/exec";
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwrstO8ggfEpfGAQjkGmEKo6CKLyG7YfxemvZ1Sn1H55ULFFOoSN2Fv-HFLrxw9Uobz/exec";
+    const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dnl8vattg/auto/upload";
+    const CLOUDINARY_UPLOAD_PRESET = "ml_default"; // Ganti jika preset lo beda
 
+    // 1. Handle Google Login
     function handleCredentialResponse(response) {
         const payload = JSON.parse(atob(response.credential.split('.')[1]));
+        document.getElementById('userName').value = payload.name;
+        document.getElementById('login-area').style.display = 'none'; // Sembunyikan login
         
-        // Isi nama otomatis
-        document.getElementById('nama_setor').value = payload.name;
-        document.getElementById('nama_lapor').value = payload.name;
-
-        // Log login
-        fetch(scriptURL + "?sheet=register.html", {
+        // Log ke Sheet Register
+        fetch(GOOGLE_SCRIPT_URL + "?sheet=register.html", {
             method: "POST",
-            body: JSON.stringify({
-                type: 'google_login',
-                nama: payload.name,
-                email: payload.email
-            })
+            body: JSON.stringify({ type: 'google_login', nama: payload.name, email: payload.email })
         });
-
-        // Sembunyikan tombol login setelah berhasil masuk (BIAR BERSIH!)
-        document.querySelector('.login-wrapper').style.display = 'none';
     }
 
-    function kirimKeSheet(formId, sheetTarget) {
-        const form = document.getElementById(formId);
-        const currentName = document.getElementById(formId === 'formSetoran' ? 'nama_setor' : 'nama_lapor').value;
+    // 2. Upload ke Cloudinary
+    async function uploadKeCloudinary() {
+        const fileInput = document.getElementById('filePicker');
+        const btn = document.getElementById('uploadBtn');
+        if (fileInput.files.length === 0) return alert("Pilih file dulu, Bro!");
 
-        if(!currentName) {
-            alert("Waduh, login Google dulu dong!");
-            return;
+        btn.innerText = "Sabar, lagi Upload...";
+        btn.disabled = true;
+
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+        try {
+            const resp = await fetch(CLOUDINARY_URL, { method: 'POST', body: formData });
+            const data = await resp.json();
+            
+            document.getElementById('fileUrl').value = data.secure_url;
+            document.getElementById('uploadStatus').style.display = 'block';
+            
+            if(data.resource_type === 'image') {
+                const preview = document.getElementById('imgPreview');
+                preview.src = data.secure_url;
+                preview.style.display = 'block';
+            }
+            alert("File Berhasil di Cloud!");
+        } catch (err) {
+            alert("Gagal upload ke Cloudinary!");
+        } finally {
+            btn.innerText = "Upload ke Cloud";
+            btn.disabled = false;
         }
+    }
 
+    // 3. Kirim Semua ke Google Sheet
+    function kirimSemua() {
+        const user = document.getElementById('userName').value;
+        if (!user) return alert("Woi, Login Google dulu!");
+
+        const form = document.getElementById('formUtama');
+        const tipe = document.getElementById('tipeData').value;
         const formData = new FormData(form);
-        const uploadURL = scriptURL + "?sheet=" + encodeURIComponent(sheetTarget);
+        const finalURL = GOOGLE_SCRIPT_URL + "?sheet=" + encodeURIComponent(tipe);
 
-        fetch(uploadURL, {
-            method: 'POST',
-            body: formData
-        })
+        fetch(finalURL, { method: 'POST', body: formData })
         .then(() => {
-            alert("Mantap! Data terkirim ke " + sheetTarget);
-            form.reset();
-            document.getElementById('nama_setor').value = currentName;
-            document.getElementById('nama_lapor').value = currentName;
+            alert("MANTAP! Data & Link Foto sudah masuk ke Google Sheets.");
+            location.reload(); // Refresh biar bersih lagi
         })
-        .catch(err => alert("Gagal kirim data: " + err));
+        .catch(err => alert("Gagal kirim ke Sheet!"));
     }
 </script>
 
@@ -131,12 +155,10 @@
     var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
     s1.async=true;
     s1.src='https://embed.tawk.to/6993e93bd5bd3b1c3ca44cb6/1ji9fnh51';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
+    s1.charset='UTF-8'; s1.setAttribute('crossorigin','*');
     s0.parentNode.insertBefore(s1,s0);
     })();
 </script>
 
 </body>
 </html>
-
