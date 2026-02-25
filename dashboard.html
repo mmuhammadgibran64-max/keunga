@@ -3,105 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gibran Hub - Keuangan & Laporan</title>
+    <title>Gibran Hub - Keuangan Fix</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --sidebar: #0d1117; --main-bg: #161b22; --accent: #2f81f7; --text: #c9d1d9; --success: #238636; }
-        body { font-family: 'Inter', sans-serif; margin: 0; background: #010409; color: var(--text); overflow-x: hidden; }
+        :root { --sidebar: #0b0e14; --main: #010409; --card: #161b22; --accent: #2f81f7; --success: #238636; --text: #c9d1d9; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--main); color: var(--text); overflow-x: hidden; }
 
-        /* 1. LAYAR LOGIN (PINTU DEPAN) */
-        #login-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #161b22 0%, #010409 100%);
-            display: flex; align-items: center; justify-content: center; z-index: 9999;
-        }
-        .login-card { background: #161b22; padding: 40px; border-radius: 20px; border: 1px solid #30363d; text-align: center; width: 100%; max-width: 350px; }
+        /* GATE LOGIN */
+        #login-gate { position: fixed; inset: 0; background: var(--main); display: flex; align-items: center; justify-content: center; z-index: 9999; }
+        .gate-box { background: var(--card); padding: 40px; border-radius: 15px; border: 1px solid #30363d; text-align: center; width: 320px; }
 
-        /* 2. LAYOUT DASHBOARD */
-        #main-dashboard { display: none; height: 100vh; width: 100%; }
-        .sidebar { width: 260px; background: var(--sidebar); border-right: 1px solid #30363d; display: flex; flex-direction: column; padding: 20px; flex-shrink: 0; }
-        .main-content { flex: 1; padding: 30px; overflow-y: auto; }
+        /* DASHBOARD LAYOUT */
+        #app-shell { display: none; height: 100vh; flex-direction: row; }
+        .side-nav { width: 260px; background: var(--sidebar); border-right: 1px solid #30363d; padding: 25px; display: flex; flex-direction: column; flex-shrink: 0; }
+        .main-area { flex: 1; padding: 40px; overflow-y: auto; }
 
-        /* 3. RUANG KEUANGAN (FORM) */
-        .room { display: none; width: 100%; max-width: 1000px; margin: 0 auto; }
-        .room.active { display: block; animation: fadeIn 0.3s; }
-        .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .card { background: var(--main-bg); border: 1px solid #30363d; padding: 25px; border-radius: 12px; }
-
+        /* FORMS */
+        .room { display: none; max-width: 1100px; margin: 0 auto; }
+        .room.active { display: block; animation: fadeIn 0.4s; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        .card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid #30363d; }
+        
+        h3 { margin-top: 0; border-bottom: 1px solid #30363d; padding-bottom: 10px; font-size: 16px; }
         label { display: block; font-size: 11px; margin: 15px 0 5px; color: #8b949e; font-weight: bold; }
         input, select { width: 100%; padding: 12px; background: #0d1117; border: 1px solid #30363d; color: white; border-radius: 8px; box-sizing: border-box; }
-        .btn-send { width: 100%; padding: 15px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; margin-top: 20px; color: white; transition: 0.2s; }
-        
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .btn { width: 100%; padding: 14px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; margin-top: 20px; color: white; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div id="login-screen">
-        <div class="login-card">
-            <i class="fas fa-lock fa-3x" style="color:var(--accent); margin-bottom:20px;"></i>
-            <h2>Gibran Hub Access</h2>
-            <div id="g_id_onload" data-client_id="594310366887-a3dsvn8plp139boru5kepf2o1c6ubkkv.apps.googleusercontent.com" data-callback="handleAuthSuccess"></div>
-            <div class="g_id_signin" data-type="standard"></div>
+    <div id="login-gate">
+        <div class="gate-box">
+            <i class="fas fa-user-shield fa-3x" style="color:var(--accent); margin-bottom:20px;"></i>
+            <h3>Gibran Hub Access</h3>
+            <div id="g_id_onload" data-client_id="594310366887-a3dsvn8plp139boru5kepf2o1c6ubkkv.apps.googleusercontent.com" data-callback="onAuth"></div>
+            <div class="g_id_signin" data-type="standard" data-theme="filled_blue"></div>
         </div>
     </div>
 
-    <div id="main-dashboard">
-        <div class="sidebar">
-            <h2 style="color:var(--accent)"><i class="fas fa-rocket"></i> DASHBOARD</h2>
-            <button class="nav-btn" style="background:#21262d; color:white; padding:10px; border:none; border-radius:5px; text-align:left; cursor:pointer; margin-bottom:10px;" onclick="showRoom('finance')"><i class="fas fa-wallet"></i> Sinkronisasi Keuangan</button>
-            <button class="nav-btn" style="background:transparent; color:var(--text); padding:10px; border:none; text-align:left; cursor:pointer;" onclick="showRoom('upload')"><i class="fas fa-cloud-upload-alt"></i> Upload Cloudinary</button>
+    <div id="app-shell">
+        <div class="side-nav">
+            <h2 style="color:var(--accent); margin-bottom:40px;"><i class="fas fa-rocket"></i> HUB</h2>
+            <button onclick="nav('fin')" style="background:#21262d; color:white; border:none; padding:12px; border-radius:8px; text-align:left; cursor:pointer; margin-bottom:10px;"><i class="fas fa-wallet"></i> Keuangan</button>
+            <button onclick="nav('up')" style="background:transparent; color:var(--text); border:none; padding:12px; text-align:left; cursor:pointer;"><i class="fas fa-upload"></i> Upload</button>
         </div>
 
-        <div class="main-content">
-            <div id="finance" class="room active">
-                <div class="grid-form">
-                    
+        <div class="main-area">
+            <div id="fin" class="room active">
+                <div class="form-grid">
                     <div class="card">
-                        <h3 style="color:var(--success)"><i class="fas fa-hand-holding-usd"></i> FORM SETORAN</h3>
-                        <label>NAMA YANG SETOR</label>
-                        <input type="text" id="nama_setor" readonly>
-                        <label>TANGGAL SETOR</label>
-                        <input type="date" id="tgl_setor">
-                        <label>SETOR KE SIAPA</label>
-                        <select id="tujuan_setor">
-                            <option value="Bu Ami">Bu Ami</option>
-                            <option value="Bu Tati">Bu Tati</option>
-                        </select>
-                        <label>TANDA TANGAN</label>
-                        <input type="text" id="ttd_setor" placeholder="Ketik nama terang">
-                        <label>BUKTI SETOR (LINK)</label>
-                        <input type="text" id="bukti_setor" placeholder="Paste link foto dari Cloudinary">
-                        <button class="btn-send" style="background:var(--success)" onclick="kirimKeSheet('Form Setoran')">KIRIM SETORAN</button>
+                        <h3 style="color:var(--success)">FORM SETORAN</h3>
+                        <label>NAMA PENYETOR</label><input type="text" id="s_nama" readonly>
+                        <label>TANGGAL</label><input type="date" id="s_tgl">
+                        <label>SETOR KE</label>
+                        <select id="s_ke"><option>Bu Ami</option><option>Bu Tati</option></select>
+                        <label>TANDA TANGAN</label><input type="text" id="s_ttd" placeholder="Nama Terang">
+                        <label>LINK BUKTI</label><input type="text" id="s_bukti" placeholder="Paste link dari menu Upload">
+                        <button class="btn" style="background:var(--success)" onclick="sendToSheet('Form Setoran')">KIRIM SETORAN</button>
                     </div>
-
                     <div class="card">
-                        <h3 style="color:var(--accent)"><i class="fas fa-file-alt"></i> FORM LAPORAN</h3>
-                        <label>NAMA YANG LAPOR</label>
-                        <input type="text" id="nama_lapor" readonly>
-                        <label>TANGGAL LAPOR</label>
-                        <input type="date" id="tgl_lapor">
-                        <label>LAPOR KE SIAPA</label>
-                        <select id="tujuan_lapor">
-                            <option value="Bu Ami">Bu Ami</option>
-                            <option value="Bu Tati">Bu Tati</option>
-                        </select>
-                        <label>TANDA TANGAN</label>
-                        <input type="text" id="ttd_lapor" placeholder="Ketik nama terang">
-                        <label>BUKTI LAPORAN (LINK)</label>
-                        <input type="text" id="bukti_lapor" placeholder="Paste link foto dari Cloudinary">
-                        <button class="btn-send" style="background:var(--accent)" onclick="kirimKeSheet('Form Laporan')">KIRIM LAPORAN</button>
+                        <h3 style="color:var(--accent)">FORM LAPORAN</h3>
+                        <label>NAMA PELAPOR</label><input type="text" id="l_nama" readonly>
+                        <label>TANGGAL</label><input type="date" id="l_tgl">
+                        <label>LAPOR KE</label>
+                        <select id="l_ke"><option>Bu Ami</option><option>Bu Tati</option></select>
+                        <label>TANDA TANGAN</label><input type="text" id="l_ttd" placeholder="Nama Terang">
+                        <label>LINK BUKTI</label><input type="text" id="l_bukti" placeholder="Paste link dari menu Upload">
+                        <button class="btn" style="background:var(--accent)" onclick="sendToSheet('Form Laporan')">KIRIM LAPORAN</button>
                     </div>
-
                 </div>
             </div>
 
-            <div id="upload" class="room">
-                <h2>📸 Upload Area</h2>
+            <div id="up" class="room">
+                <h3>UPLOAD BUKTI KE CLOUDINARY</h3>
                 <div class="card" style="text-align:center">
-                    <input type="file" id="fileInp" onchange="uploadSingle(this)">
-                    <p id="statusUp"></p>
-                    <p style="font-size:12px; color:var(--accent)">Setelah upload, salin link-nya dan masukkan ke kolom BUKTI di form keuangan.</p>
+                    <input type="file" id="fInp" onchange="runUpload(this)">
+                    <p id="upMsg" style="margin-top:20px; font-weight:bold; color:var(--accent)"></p>
                 </div>
             </div>
         </div>
@@ -109,55 +88,59 @@
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
-        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwrstO8ggfEpfGAQjkGmEKo6CKLyG7YfxemvZ1Sn1H55ULFFOoSN2Fv-HFLrxw9Uobz/exec";
+        const API = "https://script.google.com/macros/s/AKfycbwrstO8ggfEpfGAQjkGmEKo6CKLyG7YfxemvZ1Sn1H55ULFFOoSN2Fv-HFLrxw9Uobz/exec";
 
-        function handleAuthSuccess(response) {
-            const payload = JSON.parse(atob(response.credential.split('.')[1]));
-            document.getElementById('nama_setor').value = payload.name;
-            document.getElementById('nama_lapor').value = payload.name;
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('main-dashboard').style.display = 'flex';
+        function onAuth(res) {
+            const user = JSON.parse(atob(res.credential.split('.')[1]));
+            document.getElementById('s_nama').value = user.name;
+            document.getElementById('l_nama').value = user.name;
+            document.getElementById('login-gate').style.display = 'none';
+            document.getElementById('app-shell').style.display = 'flex';
         }
 
-        function showRoom(id) {
+        function nav(id) {
             document.querySelectorAll('.room').forEach(r => r.classList.remove('active'));
             document.getElementById(id).classList.add('active');
         }
 
-        async function uploadSingle(el) {
+        async function runUpload(el) {
             const file = el.files[0]; if(!file) return;
-            document.getElementById('statusUp').innerText = "Uploading...";
+            document.getElementById('upMsg').innerText = "Sedang Upload...";
+            
             const fd = new FormData();
             fd.append('file', file);
             fd.append('upload_preset', 'ml_default');
-            const res = await fetch("https://api.cloudinary.com/v1_1/dnl8vattg/auto/upload", { method: 'POST', body: fd });
-            const data = await res.json();
-            alert("Berhasil! Ini Link-nya: " + data.secure_url);
-            document.getElementById('statusUp').innerText = "Link: " + data.secure_url;
+
+            try {
+                const r = await fetch("https://api.cloudinary.com/v1_1/dnl8vattg/auto/upload", { method: 'POST', body: fd });
+                const d = await r.json();
+                if(d.secure_url) {
+                    alert("UPLOAD BERHASIL!");
+                    document.getElementById('upMsg').innerHTML = `Link: <br><small>${d.secure_url}</small>`;
+                } else {
+                    alert("Gagal ambil link, cek Cloudinary lo!");
+                }
+            } catch(e) { alert("Error koneksi!"); }
         }
 
-        function kirimKeSheet(jenis) {
-            let data = {
-                sheet_id: "1y2O_3fK0k1Ds-diQ5M8857A27J-LDEZGdmYia1ykjOY",
-                sheet_name: jenis
-            };
-
-            if(jenis === 'Form Setoran') {
-                data.nama = document.getElementById('nama_setor').value;
-                data.tanggal = document.getElementById('tgl_setor').value;
-                data.tujuan = document.getElementById('tujuan_setor').value;
-                data.ttd = document.getElementById('ttd_setor').value;
-                data.bukti = document.getElementById('bukti_setor').value;
+        function sendToSheet(type) {
+            let d = { sheet_id: "1y2O_3fK0k1Ds-diQ5M8857A27J-LDEZGdmYia1ykjOY", sheet_name: type };
+            if(type === 'Form Setoran') {
+                d.nama = document.getElementById('s_nama').value;
+                d.tanggal = document.getElementById('s_tgl').value;
+                d.tujuan = document.getElementById('s_ke').value;
+                d.ttd = document.getElementById('s_ttd').value;
+                d.bukti = document.getElementById('s_bukti').value;
             } else {
-                data.nama = document.getElementById('nama_lapor').value;
-                data.tanggal = document.getElementById('tgl_lapor').value;
-                data.tujuan = document.getElementById('tujuan_lapor').value;
-                data.ttd = document.getElementById('ttd_lapor').value;
-                data.bukti = document.getElementById('bukti_lapor').value;
+                d.nama = document.getElementById('l_nama').value;
+                d.tanggal = document.getElementById('l_tgl').value;
+                d.tujuan = document.getElementById('l_ke').value;
+                d.ttd = document.getElementById('l_ttd').value;
+                d.bukti = document.getElementById('l_bukti').value;
             }
 
-            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) })
-            .then(() => alert("Data " + jenis + " Terkirim!"));
+            fetch(API, { method: 'POST', body: JSON.stringify(d) })
+            .then(() => alert("Data " + type + " sudah mendarat di Sheet!"));
         }
     </script>
 </body>
