@@ -3,226 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB PRO - STABLE</title>
+    <title>GIBRAN HUB ENTERPRISE</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --bg: #0d1117; --card: #161b22; --accent: #2f81f7; --text: #f0f6fc; --danger: #f85149; --success: #238636; }
-        body, html { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; overflow: hidden; }
+        :root { --bg: #010409; --side: #0d1117; --card: #161b22; --accent: #2f81f7; --text: #c9d1d9; --success: #238636; --danger: #da3633; }
+        body, html { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; overflow: hidden; }
+
+        /* GATE / LOGIN LAYER */
+        #gate { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 9999; }
+        
+        /* LOADING LAYER */
+        #loader { position: fixed; inset: 0; background: var(--bg); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 9998; }
+        .spin { width: 40px; height: 40px; border: 4px solid #30363d; border-top-color: var(--accent); border-radius: 50%; animation: s 1s linear infinite; }
+        @keyframes s { to { transform: rotate(360deg); } }
 
         /* SIDEBAR */
-        .sidebar { width: 250px; background: #010409; border-right: 1px solid #30363d; display: flex; flex-direction: column; padding: 20px; flex-shrink: 0; }
-        .nav-link { width: 100%; padding: 12px; background: transparent; color: var(--text); border: none; border-radius: 6px; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 10px; margin-bottom: 5px; text-decoration: none; font-size: 14px; }
-        .nav-link.active { background: #21262d; border-left: 4px solid var(--accent); }
+        .sidebar { width: 250px; background: var(--side); border-right: 1px solid #30363d; display: none; flex-direction: column; padding: 25px; flex-shrink: 0; }
+        .nav-item { width: 100%; padding: 12px; background: transparent; color: var(--text); border: none; border-radius: 8px; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 10px; margin-bottom: 5px; font-size: 14px; }
+        .nav-item.active { background: #21262d; color: var(--accent); font-weight: bold; }
 
-        /* MAIN CONTENT */
-        .main { flex: 1; padding: 30px; overflow-y: auto; }
-        .view { display: none; }
-        .view.active { display: block; animation: fadeIn 0.2s ease-in; }
+        /* CONTENT */
+        .content { flex: 1; padding: 30px; overflow-y: auto; display: none; }
+        .view { display: none; animation: fadeIn 0.3s; }
+        .view.active { display: block; }
 
-        /* CARDS */
-        .card { background: var(--card); border: 1px solid #30363d; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        /* FORM & CARD */
+        .card { background: var(--card); border: 1px solid #30363d; border-radius: 15px; padding: 20px; margin-bottom: 20px; }
+        input, select { width: 100%; padding: 10px; background: #0d1117; border: 1px solid #30363d; color: white; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box; }
+        .btn-big { width: 100%; padding: 12px; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; }
 
-        /* INPUTS */
-        label { display: block; font-size: 12px; color: #8b949e; margin-bottom: 5px; font-weight: 600; }
-        input, select { width: 100%; padding: 10px; background: #0d1117; border: 1px solid #30363d; color: white; border-radius: 6px; margin-bottom: 15px; box-sizing: border-box; }
-        
-        /* IMAGE PREVIEW FIX */
-        .file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
-        .file-card { background: #21262d; border-radius: 8px; border: 1px solid #30363d; overflow: hidden; position: relative; }
-        .preview-box { width: 100%; height: 120px; background: #000; overflow: hidden; }
-        .preview-box img, .preview-box video { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-        .action-bar { display: flex; gap: 5px; padding: 8px; background: #161b22; }
-        .btn-tiny { flex: 1; padding: 5px; font-size: 10px; cursor: pointer; border-radius: 4px; border: none; color: white; font-weight: bold; }
-
-        /* GLOBAL BUTTONS */
-        .btn-big { width: 100%; padding: 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 15px; transition: 0.2s; }
-        .btn-big:active { transform: scale(0.98); }
+        /* FILE MANAGER GRID */
+        .file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .file-card { background: #0d1117; border: 1px solid #30363d; border-radius: 10px; overflow: hidden; }
+        .img-box { width: 100%; height: 120px; background: #000; display: flex; align-items: center; justify-content: center; }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; }
+        .actions { padding: 10px; display: flex; gap: 5px; }
+        .btn-tiny { flex: 1; padding: 5px; border: none; border-radius: 4px; font-size: 10px; cursor: pointer; color: white; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        #login-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 1000; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
 
-    <div id="login-overlay">
-        <div class="card" style="text-align: center; width: 300px;">
-            <h2 style="color:var(--accent)">GIBRAN HUB</h2>
-            <p style="font-size:12px; color:#8b949e">Silakan Login Terlebih Dahulu</p>
-            <div id="g_id_onload" data-client_id="594310366887-a3dsvn8plp139boru5kepf2o1c6ubkkv.apps.googleusercontent.com" data-callback="handleAuth"></div>
+    <div id="gate">
+        <div class="card" style="text-align:center; width:320px; border: 1px solid var(--accent);">
+            <i class="fas fa-user-shield fa-3x" style="color:var(--accent); margin-bottom:20px;"></i>
+            <h3>Gibran Hub Login</h3>
+            <div id="g_id_onload" 
+                 data-client_id="594310366887-a3dsvn8plp139boru5kepf2o1c6ubkkv.apps.googleusercontent.com" 
+                 data-callback="onAuth"></div>
             <div class="g_id_signin" data-type="standard"></div>
         </div>
     </div>
 
-    <div class="sidebar" id="sidebar-nav" style="display:none">
-        <h3 style="color:var(--accent)"><i class="fas fa-database"></i> SYSTEM v15</h3>
-        <button class="nav-link active" onclick="switchTab('tab-finance', this)"><i class="fas fa-file-invoice-dollar"></i> Keuangan</button>
-        <button class="nav-link" onclick="switchTab('tab-files', this)"><i class="fas fa-folder-open"></i> File Manager</button>
-        <button onclick="location.reload()" style="margin-top:auto" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    <div id="loader">
+        <div class="spin"></div>
+        <p style="margin-top:15px; color:var(--accent);">Membuka Dashboard...</p>
     </div>
 
-    <div class="main" id="main-ui" style="display:none">
+    <div class="sidebar" id="side-ui">
+        <h2 style="color:var(--accent); margin-bottom:30px;"><i class="fas fa-database"></i> G-SYSTEM</h2>
+        <button class="nav-item active" onclick="showTab('v-fin', this)"><i class="fas fa-wallet"></i> Keuangan</button>
+        <button class="nav-item" onclick="showTab('v-up', this)"><i class="fas fa-folder-open"></i> File Manager</button>
+        <button onclick="location.reload()" style="margin-top:auto" class="nav-item"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+
+    <div class="content" id="cont-ui">
         
-        <div id="tab-finance" class="view active">
+        <div id="v-fin" class="view active">
             <h1>Finance Center</h1>
-            <div class="grid">
-                <div class="card">
-                    <h4 style="color:var(--success); border-bottom:1px solid #333; padding-bottom:10px;">FORM SETORAN</h4>
-                    <label>Nama Penyetor</label><input type="text" id="s_nama" readonly>
-                    <label>Tanggal</label><input type="date" id="s_tgl">
-                    <label>Tujuan</label><select id="s_tujuan"><option>Bu Ami</option><option>Bu Tati</option></select>
-                    <label>Tanda Tangan</label><input type="text" id="s_ttd" placeholder="Nama Terang">
-                    <label>Link Bukti (Wajib)</label><input type="text" id="s_bukti" placeholder="Paste link dari File Manager">
-                    <button class="btn-big" style="background:var(--success)" onclick="sendToSheet('Form Setoran')">KIRIM SETORAN</button>
-                </div>
+            <div class="card" style="max-width: 500px;">
+                <h3 style="color:var(--success)">FORM SETORAN</h3>
+                <label>Penyetor</label><input type="text" id="s_n" readonly>
+                <label>Tanggal</label><input type="date" id="s_t">
+                <label>Tujuan</label><select id="s_k"><option>Bu Ami</option><option>Bu Tati</option></select>
+                <label>TTD</label><input type="text" id="s_ttd" placeholder="Nama Terang">
+                <label>Link Bukti</label><input type="text" id="s_b" placeholder="Ambil dari File Manager">
+                <button class="btn-big" style="background:var(--success)" onclick="sendSheet()">KIRIM DATA</button>
             </div>
         </div>
 
-        <div id="tab-files" class="view">
+        <div id="v-up" class="view">
             <h1>Master File Manager</h1>
-            <div class="card" style="border: 2px dashed #30363d; text-align:center; padding:40px; cursor:pointer;" onclick="document.getElementById('file-input').click()">
-                <i class="fas fa-upload fa-3x" style="color:var(--accent); margin-bottom:10px;"></i>
-                <p>Klik di sini untuk upload Foto/Video Masal</p>
-                <input type="file" id="file-input" multiple style="display:none" onchange="uploadMasal(this)">
+            <div class="card" style="border: 2px dashed var(--accent); text-align:center; padding:30px; cursor:pointer;" onclick="document.getElementById('m-up').click()">
+                <i class="fas fa-cloud-arrow-up fa-2x"></i> <p>Upload Foto/Video</p>
+                <input type="file" id="m-up" multiple style="display:none" onchange="runUp(this)">
             </div>
-            
-            <div id="upload-status" style="display:none; text-align:center; margin-bottom:15px; color:var(--accent)">
-                <i class="fas fa-spinner fa-spin"></i> Lagi proses upload...
-            </div>
-
-            <div class="file-grid" id="gallery-container">
-                </div>
+            <div id="up-stat" style="display:none; text-align:center; color:var(--accent);">Proses Upload...</div>
+            <div class="file-grid" id="m-gallery"></div>
         </div>
     </div>
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
-        const APPS_URL = "https://script.google.com/macros/s/AKfycbzzkZgu25V0CrZ2inKPreQpTox8szS_KrZQT3xdWtpBIA7QzPxD-OxWe5QIuqPvu8Au/exec";
+        const APPS_URL = "https://script.google.com/macros/s/AKfycbzUuPplENitBUDyD5-aACDwK-YWUZURWkaV52CnXso6zElCbyUpZ8RF67yRgSlwyZ_x/exec";
 
-        function handleAuth(res) {
-            const user = JSON.parse(atob(res.credential.split('.')[1]));
-            document.getElementById('login-overlay').style.display = 'none';
-            document.getElementById('sidebar-nav').style.display = 'flex';
-            document.getElementById('main-ui').style.display = 'block';
-            document.getElementById('s_nama').value = user.name;
+        // FUNGSI CALLBACK LOGIN (YANG BIKIN PINTU TERBUKA)
+        function onAuth(res) {
+            try {
+                // Decode data dari Google
+                const user = JSON.parse(atob(res.credential.split('.')[1]));
+                
+                // 1. Tutup Layer Login
+                document.getElementById('gate').style.setProperty('display', 'none', 'important');
+                
+                // 2. Tampilkan Loading bentar biar keren
+                document.getElementById('loader').style.display = 'flex';
+                
+                setTimeout(() => {
+                    // 3. Tampilkan UI Utama
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('side-ui').style.display = 'flex';
+                    document.getElementById('cont-ui').style.display = 'block';
+                    
+                    // 4. Masukin Nama ke Input
+                    document.getElementById('s_n').value = user.name;
+                }, 1200);
+            } catch (e) {
+                alert("Gagal memproses login. Cek koneksi.");
+            }
         }
 
-        function switchTab(tabId, btn) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
+        function showTab(id, btn) {
+            document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
             btn.classList.add('active');
         }
 
-        // FUNGSI UPLOAD MASAL
-        async function uploadMasal(input) {
-            const files = input.files; if(files.length === 0) return;
-            const status = document.getElementById('upload-status');
-            status.style.display = 'block';
-
-            for(let file of files) {
+        async function runUp(el) {
+            const files = el.files; if(!files.length) return;
+            document.getElementById('up-stat').style.display='block';
+            for(let f of files) {
                 const fd = new FormData();
-                fd.append('file', file);
+                fd.append('file', f);
                 fd.append('upload_preset', 'ml_default');
-
                 try {
-                    const res = await fetch("https://api.cloudinary.com/v1_1/dnl8vattg/auto/upload", { method: 'POST', body: fd });
-                    const data = await res.json();
-                    if(data.secure_url) {
-                        renderFileCard(data.secure_url, file.name, file.type);
-                    }
-                } catch(e) { console.error("Upload error"); }
+                    const r = await fetch("https://api.cloudinary.com/v1_1/dnl8vattg/auto/upload", { method:'POST', body:fd });
+                    const d = await r.json();
+                    renderCard(d.secure_url, f.type);
+                } catch(e) { console.error(e); }
             }
-            status.style.display = 'none';
+            document.getElementById('up-stat').style.display='none';
         }
 
-        function renderFileCard(url, name, type) {
-            const container = document.getElementById('gallery-container');
+        function renderCard(url, type) {
+            const gal = document.getElementById('m-gallery');
             const card = document.createElement('div');
             card.className = 'file-card';
-            
-            let media = `<img src="${url}" loading="lazy">`;
-            if(type.includes('video')) media = `<video src="${url}" controls></video>`;
-
-            card.innerHTML = `
-                <div class="preview-box">${media}</div>
-                <div class="action-bar">
-                    <button class="btn-tiny" style="background:var(--accent)" onclick="copyL('${url}')">Link</button>
-                    <button class="btn-tiny" style="background:var(--success)" onclick="window.open('${url}')">Save</button>
-                    <button class="btn-tiny" style="background:var(--danger)" onclick="this.parentElement.parentElement.remove()">Hapus</button>
-                </div>
-            `;
-            container.prepend(card);
+            let media = type.includes('video') ? `<video src="${url}" style="width:100%"></video>` : `<img src="${url}">`;
+            card.innerHTML = `<div class="img-box">${media}</div><div class="actions">
+                <button class="btn-tiny" style="background:var(--accent)" onclick="copyL('${url}')">Copy Link</button>
+                <button class="btn-tiny" style="background:var(--danger)" onclick="this.parentElement.parentElement.remove()">Hapus</button>
+            </div>`;
+            gal.prepend(card);
         }
 
-        function copyL(url) {
-            navigator.clipboard.writeText(url).then(() => alert("Link Berhasil Disalin! Paste di Form Keuangan."));
-        }
+        function copyL(u) { navigator.clipboard.writeText(u).then(()=>alert("Link disalin!")); }
 
-        // FUNGSI KIRIM GOOGLE SHEET (DIPERKUAT)
-        function sendToSheet(type) {
-    const data = {
-        sheet_id: "1y2O_3fK0k1Ds-diQ5M8857A27J-LDEZGdmYia1ykjOY",
-        sheet_name: "daftar pake gooogle", // Gue paksa namanya jadi ini sesuai mau lo
-        nama: document.getElementById('s_nama').value,
-        tanggal: document.getElementById('s_tgl').value,
-        tujuan: document.getElementById('s_tujuan').value,
-        ttd: document.getElementById('s_ttd').value,
-        bukti: document.getElementById('s_bukti').value
-    };
-
-    if(!data.tanggal || !data.bukti) return alert("Wajib isi Tanggal dan Link Bukti!");
-
-    const btn = event.target;
-    btn.innerText = "MENGIRIM...";
-    btn.disabled = true;
-
-    fetch(APPS_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        body: JSON.stringify(data)
-    })
-    .then(() => {
-        alert("BERHASIL! Cek sheet 'daftar pake gooogle' sekarang.");
-        btn.innerText = "KIRIM SEKARANG";
-        btn.disabled = false;
-    })
-    .catch(err => {
-        alert("Gagal kirim, coba cek koneksi!");
-        btn.disabled = false;
-    });
-}
-
-            if(!data.tanggal || !data.bukti) return alert("PENTING: Tanggal dan Link Bukti nggak boleh kosong!");
-
-            // Tampilkan loading manual
-            const btn = event.target;
-            const oldText = btn.innerText;
-            btn.innerText = "MENGIRIM...";
-            btn.disabled = true;
-
-            fetch(APPS_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify(data)
-            })
-            .then(() => {
-                alert("MANTAP! Data " + type + " Berhasil Terkirim.");
-                btn.innerText = oldText;
-                btn.disabled = false;
-                // Reset Form
-                document.getElementById('s_tgl').value = "";
-                document.getElementById('s_bukti').value = "";
-                document.getElementById('s_ttd').value = "";
-            })
-            .catch(err => {
-                alert("Aduh, gagal kirim! Cek sinyal Bro.");
-                btn.innerText = oldText;
-                btn.disabled = false;
-            });
+        function sendSheet() {
+            const data = {
+                sheet_id: "1y2O_3fK0k1Ds-diQ5M8857A27J-LDEZGdmYia1ykjOY",
+                sheet_name: "daftar pake gooogle",
+                nama: document.getElementById('s_n').value,
+                tanggal: document.getElementById('s_t').value,
+                tujuan: document.getElementById('s_k').value,
+                ttd: document.getElementById('s_ttd').value,
+                bukti: document.getElementById('s_b').value
+            };
+            if(!data.tanggal || !data.bukti) return alert("Isi Tanggal & Link!");
+            fetch(APPS_URL, { method:'POST', mode:'no-cors', body:JSON.stringify(data) })
+            .then(()=>alert("DATA TERKIRIM!"));
         }
     </script>
 </body>
 </html>
-
