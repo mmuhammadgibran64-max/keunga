@@ -162,15 +162,37 @@
 
         // FUNGSI KIRIM GOOGLE SHEET (DIPERKUAT)
         function sendToSheet(type) {
-            const data = {
-                sheet_id: "1y2O_3fK0k1Ds-diQ5M8857A27J-LDEZGdmYia1ykjOY",
-                sheet_name: type,
-                nama: document.getElementById('s_nama').value,
-                tanggal: document.getElementById('s_tgl').value,
-                tujuan: document.getElementById('s_tujuan').value,
-                ttd: document.getElementById('s_ttd').value,
-                bukti: document.getElementById('s_bukti').value
-            };
+    const data = {
+        sheet_id: "1y2O_3fK0k1Ds-diQ5M8857A27J-LDEZGdmYia1ykjOY",
+        sheet_name: "daftar pake gooogle", // Gue paksa namanya jadi ini sesuai mau lo
+        nama: document.getElementById('s_nama').value,
+        tanggal: document.getElementById('s_tgl').value,
+        tujuan: document.getElementById('s_tujuan').value,
+        ttd: document.getElementById('s_ttd').value,
+        bukti: document.getElementById('s_bukti').value
+    };
+
+    if(!data.tanggal || !data.bukti) return alert("Wajib isi Tanggal dan Link Bukti!");
+
+    const btn = event.target;
+    btn.innerText = "MENGIRIM...";
+    btn.disabled = true;
+
+    fetch(APPS_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify(data)
+    })
+    .then(() => {
+        alert("BERHASIL! Cek sheet 'daftar pake gooogle' sekarang.");
+        btn.innerText = "KIRIM SEKARANG";
+        btn.disabled = false;
+    })
+    .catch(err => {
+        alert("Gagal kirim, coba cek koneksi!");
+        btn.disabled = false;
+    });
+}
 
             if(!data.tanggal || !data.bukti) return alert("PENTING: Tanggal dan Link Bukti nggak boleh kosong!");
 
@@ -203,3 +225,4 @@
     </script>
 </body>
 </html>
+
