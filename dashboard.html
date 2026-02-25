@@ -3,109 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gibran Hub - Keuangan Fix</title>
+    <title>Gibran Hub - Finance Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --sidebar: #0b0e14; --main: #010409; --card: #161b22; --accent: #2f81f7; --success: #238636; --text: #c9d1d9; }
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--main); color: var(--text); overflow-x: hidden; }
+        :root { --bg: #010409; --card: #161b22; --accent: #2f81f7; --text: #c9d1d9; --success: #238636; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); margin: 0; overflow-x: hidden; }
 
-        /* GATE LOGIN */
-        #login-gate { position: fixed; inset: 0; background: var(--main); display: flex; align-items: center; justify-content: center; z-index: 9999; }
-        .gate-box { background: var(--card); padding: 40px; border-radius: 15px; border: 1px solid #30363d; text-align: center; width: 320px; }
+        /* PINTU LOGIN */
+        #login-gate { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+        .gate-box { background: var(--card); padding: 40px; border-radius: 15px; border: 1px solid #30363d; text-align: center; width: 320px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 
-        /* DASHBOARD LAYOUT */
-        #app-shell { display: none; height: 100vh; flex-direction: row; }
-        .side-nav { width: 260px; background: var(--sidebar); border-right: 1px solid #30363d; padding: 25px; display: flex; flex-direction: column; flex-shrink: 0; }
-        .main-area { flex: 1; padding: 40px; overflow-y: auto; }
-
-        /* FORMS */
-        .room { display: none; max-width: 1100px; margin: 0 auto; }
-        .room.active { display: block; animation: fadeIn 0.4s; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
-        .card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid #30363d; }
+        /* DASHBOARD */
+        #app-shell { display: none; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 25px; }
         
-        h3 { margin-top: 0; border-bottom: 1px solid #30363d; padding-bottom: 10px; font-size: 16px; }
-        label { display: block; font-size: 11px; margin: 15px 0 5px; color: #8b949e; font-weight: bold; }
-        input, select { width: 100%; padding: 12px; background: #0d1117; border: 1px solid #30363d; color: white; border-radius: 8px; box-sizing: border-box; }
-        .btn { width: 100%; padding: 14px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; margin-top: 20px; color: white; }
+        .card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid #30363d; position: relative; }
+        h3 { margin-top: 0; border-bottom: 1px solid #30363d; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; font-size: 18px; }
+        
+        label { display: block; font-size: 11px; margin: 15px 0 5px; color: #8b949e; font-weight: bold; text-transform: uppercase; }
+        input, select { width: 100%; padding: 12px; background: #0d1117; border: 1px solid #30363d; color: white; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+        input[readonly] { color: #8b949e; cursor: not-allowed; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* UPLOAD BUTTON */
+        .up-box { background: #21262d; border: 1px dashed #484f58; padding: 12px; text-align: center; cursor: pointer; border-radius: 8px; margin-top: 5px; font-size: 13px; transition: 0.2s; }
+        .up-box:hover { border-color: var(--accent); color: var(--accent); }
+
+        .btn-send { width: 100%; padding: 15px; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; margin-top: 25px; font-size: 15px; transition: 0.3s; }
+        .btn-send:active { transform: scale(0.98); }
+
+        /* LOADING SPINNER */
+        .loading-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; align-items: center; justify-content: center; flex-direction: column; }
     </style>
 </head>
 <body>
 
     <div id="login-gate">
         <div class="gate-box">
-            <i class="fas fa-user-shield fa-3x" style="color:var(--accent); margin-bottom:20px;"></i>
-            <h3>Gibran Hub Access</h3>
-            <div id="g_id_onload" data-client_id="594310366887-a3dsvn8plp139boru5kepf2o1c6ubkkv.apps.googleusercontent.com" data-callback="onAuth"></div>
-            <div class="g_id_signin" data-type="standard" data-theme="filled_blue"></div>
+            <i class="fas fa-shield-alt fa-4x" style="color:var(--accent); margin-bottom:20px;"></i>
+            <h2 style="margin-bottom: 30px;">Gibran Hub Access</h2>
+            <div id="g_id_onload" data-client_id="594310366887-a3dsvn8plp139boru5kepf2o1c6ubkkv.apps.googleusercontent.com" data-callback="handleAuth"></div>
+            <div class="g_id_signin" data-type="standard" data-theme="filled_blue" data-shape="pill"></div>
         </div>
     </div>
 
+    <div id="loader" class="loading-overlay">
+        <i class="fas fa-circle-notch fa-spin fa-3x" style="color:var(--accent); margin-bottom:15px;"></i>
+        <p>Sedang Mengirim Data...</p>
+    </div>
+
     <div id="app-shell">
-        <div class="side-nav">
-            <h2 style="color:var(--accent); margin-bottom:40px;"><i class="fas fa-rocket"></i> HUB</h2>
-            <button onclick="nav('fin')" style="background:#21262d; color:white; border:none; padding:12px; border-radius:8px; text-align:left; cursor:pointer; margin-bottom:10px;"><i class="fas fa-wallet"></i> Keuangan</button>
-            <button onclick="nav('up')" style="background:transparent; color:var(--text); border:none; padding:12px; text-align:left; cursor:pointer;"><i class="fas fa-upload"></i> Upload</button>
+        <div class="header">
+            <h1 style="color:var(--accent); margin-bottom:5px;"><i class="fas fa-university"></i> Sinkronisasi Keuangan</h1>
+            <p id="userWelcome" style="color:#8b949e">Memuat data user...</p>
         </div>
 
-        <div class="main-area">
-            <div id="fin" class="room active">
-                <div class="form-grid">
-                    <div class="card">
-                        <h3 style="color:var(--success)">FORM SETORAN</h3>
-                        <label>NAMA PENYETOR</label><input type="text" id="s_nama" readonly>
-                        <label>TANGGAL</label><input type="date" id="s_tgl">
-                        <label>SETOR KE</label>
-                        <select id="s_ke"><option>Bu Ami</option><option>Bu Tati</option></select>
-                        <label>TANDA TANGAN</label><input type="text" id="s_ttd" placeholder="Nama Terang">
-                        <label>LINK BUKTI</label><input type="text" id="s_bukti" placeholder="Paste link dari menu Upload">
-                        <button class="btn" style="background:var(--success)" onclick="sendToSheet('Form Setoran')">KIRIM SETORAN</button>
-                    </div>
-                    <div class="card">
-                        <h3 style="color:var(--accent)">FORM LAPORAN</h3>
-                        <label>NAMA PELAPOR</label><input type="text" id="l_nama" readonly>
-                        <label>TANGGAL</label><input type="date" id="l_tgl">
-                        <label>LAPOR KE</label>
-                        <select id="l_ke"><option>Bu Ami</option><option>Bu Tati</option></select>
-                        <label>TANDA TANGAN</label><input type="text" id="l_ttd" placeholder="Nama Terang">
-                        <label>LINK BUKTI</label><input type="text" id="l_bukti" placeholder="Paste link dari menu Upload">
-                        <button class="btn" style="background:var(--accent)" onclick="sendToSheet('Form Laporan')">KIRIM LAPORAN</button>
-                    </div>
+        <div class="form-grid">
+            
+            <div class="card">
+                <h3 style="color:var(--success)"><i class="fas fa-arrow-circle-up"></i> FORM SETORAN</h3>
+                
+                <label>Nama Penyetor</label>
+                <input type="text" id="s_nama" readonly>
+                
+                <label>Tanggal Setor</label>
+                <input type="date" id="s_tgl">
+                
+                <label>Setor Ke Siapa</label>
+                <select id="s_ke">
+                    <option value="Bu Ami">Bu Ami</option>
+                    <option value="Bu Tati">Bu Tati</option>
+                </select>
+                
+                <label>Tanda Tangan (Ketik Nama)</label>
+                <input type="text" id="s_ttd" placeholder="Tanda tangan nama terang">
+                
+                <label>Link Bukti Setoran</label>
+                <input type="text" id="s_bukti" placeholder="Link otomatis muncul setelah upload..." readonly>
+                
+                <div class="up-box" onclick="document.getElementById('file_s').click()" id="up_s_label">
+                    <i class="fas fa-camera"></i> Klik Upload Bukti Foto
                 </div>
+                <input type="file" id="file_s" style="display:none" onchange="processUpload(this, 's_bukti', 'up_s_label')">
+
+                <button class="btn-send" style="background:var(--success)" onclick="submitForm('Form Setoran')">KIRIM SETORAN</button>
             </div>
 
-            <div id="up" class="room">
-                <h3>UPLOAD BUKTI KE CLOUDINARY</h3>
-                <div class="card" style="text-align:center">
-                    <input type="file" id="fInp" onchange="runUpload(this)">
-                    <p id="upMsg" style="margin-top:20px; font-weight:bold; color:var(--accent)"></p>
+            <div class="card">
+                <h3 style="color:var(--accent)"><i class="fas fa-file-invoice"></i> FORM LAPORAN</h3>
+                
+                <label>Nama Pelapor</label>
+                <input type="text" id="l_nama" readonly>
+                
+                <label>Tanggal Laporan</label>
+                <input type="date" id="l_tgl">
+                
+                <label>Lapor Ke Siapa</label>
+                <select id="l_ke">
+                    <option value="Bu Ami">Bu Ami</option>
+                    <option value="Bu Tati">Bu Tati</option>
+                </select>
+                
+                <label>Tanda Tangan (Ketik Nama)</label>
+                <input type="text" id="l_ttd" placeholder="Tanda tangan nama terang">
+                
+                <label>Link Bukti Laporan</label>
+                <input type="text" id="l_bukti" placeholder="Link otomatis muncul setelah upload..." readonly>
+
+                <div class="up-box" onclick="document.getElementById('file_l').click()" id="up_l_label">
+                    <i class="fas fa-camera"></i> Klik Upload Bukti Foto
                 </div>
+                <input type="file" id="file_l" style="display:none" onchange="processUpload(this, 'l_bukti', 'up_l_label')">
+
+                <button class="btn-send" style="background:var(--accent)" onclick="submitForm('Form Laporan')">KIRIM LAPORAN</button>
             </div>
+
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px;">
+            <button onclick="location.reload()" style="background:none; border:none; color:#f85149; cursor:pointer; font-size:14px;"><i class="fas fa-sign-out-alt"></i> Logout System</button>
         </div>
     </div>
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
-        const API = "https://script.google.com/macros/s/AKfycbwrstO8ggfEpfGAQjkGmEKo6CKLyG7YfxemvZ1Sn1H55ULFFOoSN2Fv-HFLrxw9Uobz/exec";
+        // URL SCRIPT BARU LO
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzzkZgu25V0CrZ2inKPreQpTox8szS_KrZQT3xdWtpBIA7QzPxD-OxWe5QIuqPvu8Au/exec";
 
-        function onAuth(res) {
+        function handleAuth(res) {
             const user = JSON.parse(atob(res.credential.split('.')[1]));
             document.getElementById('s_nama').value = user.name;
             document.getElementById('l_nama').value = user.name;
+            document.getElementById('userWelcome').innerText = "Logged in as: " + user.email;
             document.getElementById('login-gate').style.display = 'none';
-            document.getElementById('app-shell').style.display = 'flex';
+            document.getElementById('app-shell').style.display = 'block';
         }
 
-        function nav(id) {
-            document.querySelectorAll('.room').forEach(r => r.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
-
-        async function runUpload(el) {
+        async function processUpload(el, targetInputId, labelId) {
             const file = el.files[0]; if(!file) return;
-            document.getElementById('upMsg').innerText = "Sedang Upload...";
+            const label = document.getElementById(labelId);
+            label.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Memproses Foto...";
             
             const fd = new FormData();
             fd.append('file', file);
@@ -115,16 +152,25 @@
                 const r = await fetch("https://api.cloudinary.com/v1_1/dnl8vattg/auto/upload", { method: 'POST', body: fd });
                 const d = await r.json();
                 if(d.secure_url) {
-                    alert("UPLOAD BERHASIL!");
-                    document.getElementById('upMsg').innerHTML = `Link: <br><small>${d.secure_url}</small>`;
+                    document.getElementById(targetInputId).value = d.secure_url;
+                    label.innerHTML = "<i class='fas fa-check-circle' style='color:var(--success)'></i> Foto Berhasil Diupload!";
                 } else {
-                    alert("Gagal ambil link, cek Cloudinary lo!");
+                    alert("Gagal upload ke Cloudinary!");
+                    label.innerHTML = "<i class='fas fa-times-circle' style='color:#f85149'></i> Gagal Upload";
                 }
-            } catch(e) { alert("Error koneksi!"); }
+            } catch(e) { 
+                alert("Error Koneksi!"); 
+                label.innerText = "Klik Upload Bukti Foto";
+            }
         }
 
-        function sendToSheet(type) {
-            let d = { sheet_id: "1y2O_3fK0k1Ds-diQ5M8857A27J-LDEZGdmYia1ykjOY", sheet_name: type };
+        function submitForm(type) {
+            const loader = document.getElementById('loader');
+            let d = {
+                sheet_id: "1y2O_3fK0k1Ds-diQ5M8857A27J-LDEZGdmYia1ykjOY",
+                sheet_name: type
+            };
+
             if(type === 'Form Setoran') {
                 d.nama = document.getElementById('s_nama').value;
                 d.tanggal = document.getElementById('s_tgl').value;
@@ -139,8 +185,30 @@
                 d.bukti = document.getElementById('l_bukti').value;
             }
 
-            fetch(API, { method: 'POST', body: JSON.stringify(d) })
-            .then(() => alert("Data " + type + " sudah mendarat di Sheet!"));
+            if(!d.tanggal || !d.ttd || !d.bukti) {
+                return alert("Tolong lengkapi Tanggal, TTD, dan Foto Bukti!");
+            }
+
+            loader.style.display = 'flex';
+
+            fetch(SCRIPT_URL, { 
+                method: 'POST', 
+                mode: 'no-cors', // Pakai no-cors biar nggak ribet di Apps Script
+                body: JSON.stringify(d) 
+            })
+            .then(() => {
+                loader.style.display = 'none';
+                alert("MANTAP! Data " + type + " Berhasil Terkirim.");
+                // Reset manual field yang perlu diisi ulang
+                document.getElementById(type === 'Form Setoran' ? 's_tgl' : 'l_tgl').value = "";
+                document.getElementById(type === 'Form Setoran' ? 's_ttd' : 'l_ttd').value = "";
+                document.getElementById(type === 'Form Setoran' ? 's_bukti' : 'l_bukti').value = "";
+                document.getElementById(type === 'Form Setoran' ? 'up_s_label' : 'up_l_label').innerText = "Klik Upload Bukti Foto";
+            })
+            .catch(err => {
+                loader.style.display = 'none';
+                alert("Terjadi kesalahan kirim. Cek koneksi!");
+            });
         }
     </script>
 </body>
