@@ -3,162 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Multi-Fungsi Gibran</title>
+    <title>Multi-Function Dashboard Gibran</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #007bff; --success: #28a745; --bg: #f4f7f6; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); margin: 0; padding: 20px; }
-        .container { max-width: 650px; margin: auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
-        
-        h2 { text-align: center; color: #333; margin-bottom: 30px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
-        .section { background: #fff; border: 1px solid #eee; padding: 20px; border-radius: 15px; margin-bottom: 25px; transition: 0.3s; }
-        .section:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        
-        label { display: block; margin: 15px 0 5px; font-weight: 600; color: #444; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; background: #fafafa; }
-        input[readonly] { background: #e9ecef; }
-        
-        button { width: 100%; padding: 14px; margin-top: 15px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; color: white; font-size: 16px; transition: 0.3s; }
-        .btn-setoran { background: var(--success); }
-        .btn-laporan { background: var(--primary); }
-        .btn-upload { background: #6f42c1; }
-        button:active { transform: scale(0.98); }
+        :root { --sidebar-bg: #1e293b; --accent: #3b82f6; --text-light: #f8fafc; }
+        body { font-family: 'Inter', sans-serif; margin: 0; background: #f1f5f9; display: flex; height: 100vh; overflow: hidden; }
 
-        #login-area { display: flex; justify-content: center; margin-bottom: 30px; }
-        .preview-img { width: 100%; max-height: 200px; object-fit: contain; margin-top: 10px; display: none; border-radius: 10px; border: 1px dashed #ccc; }
-        .status-msg { font-size: 12px; color: var(--success); margin-top: 5px; display: none; }
+        /* Sidebar Kiri - Navigasi & Form */
+        .sidebar { width: 350px; background: var(--sidebar-bg); color: var(--text-light); padding: 25px; display: flex; flex-direction: column; box-shadow: 4px 0 15px rgba(0,0,0,0.1); overflow-y: auto; }
+        .sidebar h2 { font-size: 20px; border-bottom: 1px solid #334155; padding-bottom: 15px; margin-bottom: 20px; color: var(--accent); }
+        
+        .nav-icon { background: #334155; padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 25px; cursor: pointer; transition: 0.3s; border: 1px solid transparent; }
+        .nav-icon:hover { border-color: var(--accent); background: #475569; }
+
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 12px; margin-bottom: 5px; color: #94a3b8; }
+        input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; }
+        
+        .btn-submit { width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        
+        /* Area Login Google di Bawah */
+        .login-footer { margin-top: auto; padding-top: 20px; border-top: 1px solid #334155; text-align: center; }
+
+        /* Main Content - Area Upload */
+        .main-content { flex: 1; padding: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        .upload-card { background: white; width: 100%; max-width: 500px; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); text-align: center; border: 2px dashed #cbd5e1; }
+        .upload-card i { font-size: 50px; color: var(--accent); margin-bottom: 20px; }
+        
+        #preview { width: 100%; max-height: 250px; margin-top: 20px; border-radius: 10px; display: none; object-fit: cover; }
+        .loader { display: none; margin-top: 10px; color: var(--accent); font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>🚀 Dashboard Gibran</h2>
-
-    <div id="login-area">
-        <div id="g_id_onload" data-client_id="845248187858-v5f617m11f.apps.googleusercontent.com" data-callback="handleCredentialResponse"></div>
-        <div class="g_id_signin" data-type="standard"></div>
-    </div>
-
-    <div class="section">
-        <h3>💰 Transaksi & Laporan</h3>
-        <form id="formUtama">
-            <label>User Aktif</label>
-            <input type="text" id="userName" name="nama" placeholder="Login Google Dulu" readonly>
-            
-            <label>Tipe Data</label>
-            <select id="tipeData" name="tipe">
-                <option value="Form Setoran">Setoran Keuangan</option>
-                <option value="Form Laporan">Laporan Kerja</option>
-            </select>
-
-            <label>Tujuan</label>
-            <select name="tujuan">
-                <option value="Bu Ami">Bu Ami</option>
-                <option value="Bu Tati">Bu Tati</option>
-            </select>
-
-            <label>Keterangan</label>
-            <textarea name="keterangan" rows="3" placeholder="Isi detail di sini..."></textarea>
-
-            <input type="hidden" name="fileUrl" id="fileUrl">
-            
-            <button type="button" class="btn-setoran" onclick="kirimSemua()">Kirim Data & Laporan</button>
-        </form>
-    </div>
-
-    <div class="section">
-        <h3>📸 Upload Bukti / Foto</h3>
-        <p style="font-size: 12px; color: #777;">Upload foto bukti di sini sebelum klik Kirim di atas.</p>
-        <input type="file" id="filePicker" accept="image/*, application/pdf">
-        <img id="imgPreview" class="preview-img">
-        <div id="uploadStatus" class="status-msg">✅ File Terupload!</div>
-        <button type="button" class="btn-upload" id="uploadBtn" onclick="uploadKeCloudinary()">Upload ke Cloud</button>
-    </div>
-
-</div>
-
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-
-<script>
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwrstO8ggfEpfGAQjkGmEKo6CKLyG7YfxemvZ1Sn1H55ULFFOoSN2Fv-HFLrxw9Uobz/exec";
-    const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dnl8vattg/auto/upload";
-    const CLOUDINARY_UPLOAD_PRESET = "ml_default"; // Ganti jika preset lo beda
-
-    // 1. Handle Google Login
-    function handleCredentialResponse(response) {
-        const payload = JSON.parse(atob(response.credential.split('.')[1]));
-        document.getElementById('userName').value = payload.name;
-        document.getElementById('login-area').style.display = 'none'; // Sembunyikan login
+    <div class="sidebar">
+        <h2><i class="fas fa-th-large"></i> Dashboard</h2>
         
-        // Log ke Sheet Register
-        fetch(GOOGLE_SCRIPT_URL + "?sheet=register.html", {
-            method: "POST",
-            body: JSON.stringify({ type: 'google_login', nama: payload.name, email: payload.email })
-        });
-    }
+        <div class="nav-icon">
+            <i class="fas fa-wallet fa-2x"></i>
+            <p style="margin: 5px 0 0; font-size: 14px;">Masuk Keuangan</p>
+        </div>
 
-    // 2. Upload ke Cloudinary
-    async function uploadKeCloudinary() {
-        const fileInput = document.getElementById('filePicker');
-        const btn = document.getElementById('uploadBtn');
-        if (fileInput.files.length === 0) return alert("Pilih file dulu, Bro!");
+        <div class="form-group">
+            <label>NAMA LENGKAP</label>
+            <input type="text" id="nama" placeholder="Masukkan Nama">
+        </div>
+        <div class="form-group">
+            <label>NOMOR WHATSAPP</label>
+            <input type="number" id="whatsapp" placeholder="08123xxx">
+        </div>
+        <input type="hidden" id="fileUrlInSheet">
+        
+        <button class="btn-submit" onclick="kirimKeSheet()">SIMPAN KE SHEET</button>
 
-        btn.innerText = "Sabar, lagi Upload...";
-        btn.disabled = true;
+        <div class="login-footer">
+            <p style="font-size: 11px; margin-bottom: 10px;">DAFTAR DENGAN GOOGLE</p>
+            <div id="g_id_onload"
+                 data-client_id="594310366887-a3dsvn8plp139boru5kepf2o1c6ubkkv.apps.googleusercontent.com"
+                 data-callback="handleCredentialResponse">
+            </div>
+            <div class="g_id_signin" data-type="icon" data-shape="circle"></div>
+        </div>
+    </div>
 
-        const formData = new FormData();
-        formData.append('file', fileInput.files[0]);
-        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-
-        try {
-            const resp = await fetch(CLOUDINARY_URL, { method: 'POST', body: formData });
-            const data = await resp.json();
+    <div class="main-content">
+        <div class="upload-card">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <h3>Upload Foto & File</h3>
+            <p style="color: #64748b; font-size: 14px;">File akan tersimpan otomatis di Cloudinary dnl8vattg</p>
+            <input type="file" id="fileInput" style="display: none;" onchange="prosesUpload(this)">
+            <button onclick="document.getElementById('fileInput').click()" style="padding: 10px 20px; border-radius: 20px; border: 1px solid var(--accent); color: var(--accent); background: white; cursor: pointer;">Pilih File</button>
             
-            document.getElementById('fileUrl').value = data.secure_url;
-            document.getElementById('uploadStatus').style.display = 'block';
-            
-            if(data.resource_type === 'image') {
-                const preview = document.getElementById('imgPreview');
-                preview.src = data.secure_url;
-                preview.style.display = 'block';
-            }
-            alert("File Berhasil di Cloud!");
-        } catch (err) {
-            alert("Gagal upload ke Cloudinary!");
-        } finally {
-            btn.innerText = "Upload ke Cloud";
-            btn.disabled = false;
+            <div id="loader" class="loader">Sedang Mengunggah...</div>
+            <img id="preview" alt="Preview">
+        </div>
+        
+        <div style="margin-top: 30px; color: #cbd5e1; font-size: 12px;">MULTI-FUNCTION ROOM SYSTEM READY</div>
+    </div>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwrstO8ggfEpfGAQjkGmEKo6CKLyG7YfxemvZ1Sn1H55ULFFOoSN2Fv-HFLrxw9Uobz/exec";
+
+        // 1. Google Login Callback
+        function handleCredentialResponse(response) {
+            const data = JSON.parse(atob(response.credential.split('.')[1]));
+            document.getElementById('nama').value = data.name;
+            alert("Halo " + data.name + "! Silakan lengkapi nomor WA.");
         }
-    }
 
-    // 3. Kirim Semua ke Google Sheet
-    function kirimSemua() {
-        const user = document.getElementById('userName').value;
-        if (!user) return alert("Woi, Login Google dulu!");
+        // 2. Upload Cloudinary
+        async function prosesUpload(input) {
+            const file = input.files[0];
+            if(!file) return;
 
-        const form = document.getElementById('formUtama');
-        const tipe = document.getElementById('tipeData').value;
-        const formData = new FormData(form);
-        const finalURL = GOOGLE_SCRIPT_URL + "?sheet=" + encodeURIComponent(tipe);
+            document.getElementById('loader').style.display = 'block';
+            
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', 'ml_default'); // Pastikan di Cloudinary 'ml_default' aktif (Unsigned)
 
-        fetch(finalURL, { method: 'POST', body: formData })
-        .then(() => {
-            alert("MANTAP! Data & Link Foto sudah masuk ke Google Sheets.");
-            location.reload(); // Refresh biar bersih lagi
-        })
-        .catch(err => alert("Gagal kirim ke Sheet!"));
-    }
-</script>
+            try {
+                const res = await fetch("https://api.cloudinary.com/v1_1/dnl8vattg/auto/upload", {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await res.json();
+                
+                // Simpan URL ke hidden input & tampilkan preview
+                document.getElementById('fileUrlInSheet').value = result.secure_url;
+                const imgPre = document.getElementById('preview');
+                imgPre.src = result.secure_url;
+                imgPre.style.display = 'block';
+                
+                alert("Foto masuk Cloudinary!");
+            } catch (err) {
+                alert("Upload Gagal!");
+            } finally {
+                document.getElementById('loader').style.display = 'none';
+            }
+        }
 
-<script type="text/javascript">
-    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-    (function(){
-    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/6993e93bd5bd3b1c3ca44cb6/1ji9fnh51';
-    s1.charset='UTF-8'; s1.setAttribute('crossorigin','*');
-    s0.parentNode.insertBefore(s1,s0);
-    })();
-</script>
+        // 3. Kirim ke Google Sheet
+        function kirimKeSheet() {
+            const nama = document.getElementById('nama').value;
+            const wa = document.getElementById('whatsapp').value;
+            const linkFoto = document.getElementById('fileUrlInSheet').value;
+
+            if(!nama || !wa) return alert("Nama dan WA wajib diisi!");
+
+            // Kirim data pake format JSON ke Apps Script lo
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    nama: nama,
+                    whatsapp: wa,
+                    foto: linkFoto,
+                    sheet_id: "1y2O_3fK0k1Ds-diQ5M8857A27J-LDEZGdmYia1ykjOY"
+                })
+            })
+            .then(res => {
+                alert("Data berhasil tersimpan di Sheet Keuangan!");
+                // Reset Form
+                document.getElementById('whatsapp').value = "";
+                document.getElementById('preview').style.display = 'none';
+            })
+            .catch(err => alert("Gagal kirim data!"));
+        }
+    </script>
+
+    <script type="text/javascript">
+        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        (function(){
+        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+        s1.async=true; s1.src='https://embed.tawk.to/6993e93bd5bd3b1c3ca44cb6/1ji9fnh51';
+        s1.charset='UTF-8'; s1.setAttribute('crossorigin','*');
+        s0.parentNode.insertBefore(s1,s0);
+        })();
+    </script>
 
 </body>
 </html>
