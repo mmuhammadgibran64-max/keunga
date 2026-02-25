@@ -3,156 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi-Function Dashboard Gibran</title>
+    <title>Gibran Hub - Multi Room</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --sidebar-bg: #0f172a; --accent: #3b82f6; --text-light: #f8fafc; --bg-main: #f8fafc; }
-        body { font-family: 'Inter', sans-serif; margin: 0; background: var(--bg-main); display: flex; height: 100vh; overflow: hidden; }
-
-        /* Sidebar Kiri - Navigasi & Form */
-        .sidebar { width: 380px; background: var(--sidebar-bg); color: var(--text-light); padding: 30px; display: flex; flex-direction: column; box-shadow: 4px 0 20px rgba(0,0,0,0.2); overflow-y: auto; }
-        .sidebar h2 { font-size: 22px; border-bottom: 2px solid #1e293b; padding-bottom: 15px; margin-bottom: 25px; color: var(--accent); display: flex; align-items: center; gap: 10px; }
+        :root { --sidebar: #0d1117; --main-bg: #161b22; --accent: #2f81f7; --text: #c9d1d9; }
+        body { font-family: 'Inter', sans-serif; margin: 0; display: flex; height: 100vh; background: #010409; color: var(--text); }
         
-        .nav-icon { background: #1e293b; padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 30px; cursor: pointer; transition: 0.3s; border: 1px solid transparent; }
-        .nav-icon:hover { border-color: var(--accent); background: #334155; }
-        .nav-icon i { color: var(--accent); }
-
-        .form-group { margin-bottom: 20px; }
-        label { display: block; font-size: 11px; font-weight: bold; margin-bottom: 8px; color: #64748b; letter-spacing: 1px; }
-        input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #334155; background: #020617; color: white; box-sizing: border-box; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+        /* SIDEBAR */
+        .sidebar { width: 280px; background: var(--sidebar); border-right: 1px solid #30363d; display: flex; flex-direction: column; padding: 20px; }
+        .logo { font-size: 20px; font-weight: 800; color: white; margin-bottom: 40px; display: flex; align-items: center; gap: 10px; }
         
-        .btn-submit { width: 100%; padding: 15px; background: var(--accent); color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; font-size: 15px; transition: 0.3s; }
-        .btn-submit:hover { background: #2563eb; transform: translateY(-2px); }
+        .nav-btn { width: 100%; padding: 15px; background: transparent; color: var(--text); border: none; border-radius: 8px; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 12px; margin-bottom: 10px; transition: 0.2s; }
+        .nav-btn:hover, .nav-btn.active { background: #21262d; color: var(--accent); }
+        .nav-btn i { width: 20px; }
 
-        /* Login Google Minimalis */
-        .login-footer { margin-top: auto; padding-top: 25px; border-top: 1px solid #1e293b; text-align: center; }
+        /* MAIN AREA */
+        .main-content { flex: 1; padding: 40px; display: flex; flex-direction: column; position: relative; }
+        .room { display: none; width: 100%; max-width: 800px; margin: auto; }
+        .room.active { display: block; animation: fadeIn 0.3s ease-in; }
 
-        /* Main Content - Area Upload */
-        .main-content { flex: 1; padding: 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #ffffff; }
-        .upload-card { background: #f8fafc; width: 100%; max-width: 550px; padding: 50px; border-radius: 30px; border: 3px dashed #e2e8f0; text-align: center; transition: 0.3s; }
-        .upload-card:hover { border-color: var(--accent); background: #f1f5f9; }
-        .upload-card i { font-size: 60px; color: #94a3b8; margin-bottom: 20px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* CARDS */
+        .card { background: var(--main-bg); border: 1px solid #30363d; padding: 30px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+        label { display: block; font-size: 12px; margin-bottom: 8px; color: #8b949e; font-weight: bold; }
+        input { width: 100%; padding: 12px; background: #0d1117; border: 1px solid #30363d; color: white; border-radius: 8px; margin-bottom: 20px; box-sizing: border-box; }
         
-        #preview { width: 100%; max-height: 300px; margin-top: 25px; border-radius: 15px; display: none; object-fit: contain; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .loader { display: none; margin-top: 15px; color: var(--accent); font-weight: bold; font-size: 14px; }
+        .btn-action { width: 100%; padding: 15px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-blue { background: var(--accent); color: white; }
+        .btn-blue:hover { opacity: 0.9; }
+
+        /* LOGIN GOOGLE */
+        .login-box { margin-top: auto; padding-top: 20px; border-top: 1px solid #30363d; text-align: center; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <h2><i class="fas fa-layer-group"></i> Gibran Hub</h2>
+        <div class="logo"><i class="fas fa-layer-group"></i> GIBRAN HUB</div>
         
-        <div class="nav-icon" onclick="alert('Masuk ke Ruang Keuangan...')">
-            <i class="fas fa-file-invoice-dollar fa-3x"></i>
-            <p style="margin: 10px 0 0; font-size: 14px; font-weight: bold;">MASUK KEUANGAN</p>
-        </div>
-
-        <div class="form-group">
-            <label>NAMA LENGKAP</label>
-            <input type="text" id="nama" placeholder="Login Google atau Isi Manual">
-        </div>
-        <div class="form-group">
-            <label>NOMOR WHATSAPP</label>
-            <input type="number" id="whatsapp" placeholder="Contoh: 08123456789">
-        </div>
+        <button class="nav-btn active" onclick="openRoom('home')"><i class="fas fa-home"></i> Dashboard Home</button>
+        <button class="nav-btn" onclick="openRoom('finance')"><i class="fas fa-wallet"></i> Ruang Keuangan</button>
+        <button class="nav-btn" onclick="openRoom('upload')"><i class="fas fa-cloud-upload-alt"></i> Ruang Upload</button>
         
-        <input type="hidden" id="fileUrlInSheet">
-        
-        <button class="btn-submit" onclick="kirimKeSheet()">
-            <i class="fas fa-paper-plane"></i> SIMPAN KE SHEET
-        </button>
-
-        <div class="login-footer">
-            <p style="font-size: 10px; margin-bottom: 12px; color: #64748b;">DAFTAR DENGAN GOOGLE</p>
-            <div id="g_id_onload"
-                 data-client_id="594310366887-a3dsvn8plp139boru5kepf2o1c6ubkkv.apps.googleusercontent.com"
-                 data-callback="handleCredentialResponse">
-            </div>
-            <div class="g_id_signin" data-type="icon" data-shape="circle" data-theme="filled_blue"></div>
+        <div class="login-box">
+            <p style="font-size: 10px; margin-bottom: 10px;">AUTH SYSTEM</p>
+            <div id="g_id_onload" data-client_id="594310366887-a3dsvn8plp139boru5kepf2o1c6ubkkv.apps.googleusercontent.com" data-callback="onSignIn"></div>
+            <div class="g_id_signin" data-type="icon" data-shape="circle"></div>
         </div>
     </div>
 
     <div class="main-content">
-        <div class="upload-card">
-            <i class="fas fa-images"></i>
-            <h3 style="margin-bottom: 10px;">Cloud Upload Center</h3>
-            <p style="color: #64748b; font-size: 14px; margin-bottom: 25px;">Pilih foto bukti atau dokumen untuk diunggah ke Cloudinary</p>
-            
-            <input type="file" id="fileInput" style="display: none;" onchange="prosesUpload(this)">
-            <button onclick="document.getElementById('fileInput').click()" style="padding: 12px 30px; border-radius: 50px; border: 2px solid var(--accent); color: var(--accent); background: transparent; cursor: pointer; font-weight: bold; transition: 0.3s;">
-                CARI FILE
-            </button>
-            
-            <div id="loader" class="loader"><i class="fas fa-spinner fa-spin"></i> Sedang Mengunggah...</div>
-            <img id="preview" alt="Preview">
-        </div>
         
-        <div style="margin-top: 40px; color: #cbd5e1; font-size: 12px; letter-spacing: 2px;">MULTI-ROOM SYSTEM v2.0</div>
+        <div id="home" class="room active">
+            <h1>Selamat Datang, <span id="userDisplayName">User</span>!</h1>
+            <p>Pilih ruangan di sidebar kiri untuk memulai aktivitas.</p>
+            <div class="card" style="margin-top:20px;">
+                <h4 style="margin-top:0"><i class="fas fa-info-circle"></i> Info System</h4>
+                <p style="font-size:14px; color:#8b949e">Status: Connected to Google Sheets & Cloudinary.</p>
+            </div>
+        </div>
+
+        <div id="finance" class="room">
+            <h2>💰 Ruang Keuangan</h2>
+            <div class="card">
+                <label>NAMA LENGKAP</label>
+                <input type="text" id="nama" placeholder="Login Google..." readonly>
+                <label>NOMOR WHATSAPP</label>
+                <input type="number" id="wa" placeholder="0812xxxx">
+                <input type="hidden" id="linkFoto">
+                <button class="btn-action btn-blue" onclick="kirimData()">SIMPAN DATA</button>
+            </div>
+        </div>
+
+        <div id="upload" class="room">
+            <h2>📸 Ruang Upload Cloudinary</h2>
+            <div class="card" style="text-align:center; border: 2px dashed #30363d;">
+                <i class="fas fa-images fa-4x" style="color:#30363d; margin-bottom:20px;"></i>
+                <p>Klik tombol di bawah untuk upload bukti.</p>
+                <input type="file" id="fileInp" style="display:none" onchange="uploadToCloud(this)">
+                <button class="btn-action btn-blue" style="width:auto; padding: 10px 30px;" onclick="document.getElementById('fileInp').click()">PILIH FILE</button>
+                <div id="upStatus" style="display:none; margin-top:15px; color:var(--accent);">Proses Uploading...</div>
+                <img id="prevImg" style="width:100%; margin-top:20px; border-radius:12px; display:none;">
+            </div>
+        </div>
+
     </div>
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwrstO8ggfEpfGAQjkGmEKo6CKLyG7YfxemvZ1Sn1H55ULFFOoSN2Fv-HFLrxw9Uobz/exec";
 
-        function handleCredentialResponse(response) {
-            const data = JSON.parse(atob(response.credential.split('.')[1]));
-            document.getElementById('nama').value = data.name;
-            alert("Halo " + data.name + ", Nama lo otomatis terisi!");
+        // Ganti Tab Ruangan
+        function openRoom(roomId) {
+            document.querySelectorAll('.room').forEach(r => r.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(roomId).classList.add('active');
+            event.currentTarget.classList.add('active');
         }
 
-        async function prosesUpload(input) {
-            const file = input.files[0];
-            if(!file) return;
+        // Handle Google Login
+        function onSignIn(response) {
+            const payload = JSON.parse(atob(response.credential.split('.')[1]));
+            document.getElementById('nama').value = payload.name;
+            document.getElementById('userDisplayName').innerText = payload.name;
+            alert("Login Berhasil, " + payload.name);
+        }
 
-            document.getElementById('loader').style.display = 'block';
-            
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('upload_preset', 'ml_default');
+        // Upload ke Cloudinary
+        async function uploadToCloud(el) {
+            const file = el.files[0];
+            if(!file) return;
+            document.getElementById('upStatus').style.display = 'block';
+
+            const fd = new FormData();
+            fd.append('file', file);
+            fd.append('upload_preset', 'ml_default');
 
             try {
-                const res = await fetch("https://api.cloudinary.com/v1_1/dnl8vattg/auto/upload", {
-                    method: 'POST',
-                    body: formData
-                });
-                const result = await res.json();
-                
-                document.getElementById('fileUrlInSheet').value = result.secure_url;
-                const imgPre = document.getElementById('preview');
-                imgPre.src = result.secure_url;
-                imgPre.style.display = 'block';
-                
-                alert("Foto sukses masuk ke Cloudinary!");
-            } catch (err) {
-                alert("Gagal Upload!");
-            } finally {
-                document.getElementById('loader').style.display = 'none';
-            }
+                const res = await fetch("https://api.cloudinary.com/v1_1/dnl8vattg/auto/upload", { method: 'POST', body: fd });
+                const data = await res.json();
+                document.getElementById('linkFoto').value = data.secure_url;
+                const p = document.getElementById('prevImg');
+                p.src = data.secure_url; p.style.display = 'block';
+                alert("Foto masuk ke Cloud!");
+            } catch (e) { alert("Gagal upload!"); }
+            finally { document.getElementById('upStatus').style.display = 'none'; }
         }
 
-        function kirimKeSheet() {
-            const nama = document.getElementById('nama').value;
-            const wa = document.getElementById('whatsapp').value;
-            const linkFoto = document.getElementById('fileUrlInSheet').value;
-
-            if(!nama || !wa) return alert("Woi, Nama & WA diisi dulu!");
+        // Kirim ke Google Sheet
+        function kirimData() {
+            const n = document.getElementById('nama').value;
+            const w = document.getElementById('wa').value;
+            const f = document.getElementById('linkFoto').value;
+            if(!n || !w) return alert("Lengkapi data!");
 
             fetch(SCRIPT_URL, {
                 method: 'POST',
-                body: JSON.stringify({
-                    nama: nama,
-                    whatsapp: wa,
-                    foto: linkFoto,
-                    sheet_id: "1y2O_3fK0k1Ds-diQ5M8857A27J-LDEZGdmYia1ykjOY"
-                })
-            })
-            .then(() => {
-                alert("MANTAP! Data & Bukti Foto udah mendarat di Google Sheet.");
-                document.getElementById('whatsapp').value = "";
-                document.getElementById('preview').style.display = 'none';
-            })
-            .catch(() => alert("Gagal koneksi ke Google Sheet!"));
+                body: JSON.stringify({ nama: n, whatsapp: w, foto: f, sheet_id: "1y2O_3fK0k1Ds-diQ5M8857A27J-LDEZGdmYia1ykjOY" })
+            }).then(() => {
+                alert("DATA BERHASIL MASUK SHEET!");
+                document.getElementById('wa').value = "";
+                document.getElementById('prevImg').style.display = 'none';
+            });
         }
     </script>
 
@@ -160,13 +153,10 @@
     var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
     (function(){
     var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-    s1.async=true;
-    s1.src='https://embed.tawk.to/6993e93bd5bd3b1c3ca44cb6/1ji9fnh51';
-    s1.charset='UTF-8';
-    s1.setAttribute('crossorigin','*');
+    s1.async=true; s1.src='https://embed.tawk.to/6993e93bd5bd3b1c3ca44cb6/1ji9fnh51';
+    s1.charset='UTF-8'; s1.setAttribute('crossorigin','*');
     s0.parentNode.insertBefore(s1,s0);
     })();
     </script>
-
 </body>
 </html>
