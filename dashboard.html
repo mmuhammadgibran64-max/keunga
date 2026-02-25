@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <title>Dashboard Gibran</title>
@@ -17,20 +17,32 @@
     </style>
 </head>
 <body>
+
 <div class="container">
     <div class="user-box">
-        <img id="profilePic" src="" width="40" style="border-radius: 50%">
-        <div><b id="dispName"></b><br><small id="dispEmail"></small></div>
+        <img id="profilePic" src="" width="40" style="border-radius: 50%; background: #ccc;">
+        <div><b id="dispName">Memuat...</b><br><small id="dispEmail"></small></div>
     </div>
+
+    <div id="g_id_onload"
+         data-client_id="845248187858-v5f617m11f.apps.googleusercontent.com" 
+         data-callback="handleCredentialResponse">
+    </div>
+    <div class="g_id_signin" data-type="standard"></div>
+
+    <hr style="margin: 20px 0;">
 
     <div class="form-section">
         <h3>💰 FORM SETORAN</h3>
         <label>Nama yang Setor</label><input type="text" id="nama_setor">
         <label>Tanggal Setor</label><input type="date" id="tgl_setor">
         <label>Setor Ke Siapa</label>
-        <select id="setor_ke"><option value="Bu Ami">Bu Ami</option><option value="Bu Tati">Bu Tati</option></select>
-        <label>Bukti / Keterangan</label><input type="text" id="bukti_setor">
-        <button class="btn-green" onclick="kirim('SETORAN')">Kirim Setoran</button>
+        <select id="setor_ke">
+            <option value="Bu Ami">Bu Ami</option>
+            <option value="Bu Tati">Bu Tati</option>
+        </select>
+        <label>Keterangan</label><input type="text" id="bukti_setor">
+        <button class="btn-green" onclick="kirimData('Form Setoran')">Kirim Setoran</button>
     </div>
 
     <div class="form-section">
@@ -38,92 +50,74 @@
         <label>Nama yang Lapor</label><input type="text" id="nama_lapor">
         <label>Tanggal Lapor</label><input type="date" id="tgl_lapor">
         <label>Lapor Ke Siapa</label>
-        <select id="lapor_ke"><option value="Bu Ami">Bu Ami</option><option value="Bu Tati">Bu Tati</option></select>
-        <label>Bukti / Keterangan</label><input type="text" id="bukti_lapor">
-        <button class="btn-blue" onclick="kirim('LAPORAN')">Kirim Laporan</button>
+        <select id="lapor_ke">
+            <option value="Bu Ami">Bu Ami</option>
+            <option value="Bu Tati">Bu Tati</option>
+        </select>
+        <label>Keterangan</label><input type="text" id="bukti_lapor">
+        <button class="btn-blue" onclick="kirimData('Form Laporan')">Kirim Laporan</button>
     </div>
 </div>
 
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
-   const scriptURL = 'https://script.google.com/macros/s/AKfycbxGoAWNS5xQWwrOnuHAyZdzEw8ZEC8SPPKKKtAqxSAveEp6716-8_to2Ou9s6Qq484/exec';
+    // Link Apps Script lo yang paling baru
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwrstO8ggfEpfGAQjkGmEKo6CKLyG7YfxemvZ1Sn1H55ULFFOoSN2Fv-HFLrxw9Uobz/exec";
 
-    function kirim(tipe) {
-        let payload = { 
-            "tipe": tipe,
-            "sheetName": "tempat masuk nya data" // Tambahan: Nama sheet tujuan lo
-        };
+    // 1. Ambil data dari localStorage (kalau sudah login)
+    document.getElementById('dispName').innerText = localStorage.getItem('userName') || "Belum Login";
+    document.getElementById('dispEmail').innerText = localStorage.getItem('userEmail') || "";
+    document.getElementById('profilePic').src = localStorage.getItem('userPic') || "";
+    document.getElementById('nama_setor').value = localStorage.getItem('userName') || "";
+    document.getElementById('nama_lapor').value = localStorage.getItem('userName') || "";
 
-        if(tipe === 'SETORAN') {
-            payload.nama = document.getElementById('nama_setor').value;
-            payload.tanggal = document.getElementById('tgl_setor').value;
-            payload.tujuan = document.getElementById('setor_ke').value;
-            payload.bukti = document.getElementById('bukti_setor').value;
-        } else {
-            payload.nama = document.getElementById('nama_lapor').value;
-            payload.tanggal = document.getElementById('tgl_lapor').value;
-            payload.tujuan = document.getElementById('lapor_ke').value;
-            payload.bukti = document.getElementById('bukti_lapor').value;
-        }
-
-        fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) })
-        .then(() => alert("Mantap! Data " + tipe + " Berhasil Masuk ke sheet 'tempat masuk nya data'!"))
-        .catch(err => alert("Gagal kirim: " + err));
+    // 2. Fungsi Login Google
+    function handleCredentialResponse(response) {
+        fetch(scriptURL + "?sheet=register.html", {
+            method: "POST",
+            body: JSON.stringify({ token: response.credential, type: 'google_login' })
+        })
+        .then(() => alert("Login Berhasil & Terdaftar di Sheet!"))
+        .catch(err => console.error(err));
     }
-    <script>
-    // 1. Mengambil data dari localStorage (Hasil Login)
-    document.getElementById('dispName').innerText = localStorage.getItem('userName');
-    document.getElementById('dispEmail').innerText = localStorage.getItem('userEmail');
-    document.getElementById('profilePic').src = localStorage.getItem('userPic');
-    
-    // Auto-fill nama di form agar user tidak repot mengetik nama sendiri
-    document.getElementById('nama_setor').value = localStorage.getItem('userName');
-    document.getElementById('nama_lapor').value = localStorage.getItem('userName');
 
-    // 2. URL Apps Script lo
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxGoAWNS5xQWwrOnuHAyZdzEw8ZEC8SPPKKKtAqxSAveEp6716-8_to2Ou9s6Qq484/exec';
+    // 3. Fungsi Kirim Data (Setoran/Laporan)
+    function kirimData(namaSheet) {
+        let payload = { "sheet": namaSheet };
 
-    // 3. Fungsi Kirim Data Baru (Sudah pakai target Sheet)
-    function kirim(tipe) {
-        let payload = { 
-            "tipe": tipe,
-            "sheetName": "tempat masuk nya data" // Ini perintah supaya masuk ke tab spesifik
-        };
-
-        if(tipe === 'SETORAN') {
+        if(namaSheet === 'Form Setoran') {
             payload.nama = document.getElementById('nama_setor').value;
             payload.tanggal = document.getElementById('tgl_setor').value;
             payload.tujuan = document.getElementById('setor_ke').value;
-            payload.bukti = document.getElementById('bukti_setor').value;
+            payload.keterangan = document.getElementById('bukti_setor').value;
         } else {
             payload.nama = document.getElementById('nama_lapor').value;
             payload.tanggal = document.getElementById('tgl_lapor').value;
             payload.tujuan = document.getElementById('lapor_ke').value;
-            payload.bukti = document.getElementById('bukti_lapor').value;
+            payload.keterangan = document.getElementById('bukti_lapor').value;
         }
 
-        // Proses pengiriman
-        fetch(scriptURL, { 
+        fetch(scriptURL + "?sheet=" + namaSheet, { 
             method: 'POST', 
             mode: 'no-cors', 
             body: JSON.stringify(payload) 
         })
-        .then(() => {
-            alert("Mantap! Data " + tipe + " Berhasil Terkirim ke sheet 'tempat masuk nya data'!");
-        })
-        .catch(err => {
-            alert("Waduh, Gagal: " + err);
-        });
+        .then(() => alert("Mantap! Data berhasil masuk ke tab " + namaSheet))
+        .catch(err => alert("Gagal: " + err));
     }
-</script><script type="text/javascript">
-var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-(function(){
-var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-s1.async=true;
-s1.src='https://embed.tawk.to/6993e93bd5bd3b1c3ca44cb6/1ji9fnh51';
-s1.charset='UTF-8';
-s1.setAttribute('crossorigin','*');
-s0.parentNode.insertBefore(s1,s0);
-})();
-</script></body>
+</script>
 
+<script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+    s1.async=true;
+    s1.src='https://embed.tawk.to/6993e93bd5bd3b1c3ca44cb6/1ji9fnh51';
+    s1.charset='UTF-8';
+    s1.setAttribute('crossorigin','*');
+    s0.parentNode.insertBefore(s1,s0);
+    })();
+</script>
+
+</body>
 </html>
