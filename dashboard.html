@@ -2,7 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Gibran</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Keuangan Gibran</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #e9ecef; padding: 20px; }
         .container { max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
@@ -14,96 +15,130 @@
         button { width: 100%; padding: 12px; margin-top: 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; transition: 0.3s; }
         .btn-green { background: #28a745; }
         .btn-blue { background: #007bff; }
+        #g_id_signin { margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="user-box">
-        <img id="profilePic" src="" width="40" style="border-radius: 50%; background: #ccc;">
-        <div><b id="dispName">Memuat...</b><br><small id="dispEmail"></small></div>
-    </div>
-
     <div id="g_id_onload"
-         data-client_id="845248187858-v5f617m11f.apps.googleusercontent.com" 
+         data-client_id="845248187858-v5f617m11f.apps.googleusercontent.com"
          data-callback="handleCredentialResponse">
     </div>
     <div class="g_id_signin" data-type="standard"></div>
 
-    <hr style="margin: 20px 0;">
+    <div class="user-box">
+        <img id="profilePic" src="https://via.placeholder.com/40" width="40" style="border-radius: 50%">
+        <div>
+            <b id="dispName">Guest</b><br>
+            <small id="dispEmail">Silahkan Login Google</small>
+        </div>
+    </div>
+
+    <hr>
 
     <div class="form-section">
         <h3>💰 FORM SETORAN</h3>
-        <label>Nama yang Setor</label><input type="text" id="nama_setor">
-        <label>Tanggal Setor</label><input type="date" id="tgl_setor">
-        <label>Setor Ke Siapa</label>
-        <select id="setor_ke">
-            <option value="Bu Ami">Bu Ami</option>
-            <option value="Bu Tati">Bu Tati</option>
-        </select>
-        <label>Keterangan</label><input type="text" id="bukti_setor">
-        <button class="btn-green" onclick="kirimData('Form Setoran')">Kirim Setoran</button>
+        <form id="formSetoran">
+            <label>Nama yang Setor</label>
+            <input type="text" name="nama" id="nama_setor" readonly>
+            
+            <label>Tanggal Setor</label>
+            <input type="date" name="tanggal" required>
+            
+            <label>Setor Ke Siapa</label>
+            <select name="tujuan">
+                <option value="Bu Ami">Bu Ami</option>
+                <option value="Bu Tati">Bu Tati</option>
+            </select>
+            
+            <label>Keterangan/Bukti</label>
+            <input type="text" name="keterangan" placeholder="Contoh: Setoran Mingguan">
+            
+            <button type="button" class="btn-green" onclick="kirimKeSheet('formSetoran', 'Form Setoran')">Kirim Setoran</button>
+        </form>
     </div>
 
     <div class="form-section">
         <h3>📋 FORM LAPORAN</h3>
-        <label>Nama yang Lapor</label><input type="text" id="nama_lapor">
-        <label>Tanggal Lapor</label><input type="date" id="tgl_lapor">
-        <label>Lapor Ke Siapa</label>
-        <select id="lapor_ke">
-            <option value="Bu Ami">Bu Ami</option>
-            <option value="Bu Tati">Bu Tati</option>
-        </select>
-        <label>Keterangan</label><input type="text" id="bukti_lapor">
-        <button class="btn-blue" onclick="kirimData('Form Laporan')">Kirim Laporan</button>
+        <form id="formLaporan">
+            <label>Nama yang Lapor</label>
+            <input type="text" name="nama" id="nama_lapor" readonly>
+            
+            <label>Tanggal Lapor</label>
+            <input type="date" name="tanggal" required>
+            
+            <label>Lapor Ke Siapa</label>
+            <select name="tujuan">
+                <option value="Bu Ami">Bu Ami</option>
+                <option value="Bu Tati">Bu Tati</option>
+            </select>
+            
+            <label>Keterangan/Bukti</label>
+            <input type="text" name="keterangan" placeholder="Contoh: Laporan Selesai">
+            
+            <button type="button" class="btn-blue" onclick="kirimKeSheet('formLaporan', 'Form Laporan')">Kirim Laporan</button>
+        </form>
     </div>
 </div>
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+
 <script>
-    // Link Apps Script lo yang paling baru
+    // LINK APPS SCRIPT KEUANGAN LO
     const scriptURL = "https://script.google.com/macros/s/AKfycbwrstO8ggfEpfGAQjkGmEKo6CKLyG7YfxemvZ1Sn1H55ULFFOoSN2Fv-HFLrxw9Uobz/exec";
 
-    // 1. Ambil data dari localStorage (kalau sudah login)
-    document.getElementById('dispName').innerText = localStorage.getItem('userName') || "Belum Login";
-    document.getElementById('dispEmail').innerText = localStorage.getItem('userEmail') || "";
-    document.getElementById('profilePic').src = localStorage.getItem('userPic') || "";
-    document.getElementById('nama_setor').value = localStorage.getItem('userName') || "";
-    document.getElementById('nama_lapor').value = localStorage.getItem('userName') || "";
-
-    // 2. Fungsi Login Google
+    // A. HANDLE LOGIN GOOGLE
     function handleCredentialResponse(response) {
+        const responsePayload = decodeJwtResponse(response.credential);
+        
+        // Simpan ke Tampilan
+        document.getElementById('dispName').innerText = responsePayload.name;
+        document.getElementById('dispEmail').innerText = responsePayload.email;
+        document.getElementById('profilePic').src = responsePayload.picture;
+        
+        // Auto-fill nama di form
+        document.getElementById('nama_setor').value = responsePayload.name;
+        document.getElementById('nama_lapor').value = responsePayload.name;
+
+        // Kirim data login ke sheet register.html
         fetch(scriptURL + "?sheet=register.html", {
             method: "POST",
-            body: JSON.stringify({ token: response.credential, type: 'google_login' })
-        })
-        .then(() => alert("Login Berhasil & Terdaftar di Sheet!"))
-        .catch(err => console.error(err));
+            body: JSON.stringify({
+                type: 'google_login',
+                name: responsePayload.name,
+                email: responsePayload.email,
+                token: response.credential
+            })
+        });
     }
 
-    // 3. Fungsi Kirim Data (Setoran/Laporan)
-    function kirimData(namaSheet) {
-        let payload = { "sheet": namaSheet };
+    function decodeJwtResponse(token) {
+        let base64Url = token.split('.')[1];
+        let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        return JSON.parse(atob(base64));
+    }
 
-        if(namaSheet === 'Form Setoran') {
-            payload.nama = document.getElementById('nama_setor').value;
-            payload.tanggal = document.getElementById('tgl_setor').value;
-            payload.tujuan = document.getElementById('setor_ke').value;
-            payload.keterangan = document.getElementById('bukti_setor').value;
-        } else {
-            payload.nama = document.getElementById('nama_lapor').value;
-            payload.tanggal = document.getElementById('tgl_lapor').value;
-            payload.tujuan = document.getElementById('lapor_ke').value;
-            payload.keterangan = document.getElementById('bukti_lapor').value;
-        }
+    // B. FUNGSI KIRIM DATA FORM
+    function kirimKeSheet(formId, sheetTarget) {
+        const form = document.getElementById(formId);
+        const formData = new FormData(form);
+        
+        // Tambahin nama sheet ke URL
+        const uploadURL = scriptURL + "?sheet=" + encodeURIComponent(sheetTarget);
 
-        fetch(scriptURL + "?sheet=" + namaSheet, { 
-            method: 'POST', 
-            mode: 'no-cors', 
-            body: JSON.stringify(payload) 
+        fetch(uploadURL, {
+            method: 'POST',
+            body: formData
         })
-        .then(() => alert("Mantap! Data berhasil masuk ke tab " + namaSheet))
-        .catch(err => alert("Gagal: " + err));
+        .then(res => {
+            alert("Mantap! Data berhasil masuk ke sheet " + sheetTarget);
+            form.reset();
+            // Isi balik nama setelah reset
+            document.getElementById('nama_setor').value = document.getElementById('dispName').innerText;
+            document.getElementById('nama_lapor').value = document.getElementById('dispName').innerText;
+        })
+        .catch(err => alert("Gagal kirim: " + err));
     }
 </script>
 
