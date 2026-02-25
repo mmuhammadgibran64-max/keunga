@@ -7,15 +7,14 @@
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #e9ecef; padding: 20px; }
         .container { max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .user-box { display: flex; align-items: center; gap: 10px; background: #f8f9fa; padding: 10px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ddd; }
         .form-section { border: 1px solid #ddd; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
-        h3 { margin: 0 0 15px 0; color: #333; border-bottom: 2px solid #007bff; padding-bottom: 5px; }
+        h3 { margin: 0 0 15px 0; color: #333; border-bottom: 2px solid #28a745; padding-bottom: 5px; }
         label { display: block; margin: 10px 0 5px; font-weight: bold; font-size: 14px; }
         input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
         button { width: 100%; padding: 12px; margin-top: 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; transition: 0.3s; }
         .btn-green { background: #28a745; }
         .btn-blue { background: #007bff; }
-        #g_id_signin { margin-bottom: 20px; }
+        #g_id_signin { display: flex; justify-content: center; margin-bottom: 25px; }
     </style>
 </head>
 <body>
@@ -25,16 +24,13 @@
          data-client_id="845248187858-v5f617m11f.apps.googleusercontent.com"
          data-callback="handleCredentialResponse">
     </div>
-    <div class="g_id_signin" data-type="standard"></div>
-
-    
-    <hr>
+    <div id="g_id_signin" class="g_id_signin" data-type="standard"></div>
 
     <div class="form-section">
         <h3>💰 FORM SETORAN</h3>
         <form id="formSetoran">
             <label>Nama yang Setor</label>
-            <input type="text" name="nama" id="nama_setor" readonly>
+            <input type="text" name="nama" id="nama_setor" placeholder="Nama otomatis terisi setelah login" readonly>
             
             <label>Tanggal Setor</label>
             <input type="date" name="tanggal" required>
@@ -56,7 +52,7 @@
         <h3>📋 FORM LAPORAN</h3>
         <form id="formLaporan">
             <label>Nama yang Lapor</label>
-            <input type="text" name="nama" id="nama_lapor" readonly>
+            <input type="text" name="nama" id="nama_lapor" placeholder="Nama otomatis terisi setelah login" readonly>
             
             <label>Tanggal Lapor</label>
             <input type="date" name="tanggal" required>
@@ -68,7 +64,7 @@
             </select>
             
             <label>Keterangan/Bukti</label>
-            <input type="text" name="keterangan" placeholder="Contoh: Laporan Selesai">
+            <input type="text" name="keterangan" placeholder="Contoh: Laporan harian">
             
             <button type="button" class="btn-blue" onclick="kirimKeSheet('formLaporan', 'Form Laporan')">Kirim Laporan</button>
         </form>
@@ -78,60 +74,53 @@
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 
 <script>
-    // LINK APPS SCRIPT KEUANGAN LO
+    // LINK APPS SCRIPT KEUANGAN GIBRAN
     const scriptURL = "https://script.google.com/macros/s/AKfycbwrstO8ggfEpfGAQjkGmEKo6CKLyG7YfxemvZ1Sn1H55ULFFOoSN2Fv-HFLrxw9Uobz/exec";
 
-   
+    // 1. Fungsi saat login berhasil
     function handleCredentialResponse(response) {
-        const responsePayload = decodeJwtResponse(response.credential);
+        const payload = JSON.parse(atob(response.credential.split('.')[1]));
         
-        // Simpan ke Tampilan
-        document.getElementById('dispName').innerText = responsePayload.name;
-        document.getElementById('dispEmail').innerText = responsePayload.email;
-        document.getElementById('profilePic').src = responsePayload.picture;
-        
-        // Auto-fill nama di form
-        document.getElementById('nama_setor').value = responsePayload.name;
-        document.getElementById('nama_lapor').value = responsePayload.name;
+        // Langsung isi nama ke semua form input
+        document.getElementById('nama_setor').value = payload.name;
+        document.getElementById('nama_lapor').value = payload.name;
 
         // Kirim data login ke sheet register.html
         fetch(scriptURL + "?sheet=register.html", {
             method: "POST",
             body: JSON.stringify({
                 type: 'google_login',
-                name: responsePayload.name,
-                email: responsePayload.email,
-                token: response.credential
+                nama: payload.name,
+                email: payload.email
             })
         });
     }
 
-    function decodeJwtResponse(token) {
-        let base64Url = token.split('.')[1];
-        let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        return JSON.parse(atob(base64));
-    }
-
-    // B. FUNGSI KIRIM DATA FORM
+    // 2. Fungsi kirim data form
     function kirimKeSheet(formId, sheetTarget) {
         const form = document.getElementById(formId);
+        const namaUser = document.getElementById(formId === 'formSetoran' ? 'nama_setor' : 'nama_lapor').value;
+
+        if(!namaUser) {
+            alert("Woi, Login Google dulu biar namanya muncul!");
+            return;
+        }
+
         const formData = new FormData(form);
-        
-        // Tambahin nama sheet ke URL
         const uploadURL = scriptURL + "?sheet=" + encodeURIComponent(sheetTarget);
 
         fetch(uploadURL, {
             method: 'POST',
             body: formData
         })
-        .then(res => {
-            alert("Mantap! Data berhasil masuk ke sheet " + sheetTarget);
+        .then(() => {
+            alert("Siap! Data " + sheetTarget + " udah masuk ke Sheet.");
             form.reset();
-            // Isi balik nama setelah reset
-            document.getElementById('nama_setor').value = document.getElementById('dispName').innerText;
-            document.getElementById('nama_lapor').value = document.getElementById('dispName').innerText;
+            // Isi balik nama setelah reset form
+            document.getElementById('nama_setor').value = namaUser;
+            document.getElementById('nama_lapor').value = namaUser;
         })
-        .catch(err => alert("Gagal kirim: " + err));
+        .catch(err => alert("Waduh gagal kirim: " + err));
     }
 </script>
 
@@ -149,5 +138,3 @@
 
 </body>
 </html>
-
-
