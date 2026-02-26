@@ -3,74 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB - SIMPLE LOGIN</title>
+    <title>GIBRAN HUB SYSTEM</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --bg: #010409; --card: #161b22; --accent: #2f81f7; --text: #c9d1d9; }
-        body, html { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); height: 100vh; display: flex; align-items: center; justify-content: center; }
-        .card { background: var(--card); border: 1px solid #30363d; border-radius: 20px; padding: 40px; text-align: center; width: 340px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        #loader { display: none; flex-direction: column; align-items: center; justify-content: center; }
+        :root { --bg: #010409; --card: #161b22; --accent: #2f81f7; --text: #c9d1d9; --success: #238636; }
+        body, html { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; }
+
+        /* LAYER 1: LOGIN */
+        #gate { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 9999; }
+        
+        /* LAYER 2: LOADING */
+        #loader { position: fixed; inset: 0; background: var(--bg); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 9998; }
         .spin { width: 40px; height: 40px; border: 4px solid #30363d; border-top-color: var(--accent); border-radius: 50%; animation: s 1s linear infinite; }
         @keyframes s { to { transform: rotate(360deg); } }
-        h2 { margin-bottom: 25px; }
-        #dashboard { display: none; }
+
+        /* LAYER 3: DASHBOARD */
+        #dashboard { display: none; padding: 20px; max-width: 1000px; margin: auto; }
+        .card { background: var(--card); border: 1px solid #30363d; border-radius: 15px; padding: 20px; margin-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        h2 { border-bottom: 1px solid #30363d; padding-bottom: 10px; color: var(--accent); margin-top: 0; }
+        
+        label { display: block; margin: 10px 0 5px; font-size: 13px; font-weight: bold; color: #8b949e; }
+        input, select { width: 100%; padding: 12px; background: #0d1117; border: 1px solid #30363d; color: white; border-radius: 8px; box-sizing: border-box; font-size: 14px; }
+        button { width: 100%; padding: 14px; margin-top: 15px; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; background: var(--success); transition: 0.3s; }
+        button:hover { opacity: 0.8; }
+
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <div id="gate" class="card">
-        <i class="fas fa-user-circle fa-4x" style="color:var(--accent); margin-bottom:20px;"></i>
-        <h2>Gibran Hub</h2>
-        <div id="g_id_onload" 
-             data-client_id="594310366887-a3dsvn8plp139boru5kepf2o1c6ubkkv.apps.googleusercontent.com" 
-             data-callback="onAuth"></div>
-        <div class="g_id_signin" data-type="standard"></div>
+    <div id="gate">
+        <div class="card" style="text-align:center; width:320px; border: 1px solid var(--accent);">
+            <i class="fas fa-shield-alt fa-3x" style="color:var(--accent); margin-bottom:20px;"></i>
+            <h3>Gibran Hub Login</h3>
+            <div id="g_id_onload" data-client_id="594310366887-a3dsvn8plp139boru5kepf2o1c6ubkkv.apps.googleusercontent.com" data-callback="onAuth"></div>
+            <div class="g_id_signin" data-type="standard"></div>
+        </div>
     </div>
 
     <div id="loader">
         <div class="spin"></div>
-        <p style="margin-top:20px; color:var(--accent);">Menyimpan Data...</p>
+        <p style="margin-top:15px; color:var(--accent);">Membuka Dashboard...</p>
     </div>
 
-    <div id="dashboard" class="card">
-        <i class="fas fa-check-circle fa-4x" style="color:#238636; margin-bottom:20px;"></i>
-        <h2>Berhasil!</h2>
-        <p id="user-info"></p>
-        <button onclick="location.reload()" style="background:var(--accent); color:white; border:none; padding:10px 20px; border-radius:8px; cursor:pointer; margin-top:20px;">Logout</button>
+    <div id="dashboard">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <h1 style="color:var(--accent);">GIBRAN HUB</h1>
+            <button onclick="location.reload()" style="width: auto; background: #da3633; padding: 8px 15px;">Logout</button>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2><i class="fas fa-money-bill-wave"></i> SETORAN</h2>
+                <label>Nama yang Setor</label>
+                <input type="text" id="s_nama" readonly>
+                <label>Tanggal Setor</label>
+                <input type="date" id="s_tgl">
+                <label>Setor Ke</label>
+                <select id="s_ke"><option>Bu Ami</option><option>Bu Tati</option></select>
+                <label>Tanda Tangan</label>
+                <input type="text" id="s_ttd" placeholder="Nama Terang">
+                <label>Bukti Setor (Link)</label>
+                <input type="text" id="s_bukti" placeholder="Paste link foto/video">
+                <button onclick="kirimKeSheet('setoran')">KIRIM SETORAN</button>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-file-contract"></i> LAPORAN</h2>
+                <label>Nama yang Lapor</label>
+                <input type="text" id="l_nama" readonly>
+                <label>Tanggal Lapor</label>
+                <input type="date" id="l_tgl">
+                <label>Bukti Laporan (Link)</label>
+                <input type="text" id="l_bukti" placeholder="Paste link foto/video">
+                <label>Tanda Tangan</label>
+                <input type="text" id="l_ttd" placeholder="Nama Terang">
+                <label>Lapor Ke</label>
+                <select id="l_ke"><option>Bu Ami</option><option>Bu Tati</option></select>
+                <button onclick="kirimKeSheet('laporan')">KIRIM LAPORAN</button>
+            </div>
+        </div>
     </div>
 
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
-        // LINK WEB APP LO
-        const APPS_URL = "https://script.google.com/macros/s/AKfycbwDDUJ8gA_TOGwaoI5pcFGqeU_ZZvbw9Cwx-JJs9ISc8aJnjNTeM1eUV4FcO6XAhTU3/exec";
+        const APPS_URL = "https://script.google.com/macros/s/AKfycbw2iHFOpwcdSsivpeq8tsIUnwI8_j-q2vqnGwTVV3HOaQUifcfcI-E_idSYV5HP6HEE/exec";
+        let sessionUser = {};
 
         function onAuth(res) {
             const user = JSON.parse(atob(res.credential.split('.')[1]));
-            
-            // Sembunyikan Login, Tampilkan Loading
+            sessionUser = user;
+
             document.getElementById('gate').style.display = 'none';
             document.getElementById('loader').style.display = 'flex';
 
-            // KIRIM DATA KE GOOGLE SHEET (HANYA NAMA & EMAIL)
+            // Kirim data login dulu ke Sheet (Kolom 2: nama email)
             fetch(APPS_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 body: JSON.stringify({
+                    type: "login",
                     nama: user.name,
-                    email: user.email,
-                    sheet_id: "1y2O_3fK0k1Ds-diQ5M8857A27J-LDEZGdmYia1ykjOY",
-                    sheet_name: "daftar pake gooogle"
+                    email: user.email
                 })
-            })
-            .then(() => {
-                // Tampilkan Dashboard Sukses
+            });
+
+            // Langsung buka dashboard
+            setTimeout(() => {
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
-                document.getElementById('user-info').innerText = "Data " + user.name + " sudah masuk ke Sheet.";
-            })
-            .catch(err => {
-                alert("Gagal kirim data!");
-                location.reload();
+                document.getElementById('s_nama').value = user.name;
+                document.getElementById('l_nama').value = user.name;
+            }, 1200);
+        }
+
+        function kirimKeSheet(tipe) {
+            let payload = { type: tipe, nama_grafik: sessionUser.email };
+
+            if(tipe === 'setoran') {
+                payload.nama = document.getElementById('s_nama').value;
+                payload.tanggal = document.getElementById('s_tgl').value;
+                payload.tujuan = document.getElementById('s_ke').value;
+                payload.ttd = document.getElementById('s_ttd').value;
+                payload.bukti = document.getElementById('s_bukti').value;
+            } else {
+                payload.nama = document.getElementById('l_nama').value;
+                payload.tanggal = document.getElementById('l_tgl').value;
+                payload.bukti = document.getElementById('l_bukti').value;
+                payload.ttd = document.getElementById('l_ttd').value;
+                payload.tujuan = document.getElementById('l_ke').value;
+            }
+
+            if(!payload.tanggal || !payload.bukti) return alert("Wajib isi Tanggal dan Bukti!");
+
+            const btn = event.target;
+            btn.innerText = "MENGIRIM...";
+            btn.disabled = true;
+
+            fetch(APPS_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(payload)
+            }).then(() => {
+                alert("Data " + tipe + " Berhasil Masuk!");
+                btn.innerText = "KIRIM " + tipe.toUpperCase();
+                btn.disabled = false;
+                // Reset form
+                if(tipe === 'setoran') { document.getElementById('s_tgl').value = ""; document.getElementById('s_bukti').value = ""; }
+                else { document.getElementById('l_tgl').value = ""; document.getElementById('l_bukti').value = ""; }
             });
         }
     </script>
