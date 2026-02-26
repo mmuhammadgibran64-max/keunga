@@ -12,22 +12,19 @@
         .logout-btn { background: #da3633; color: white; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
         /* Pastikan 1fr-nya ada tiga! */
-.main-layout { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr 1fr; 
-    gap: 20px; 
-}
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
-        h2 { color: var(--accent); font-size: 1.1rem; margin-top: 0; display: flex; align-items: center; gap: 10px; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-        
-        label { display: block; margin: 15px 0 5px; font-size: 13px; font-weight: bold; color: #8b949e; }
-        input, select { width: 100%; padding: 10px; background: #010409; border: 1px solid var(--border); color: white; border-radius: 6px; box-sizing: border-box; outline: none; }
-        .btn-kirim { width: 100%; padding: 12px; margin-top: 15px; background: var(--success); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+<style>
+    .main-layout { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .card { background: #161b22; color: white; padding: 20px; border: 1px solid #333; }
+</style>
 
-        iframe { width: 100%; height: 600px; border: none; border-radius: 10px; background: #000; }
-
-        @media (max-width: 1200px) { .main-layout { grid-template-columns: 1fr; } }
-    </style>
+<div class="main-layout">
+    <div class="card"><h1>SETORAN</h1></div>
+    <div class="card"><h1>LAPORAN</h1></div>
+    <div class="card">
+        <h1>UPLOAD</h1>
+        <iframe src="uploadapapun.html" style="width:100%; height:500px;"></iframe>
+    </div>
+</div>
 </head>
 <body>
 
@@ -85,4 +82,5 @@
     </script>
 </body>
 </html>
+
 
