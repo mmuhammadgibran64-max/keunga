@@ -10,164 +10,58 @@
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding: 0 10px; }
         .logout-btn { background: #da3633; color: white; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        
-        /* INI YANG BIKIN JADI 3 KOLOM */
-        .main-layout { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: start; }
-        
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
-        h2 { color: var(--accent); font-size: 1.2rem; margin-top: 0; display: flex; align-items: center; gap: 10px; text-transform: uppercase; }
-        label { display: block; margin: 15px 0 5px; font-size: 13px; font-weight: bold; color: #8b949e; }
-        input, select { width: 100%; padding: 10px; background: #010409; border: 1px solid var(--border); color: white; border-radius: 6px; box-sizing: border-box; }
-        .btn-kirim { width: 100%; padding: 12px; margin-top: 20px; background: var(--success); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        
-        @media (max-width: 1200px) { .main-layout { grid-template-columns: 1fr; } }
-    </style>
-</head>
-<body>
+        <style>
+    /* CSS Kunci: Cuma 2 Kolom Sejajar */
+    .main-layout { 
+        display: grid; 
+        grid-template-columns: 1fr 1.2fr; /* Kiri pas, Kanan agak lebar buat File Manager */
+        gap: 20px; 
+    }
+    @media (max-width: 900px) {
+        .main-layout { grid-template-columns: 1fr; } /* Di HP tumpuk atas bawah */
+    }
+</style>
 
-    <header>
-        <h1 style="color: var(--accent); margin: 0;">GIBRAN HUB</h1>
-        <button class="logout-btn">Logout</button>
-    </header>
-
-    <div class="main-layout">
+<div class="main-layout">
+    
+    <div class="col">
         <div class="card">
-            <h2><i class="fas fa-money-bill-wave"></i> SETORAN</h2>
-            <label>Nama yang Setor</label>
-            <input type="text" id="s_nama" value="Muhammad gibran Muhammad gibran">
-            <label>Tanggal Setor</label>
+            <h2><i class="fas fa-hand-holding-dollar"></i> SETORAN</h2>
+            <label>Nama Penyetor</label>
+            <input type="text" id="s_nama" value="Muhammad gibran">
+            <label>Tanggal</label>
             <input type="date" id="s_tgl">
-            <label>Setor Ke</label>
-            <select id="s_ke"><option>Bu Ami</option><option>Bu Tati</option></select>
-            <label>Tanda Tangan</label>
-            <input type="text" placeholder="Nama Terang">
             <label>Bukti Setor (Link)</label>
-            <input type="text" id="s_bukti" placeholder="Paste link foto/video">
-            <button class="btn-kirim">KIRIM SETORAN</button>
+            <input type="text" id="s_bukti" placeholder="Link otomatis masuk sini...">
+            <button class="btn-kirim" onclick="gasKirim()">KIRIM DATA</button>
         </div>
+    </div>
 
-        <div class="card">
-            <h2><i class="fas fa-file-alt"></i> LAPORAN</h2>
-            <label>Nama yang Lapor</label>
-            <input type="text" id="l_nama" value="Muhammad gibran Muhammad gibran">
-            <label>Tanggal Lapor</label>
-            <input type="date" id="l_tgl">
-            <label>Bukti Laporan (Link)</label>
-            <input type="text" id="l_bukti" placeholder="Paste link foto/video">
-            <label>Tanda Tangan</label>
-            <input type="text" placeholder="Nama Terang">
-            <label>Lapor Ke</label>
-            <select id="l_ke"><option>Bu Ami</option><option>Bu Tati</option></select>
-            <button class="btn-kirim">KIRIM LAPORAN</button>
-        </div>
-
+    <div class="col">
         <div class="card">
             <h2><i class="fas fa-folder-open"></i> FILE MANAGER</h2>
-            <iframe src="https://keunga.vercel.app/uploadapapun.html" style="width:100%; height:600px; border:none; border-radius:10px;"></iframe>
+            <p style="font-size: 12px; color: #8b949e;">Upload bukti di sini, lalu klik icon Copy Biru.</p>
+            <iframe src="https://keunga.vercel.app/uploadapapun.html" style="width:100%; height:600px; border:none; border-radius:10px; background: #000;"></iframe>
         </div>
     </div>
 
-    <script>
-        window.addEventListener('message', function(event) {
-            if (event.data.type === 'copyLink') {
-                if(document.getElementById('s_bukti')) document.getElementById('s_bukti').value = event.data.url;
-                if(document.getElementById('l_bukti')) document.getElementById('l_bukti').value = event.data.url;
-                alert("✅ Link Bukti Berhasil Disalin ke Form!");
+</div>
+
+<script>
+    // Jembatan biar link dari File Manager (Kanan) masuk ke Input (Kiri)
+    window.addEventListener('message', function(event) {
+        if (event.data.type === 'copyLink') {
+            const inputS = document.getElementById('s_bukti');
+            if(inputS) {
+                inputS.value = event.data.url;
+                alert("✅ Link Berhasil Dipasang!");
             }
+        }
+    }, false);
+</script>
+       
         }, false);
-    </script>
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Apapun</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { --bg: #0d1117; --card: #161b22; --accent: #2f81f7; --success: #238636; --danger: #da3633; --text: #c9d1d9; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; overflow-x: hidden; }
-        
-        .upload-area { border: 2px dashed #30363d; padding: 20px; text-align: center; border-radius: 10px; margin-bottom: 20px; cursor: pointer; transition: 0.3s; }
-        .upload-area:hover { border-color: var(--accent); background: #1c2128; }
-        
-        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
-        .file-card { background: var(--card); border: 1px solid #30363d; border-radius: 8px; overflow: hidden; position: relative; }
-        .preview { width: 100%; height: 100px; background: #000; display: flex; align-items: center; justify-content: center; }
-        .preview img, .preview video { width: 100%; height: 100%; object-fit: cover; }
-        
-        .actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: #30363d; border-top: 1px solid #30363d; }
-        .btn { border: none; padding: 8px 0; color: white; cursor: pointer; font-size: 11px; text-align: center; }
-        .btn-link { background: var(--accent); }
-        .btn-down { background: var(--success); }
-        .btn-wa { background: #25d366; }
-        .btn-del { background: var(--danger); }
-        
-        #status { display: none; font-size: 12px; color: var(--accent); margin-bottom: 10px; text-align: center; }
-    </style>
-</head>
-<body>
-
-    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
-        <i class="fas fa-cloud-upload-alt fa-2x" style="color: var(--accent);"></i>
-        <p style="margin: 10px 0 0; font-weight: bold; font-size: 14px;">KLIK UPLOAD MASAL</p>
-        <input type="file" id="fileInput" multiple style="display:none" onchange="startUpload(this)">
-    </div>
-
-    <div id="status"><i class="fas fa-spinner fa-spin"></i> Sedang Mengunggah ke Cloud...</div>
-
-    <div class="gallery" id="gallery"></div>
-
-    <script>
-        const CLOUD_NAME = "dumqnwl9g";
-        const UPLOAD_PRESET = "ml_default";
-
-        async function startUpload(el) {
-            const files = el.files;
-            if (files.length === 0) return;
-            document.getElementById('status').style.display = 'block';
-
-            for (let f of files) {
-                const fd = new FormData();
-                fd.append('file', f);
-                fd.append('upload_preset', UPLOAD_PRESET);
-
-                try {
-                    const resp = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`, {
-                        method: 'POST',
-                        body: fd
-                    });
-                    const d = await resp.json();
-                    renderFile(d.secure_url, f.type);
-                } catch (e) { console.error("Gagal"); }
-            }
-            document.getElementById('status').style.display = 'none';
-        }
-
-        function renderFile(url, type) {
-            const gal = document.getElementById('gallery');
-            const card = document.createElement('div');
-            card.className = 'file-card';
-            const media = type.includes('video') ? `<video src="${url}"></video>` : `<img src="${url}">`;
-            
-            card.innerHTML = `
-                <div class="preview">${media}</div>
-                <div class="actions">
-                    <button class="btn btn-link" onclick="sendToParent('${url}')" title="Gunakan"><i class="fas fa-copy"></i></button>
-                    <button class="btn btn-down" onclick="window.open('${url}')" title="Download"><i class="fas fa-download"></i></button>
-                    <button class="btn btn-wa" onclick="window.open('https://wa.me/?text=${encodeURIComponent(url)}')"><i class="fab fa-whatsapp"></i></button>
-                    <button class="btn btn-del" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-trash"></i></button>
-                </div>
-            `;
-            gal.prepend(card);
-        }
-
-        function sendToParent(url) {
-            // Mengirim link ke dashboard utama (parent)
-            window.parent.postMessage({ type: 'copyLink', url: url }, '*');
-            alert("Link dikirim ke form!");
-        }
     </script>
 </body>
 </html>
-
 
