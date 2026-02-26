@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DASHBOARD MASTER</title>
+    <title>GIBRAN HUB SYSTEM</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --bg: #0d1117; --card: #161b22; --accent: #2f81f7; --text: #c9d1d9; --success: #238636; --border: #30363d; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
-        
-        /* BIAR 3 KOLOM SEJAJAR FULL */
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .logout-btn { background: #da3633; color: white; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+
+        /* KUNCI 3 KOLOM SEJAJAR */
         .main-layout { 
             display: grid; 
             grid-template-columns: 1fr 1fr 1fr; 
@@ -22,12 +24,8 @@
         
         label { display: block; margin: 15px 0 5px; font-size: 13px; font-weight: bold; color: #8b949e; }
         input, select { width: 100%; padding: 10px; background: #010409; border: 1px solid var(--border); color: white; border-radius: 6px; box-sizing: border-box; outline: none; }
+        .btn-kirim { width: 100%; padding: 12px; margin-top: 15px; background: var(--success); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-        .btn-kirim { width: 100%; padding: 12px; margin-top: 15px; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-set { background: var(--success); }
-        .btn-lap { background: var(--accent); }
-
-        /* IFRAME FILE MANAGER */
         iframe { width: 100%; height: 600px; border: none; border-radius: 10px; background: #000; }
 
         @media (max-width: 1200px) { .main-layout { grid-template-columns: 1fr; } }
@@ -35,50 +33,55 @@
 </head>
 <body>
 
-    <header style="margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center;">
-        <h1 style="color: var(--accent); margin: 0; font-size: 1.5rem;">GIBRAN HUB DASHBOARD</h1>
-        <a href="index.html" style="color: #da3633; text-decoration: none; font-weight: bold;">Logout</a>
+    <header>
+        <h1 style="color: var(--accent); margin: 0;">GIBRAN HUB</h1>
+        <button class="logout-btn" onclick="window.location.href='index.html'">Logout</button>
     </header>
 
     <div class="main-layout">
-        
         <div class="card">
             <h2><i class="fas fa-hand-holding-dollar"></i> SETORAN</h2>
-            <label>Nama Penyetor</label>
-            <input type="text" id="s_nama" value="Muhammad gibran">
+            <label>Nama yang Setor</label>
+            <input type="text" id="s_nama" value="Muhammad gibran Muhammad gibran">
             <label>Tanggal Setor</label>
             <input type="date" id="s_tgl">
+            <label>Setor Ke</label>
+            <select id="s_ke"><option>Bu Ami</option><option>Bu Tati</option></select>
+            <label>Tanda Tangan</label>
+            <input type="text" placeholder="Nama Terang">
             <label>Bukti Setor (Link)</label>
-            <input type="text" id="s_bukti" placeholder="Link otomatis dari kanan">
-            <button class="btn-kirim btn-set" onclick="alert('Setoran Terkirim!')">KIRIM SETORAN</button>
+            <input type="text" id="s_bukti" placeholder="Link otomatis muncul di sini">
+            <button class="btn-kirim">KIRIM SETORAN</button>
         </div>
 
         <div class="card">
             <h2><i class="fas fa-file-invoice"></i> LAPORAN</h2>
-            <label>Nama Pelapor</label>
-            <input type="text" id="l_nama" value="Muhammad gibran">
+            <label>Nama yang Lapor</label>
+            <input type="text" id="l_nama" value="Muhammad gibran Muhammad gibran">
             <label>Tanggal Lapor</label>
             <input type="date" id="l_tgl">
             <label>Bukti Laporan (Link)</label>
-            <input type="text" id="l_bukti" placeholder="Link otomatis dari kanan">
-            <button class="btn-kirim btn-lap" onclick="alert('Laporan Terkirim!')">KIRIM LAPORAN</button>
+            <input type="text" id="l_bukti" placeholder="Link otomatis muncul di sini">
+            <label>Tanda Tangan</label>
+            <input type="text" placeholder="Nama Terang">
+            <label>Lapor Ke</label>
+            <select id="l_ke"><option>Bu Ami</option><option>Bu Tati</option></select>
+            <button class="btn-kirim" style="background: var(--accent);">KIRIM LAPORAN</button>
         </div>
 
         <div class="card">
             <h2><i class="fas fa-folder-open"></i> FILE MANAGER</h2>
             <iframe src="uploadapapun.html"></iframe>
         </div>
-
     </div>
 
     <script>
-        // SCRIPT JEMBATAN OTOMATIS
         window.addEventListener('message', function(event) {
             if (event.data.type === 'copyLink') {
                 const link = event.data.url;
                 if(document.getElementById('s_bukti')) document.getElementById('s_bukti').value = link;
                 if(document.getElementById('l_bukti')) document.getElementById('l_bukti').value = link;
-                alert("✅ Link Berhasil Dipasang ke Form!");
+                alert("✅ Link Berhasil Dipasang!");
             }
         }, false);
     </script>
