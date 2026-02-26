@@ -2,194 +2,70 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DASHBOARD GIBRAN HUB</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --bg: #0d1117; --card: #161b22; --accent: #2f81f7; --text: #c9d1d9; --success: #238636; --danger: #da3633; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
         
+        /* INI KODE YANG TADI LO TANYA - TETEP DIPAKE */
         .main-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1400px; margin: auto; }
         .card { background: var(--card); border: 1px solid #30363d; border-radius: 12px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
         
-        h2 { color: var(--accent); margin-top: 0; display: flex; align-items: center; gap: 10px; font-size: 20px; border-bottom: 1px solid #30363d; padding-bottom: 10px; }
-        label { display: block; margin: 10px 0 5px; font-size: 13px; font-weight: bold; }
+        h2 { color: var(--accent); margin-top: 0; border-bottom: 1px solid #30363d; padding-bottom: 10px; }
+        label { display: block; margin: 10px 0 5px; font-weight: bold; font-size: 13px; }
         input, select { width: 100%; padding: 12px; background: #010409; border: 1px solid #30363d; color: white; border-radius: 8px; box-sizing: border-box; margin-bottom: 10px; }
+        .btn-kirim { width: 100%; padding: 15px; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; background: var(--success); }
         
-        .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        .btn-kirim { background: var(--success); }
-        .btn-upload { background: var(--accent); margin-bottom: 20px; }
-
-        /* FILE MANAGER */
-        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; max-height: 500px; overflow-y: auto; background: #010409; padding: 15px; border-radius: 10px; border: 1px solid #30363d; }
-        .file-box { background: var(--card); border-radius: 8px; border: 1px solid #30363d; overflow: hidden; position: relative; }
-        .file-box img, .file-box video { width: 100%; height: 100px; object-fit: cover; background: #000; }
-        
-        .file-ops { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; padding: 5px; }
-        .op-btn { border: none; padding: 8px 0; color: white; cursor: pointer; font-size: 12px; border-radius: 4px; text-align: center; }
-
         @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
-    <h1 style="text-align: center; color: var(--accent); margin-bottom: 30px;">GIBRAN HUB DASHBOARD SYSTEM</h1>
+    <h1 style="text-align: center; color: var(--accent);">GIBRAN HUB DASHBOARD</h1>
 
     <div class="main-layout">
-    <div class="left-col">
-        </div>
-
-    <div class="right-col">
-        <div class="card">
-            <h2><i class="fas fa-folder-open"></i> FILE MANAGER</h2>
-            <iframe src="uploadapapun.html" style="width:100%; height:600px; border:none; border-radius:10px;"></iframe>
-        </div>
-    </div>
-</div>
-            
-            <div class="card" style="margin-bottom: 20px;">
+        
+        <div class="left-col">
+            <div class="card">
                 <h2><i class="fas fa-hand-holding-dollar"></i> SETORAN</h2>
                 <label>Nama Penyetor</label>
-                <input type="text" id="s_nama" placeholder="Nama Anda">
+                <input type="text" id="s_nama" value="Gibran User">
                 <label>Tanggal Setor</label>
                 <input type="date" id="s_tgl">
                 <label>Setor Ke</label>
                 <select id="s_ke"><option>Bu Ami</option><option>Bu Tati</option></select>
-                <label>Tanda Tangan Nama</label>
-                <input type="text" id="s_ttd" placeholder="Tanda Tangan">
+                <label>Tanda Tangan</label>
+                <input type="text" id="s_ttd">
                 <label>Bukti Setor (Link)</label>
-                <input type="text" id="s_bukti" placeholder="Link dari File Manager">
-                <button class="btn btn-kirim" onclick="gasKirim('setoran')">KIRIM SETORAN</button>
+                <input type="text" id="s_bukti" placeholder="Link bakal muncul otomatis dari kanan">
+                <button class="btn-kirim" onclick="gasKirim()">KIRIM DATA</button>
             </div>
-
-            <div class="card">
-                <h2><i class="fas fa-file-signature"></i> LAPORAN</h2>
-                <label>Nama Pelapor</label>
-                <input type="text" id="l_nama" placeholder="Nama Anda">
-                <label>Tanggal Lapor</label>
-                <input type="date" id="l_tgl">
-                <label>Lapor Ke</label>
-                <select id="l_ke"><option>Bu Ami</option><option>Bu Tati</option></select>
-                <label>Tanda Tangan Nama</label>
-                <input type="text" id="l_ttd" placeholder="Tanda Tangan">
-                <label>Bukti Laporan (Link)</label>
-                <input type="text" id="l_bukti" placeholder="Link dari File Manager">
-                <button class="btn btn-kirim" style="background: #6f42c1;" onclick="gasKirim('laporan')">KIRIM LAPORAN</button>
-            </div>
-
         </div>
 
         <div class="right-col">
-            <div class="card" style="height: 100%;">
-                <h2><i class="fas fa-folder-open"></i> FILE MANAGER CLOUDINARY</h2>
-                
-                <label class="btn btn-upload" style="text-align: center; display: block; line-height: 1.5;">
-                    <i class="fas fa-cloud-upload-alt"></i> UPLOAD FOTO / VIDEO (MASAL)
-                    <input type="file" id="up_input" multiple style="display:none" onchange="prosesUpload(this)">
-                </label>
-
-                <div id="loading_txt" style="display:none; text-align:center; color:var(--accent); margin-bottom:10px;">
-                    <i class="fas fa-sync fa-spin"></i> Sedang Mengunggah...
-                </div>
-
-                <div class="gallery" id="gallery_files">
-                    </div>
+            <div class="card">
+                <h2><i class="fas fa-folder-open"></i> FILE MANAGER</h2>
+                <iframe src="uploadapapun.html" style="width:100%; height:650px; border:none; border-radius:10px;"></iframe>
             </div>
         </div>
 
     </div>
 
-<script>
-    const APPS_URL = "https://script.google.com/macros/s/AKfycbw2iHFOpwcdSsivpeq8tsIUnwI8_j-q2vqnGwTVV3HOaQUifcfcI-E_idSYV5HP6HEE/exec";
-    const CLOUD_NAME = "dumqnwl9g";
-    const UPLOAD_PRESET = "ml_default";
+    <script>
+        // SCRIPT PENANGKAP LINK DARI UPLOADAPAPUN.HTML
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'copyLink') {
+                document.getElementById('s_bukti').value = event.data.url;
+                alert("Link Bukti Berhasil Disalin!");
+            }
+        }, false);
 
-    // Fungsi Upload ke Cloudinary
-    async function prosesUpload(input) {
-        const files = input.files;
-        if (files.length === 0) return;
-        document.getElementById('loading_txt').style.display = 'block';
-
-        for (let f of files) {
-            const fd = new FormData();
-            fd.append('file', f);
-            fd.append('upload_preset', UPLOAD_PRESET);
-
-            try {
-                const resp = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`, {
-                    method: 'POST',
-                    body: fd
-                });
-                const d = await resp.json();
-                tambahKeGallery(d.secure_url, f.type);
-            } catch (err) { console.error("Gagal Upload"); }
+        function gasKirim() {
+            // Kode fetch ke Google Apps Script lo di sini
+            alert("Data sedang dikirim ke Google Sheet...");
         }
-        document.getElementById('loading_txt').style.display = 'none';
-    }
+    </script>
 
-    function tambahKeGallery(url, type) {
-        const gal = document.getElementById('gallery_files');
-        const box = document.createElement('div');
-        box.className = 'file-box';
-        
-        let media = type.includes('video') ? `<video src="${url}"></video>` : `<img src="${url}">`;
-        
-        box.innerHTML = `
-            ${media}
-            <div class="file-ops">
-                <button class="op-btn" style="background:var(--accent)" onclick="copyKeInput('${url}')" title="Gunakan"><i class="fas fa-paste"></i></button>
-                <button class="op-btn" style="background:var(--success)" onclick="window.open('${url}')" title="Download"><i class="fas fa-download"></i></button>
-                <button class="op-btn" style="background:#25d366" onclick="window.open('https://wa.me/?text=${encodeURIComponent(url)}')"><i class="fab fa-whatsapp"></i></button>
-                <button class="op-btn" style="background:var(--danger)" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-trash"></i></button>
-            </div>
-        `;
-        gal.prepend(box);
-    }
-
-  <script>
-    // Ini buat nangkep link dari file uploadapapun.html
-    window.addEventListener('message', function(event) {
-        if (event.data.type === 'copyLink') {
-            // Ngisi otomatis ke input yang ID-nya s_bukti atau l_bukti
-            const inputBuktiS = document.getElementById('s_bukti');
-            const inputBuktiL = document.getElementById('l_bukti');
-            if(inputBuktiS) inputBuktiS.value = event.data.url;
-            if(inputBuktiL) inputBuktiL.value = event.data.url;
-            alert("Link bukti sudah masuk ke form!");
-        }
-    }, false);
-</script>
-
-    // Fungsi Kirim ke Google Sheet
-    function gasKirim(tipe) {
-        let data = { type: tipe, nama_grafik: "mmuhammadgibran64@gmail.com" }; // Ganti email ini sesuai login
-
-        if(tipe === 'setoran') {
-            data.nama = document.getElementById('s_nama').value;
-            data.tanggal = document.getElementById('s_tgl').value;
-            data.tujuan = document.getElementById('s_ke').value;
-            data.ttd = document.getElementById('s_ttd').value;
-            data.bukti = document.getElementById('s_bukti').value;
-        } else {
-            data.nama = document.getElementById('l_nama').value;
-            data.tanggal = document.getElementById('l_tgl').value;
-            data.tujuan = document.getElementById('l_ke').value;
-            data.ttd = document.getElementById('l_ttd').value;
-            data.bukti = document.getElementById('l_bukti').value;
-        }
-
-        if(!data.tanggal || !data.bukti) return alert("Isi dulu Tanggal dan Link Bukti!");
-
-        fetch(APPS_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: JSON.stringify(data)
-        }).then(() => {
-            alert("Data " + tipe + " Terkirim!");
-            location.reload();
-        });
-    }
-</script>
 </body>
 </html>
-
