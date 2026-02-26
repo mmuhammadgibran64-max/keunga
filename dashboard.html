@@ -9,62 +9,72 @@
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
         
         /* INI KODE YANG TADI LO TANYA - TETEP DIPAKE */
-        .main-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 1400px; margin: auto; }
-        .card { background: var(--card); border: 1px solid #30363d; border-radius: 12px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
-        
-        h2 { color: var(--accent); margin-top: 0; border-bottom: 1px solid #30363d; padding-bottom: 10px; }
-        label { display: block; margin: 10px 0 5px; font-weight: bold; font-size: 13px; }
-        input, select { width: 100%; padding: 12px; background: #010409; border: 1px solid #30363d; color: white; border-radius: 8px; box-sizing: border-box; margin-bottom: 10px; }
-        .btn-kirim { width: 100%; padding: 15px; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; background: var(--success); }
-        
-        @media (max-width: 900px) { .main-layout { grid-template-columns: 1fr; } }
-    </style>
-</head>
-<body>
+       <style>
+    /* CSS biar muat 3 kolom jejeran */
+    .main-layout { 
+        display: grid; 
+        grid-template-columns: 1fr 1fr 1fr; 
+        gap: 15px; 
+        max-width: 100%; 
+        margin: auto; 
+    }
+    @media (max-width: 1100px) {
+        .main-layout { grid-template-columns: 1fr; } /* Kalau di HP jadi tumpuk bawah */
+    }
+</style>
 
-    <h1 style="text-align: center; color: var(--accent);">GIBRAN HUB DASHBOARD</h1>
-
-    <div class="main-layout">
-        
-        <div class="left-col">
-            <div class="card">
-                <h2><i class="fas fa-hand-holding-dollar"></i> SETORAN</h2>
-                <label>Nama Penyetor</label>
-                <input type="text" id="s_nama" value="Gibran User">
-                <label>Tanggal Setor</label>
-                <input type="date" id="s_tgl">
-                <label>Setor Ke</label>
-                <select id="s_ke"><option>Bu Ami</option><option>Bu Tati</option></select>
-                <label>Tanda Tangan</label>
-                <input type="text" id="s_ttd">
-                <label>Bukti Setor (Link)</label>
-                <input type="text" id="s_bukti" placeholder="Link bakal muncul otomatis dari kanan">
-                <button class="btn-kirim" onclick="gasKirim()">KIRIM DATA</button>
-            </div>
+<div class="main-layout">
+    
+    <div class="col">
+        <div class="card">
+            <h2><i class="fas fa-hand-holding-dollar"></i> SETORAN</h2>
+            <label>Nama Penyetor</label>
+            <input type="text" id="s_nama" value="Gibran User">
+            <label>Tanggal</label>
+            <input type="date" id="s_tgl">
+            <label>Bukti (Link)</label>
+            <input type="text" id="s_bukti" placeholder="Otomatis dari kanan...">
+            <button class="btn-kirim" onclick="gasKirim('setoran')">KIRIM SETORAN</button>
         </div>
+    </div>
 
-        <div class="right-col">
-            <div class="card">
-                <h2><i class="fas fa-folder-open"></i> FILE MANAGER</h2>
-                <iframe src="https://keunga.vercel.app/uploadapapun.html" style="width:100%; height:650px; border:none; border-radius:10px;"></iframe>
-            </div>
+    <div class="col">
+        <div class="card">
+            <h2><i class="fas fa-file-invoice"></i> LAPORAN</h2>
+            <label>Jenis Laporan</label>
+            <input type="text" id="l_jenis">
+            <label>Keterangan</label>
+            <input type="text" id="l_ket">
+            <label>Bukti (Link)</label>
+            <input type="text" id="l_bukti" placeholder="Otomatis dari kanan...">
+            <button class="btn-kirim" onclick="gasKirim('laporan')" style="background: var(--accent);">KIRIM LAPORAN</button>
         </div>
+    </div>
 
-    </div> <script>
-        window.addEventListener('message', function(event) {
-            if (event.data.type === 'copyLink') {
-                const inputS = document.getElementById('s_bukti');
-                const inputL = document.getElementById('l_bukti');
-                if(inputS) inputS.value = event.data.url;
-                if(inputL) inputL.value = event.data.url;
-                alert("Link bukti berhasil dipasang!");
-            }
-        }, false);
+    <div class="col">
+        <div class="card">
+            <h2><i class="fas fa-folder-open"></i> FILE MANAGER</h2>
+            <iframe src="https://keunga.vercel.app/uploadapapun.html" style="width:100%; height:600px; border:none; border-radius:10px;"></iframe>
+        </div>
+    </div>
 
-        function gasKirim() {
-            alert("Data sedang dikirim...");
+</div>
+
+<script>
+    // SCRIPT JEMBATAN UNTUK KEDUA FORM
+    window.addEventListener('message', function(event) {
+        if (event.data.type === 'copyLink') {
+            // Link otomatis masuk ke kolom Setoran DAN Laporan
+            if(document.getElementById('s_bukti')) document.getElementById('s_bukti').value = event.data.url;
+            if(document.getElementById('l_bukti')) document.getElementById('l_bukti').value = event.data.url;
+            alert("✅ Link berhasil dipasang di kedua form!");
         }
-    </script>
+    }, false);
+
+    function gasKirim(tipe) {
+        alert("Sedang mengirim data " + tipe + "...");
+    }
+</script>
 </body>
 </html>
 
@@ -85,4 +95,5 @@
 
 </body>
 </html>
+
 
