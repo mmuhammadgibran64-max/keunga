@@ -2,98 +2,79 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>DASHBOARD GIBRAN HUB</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIBRAN HUB SYSTEM</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --bg: #0d1117; --card: #161b22; --accent: #2f81f7; --text: #c9d1d9; --success: #238636; --danger: #da3633; }
+        :root { --bg: #0d1117; --card: #161b22; --accent: #2f81f7; --text: #c9d1d9; --success: #238636; --border: #30363d; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding: 0 10px; }
+        .logout-btn { background: #da3633; color: white; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
         
-        /* INI KODE YANG TADI LO TANYA - TETEP DIPAKE */
-       <style>
-    /* CSS biar muat 3 kolom jejeran */
-    .main-layout { 
-        display: grid; 
-        grid-template-columns: 1fr 1fr 1fr; 
-        gap: 15px; 
-        max-width: 100%; 
-        margin: auto; 
-    }
-    @media (max-width: 1100px) {
-        .main-layout { grid-template-columns: 1fr; } /* Kalau di HP jadi tumpuk bawah */
-    }
-</style>
+        /* INI YANG BIKIN JADI 3 KOLOM */
+        .main-layout { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: start; }
+        
+        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+        h2 { color: var(--accent); font-size: 1.2rem; margin-top: 0; display: flex; align-items: center; gap: 10px; text-transform: uppercase; }
+        label { display: block; margin: 15px 0 5px; font-size: 13px; font-weight: bold; color: #8b949e; }
+        input, select { width: 100%; padding: 10px; background: #010409; border: 1px solid var(--border); color: white; border-radius: 6px; box-sizing: border-box; }
+        .btn-kirim { width: 100%; padding: 12px; margin-top: 20px; background: var(--success); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        
+        @media (max-width: 1200px) { .main-layout { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
 
-<div class="main-layout">
-    
-    <div class="col">
+    <header>
+        <h1 style="color: var(--accent); margin: 0;">GIBRAN HUB</h1>
+        <button class="logout-btn">Logout</button>
+    </header>
+
+    <div class="main-layout">
         <div class="card">
-            <h2><i class="fas fa-hand-holding-dollar"></i> SETORAN</h2>
-            <label>Nama Penyetor</label>
-            <input type="text" id="s_nama" value="Gibran User">
-            <label>Tanggal</label>
+            <h2><i class="fas fa-money-bill-wave"></i> SETORAN</h2>
+            <label>Nama yang Setor</label>
+            <input type="text" id="s_nama" value="Muhammad gibran Muhammad gibran">
+            <label>Tanggal Setor</label>
             <input type="date" id="s_tgl">
-            <label>Bukti (Link)</label>
-            <input type="text" id="s_bukti" placeholder="Otomatis dari kanan...">
-            <button class="btn-kirim" onclick="gasKirim('setoran')">KIRIM SETORAN</button>
+            <label>Setor Ke</label>
+            <select id="s_ke"><option>Bu Ami</option><option>Bu Tati</option></select>
+            <label>Tanda Tangan</label>
+            <input type="text" placeholder="Nama Terang">
+            <label>Bukti Setor (Link)</label>
+            <input type="text" id="s_bukti" placeholder="Paste link foto/video">
+            <button class="btn-kirim">KIRIM SETORAN</button>
         </div>
-    </div>
 
-    <div class="col">
         <div class="card">
-            <h2><i class="fas fa-file-invoice"></i> LAPORAN</h2>
-            <label>Jenis Laporan</label>
-            <input type="text" id="l_jenis">
-            <label>Keterangan</label>
-            <input type="text" id="l_ket">
-            <label>Bukti (Link)</label>
-            <input type="text" id="l_bukti" placeholder="Otomatis dari kanan...">
-            <button class="btn-kirim" onclick="gasKirim('laporan')" style="background: var(--accent);">KIRIM LAPORAN</button>
+            <h2><i class="fas fa-file-alt"></i> LAPORAN</h2>
+            <label>Nama yang Lapor</label>
+            <input type="text" id="l_nama" value="Muhammad gibran Muhammad gibran">
+            <label>Tanggal Lapor</label>
+            <input type="date" id="l_tgl">
+            <label>Bukti Laporan (Link)</label>
+            <input type="text" id="l_bukti" placeholder="Paste link foto/video">
+            <label>Tanda Tangan</label>
+            <input type="text" placeholder="Nama Terang">
+            <label>Lapor Ke</label>
+            <select id="l_ke"><option>Bu Ami</option><option>Bu Tati</option></select>
+            <button class="btn-kirim">KIRIM LAPORAN</button>
         </div>
-    </div>
 
-    <div class="col">
         <div class="card">
             <h2><i class="fas fa-folder-open"></i> FILE MANAGER</h2>
             <iframe src="https://keunga.vercel.app/uploadapapun.html" style="width:100%; height:600px; border:none; border-radius:10px;"></iframe>
         </div>
     </div>
 
-</div>
-
-<script>
-    // SCRIPT JEMBATAN UNTUK KEDUA FORM
-    window.addEventListener('message', function(event) {
-        if (event.data.type === 'copyLink') {
-            // Link otomatis masuk ke kolom Setoran DAN Laporan
-            if(document.getElementById('s_bukti')) document.getElementById('s_bukti').value = event.data.url;
-            if(document.getElementById('l_bukti')) document.getElementById('l_bukti').value = event.data.url;
-            alert("✅ Link berhasil dipasang di kedua form!");
-        }
-    }, false);
-
-    function gasKirim(tipe) {
-        alert("Sedang mengirim data " + tipe + "...");
-    }
-</script>
-</body>
-</html>
-
     <script>
-        // SCRIPT PENANGKAP LINK DARI UPLOADAPAPUN.HTML
         window.addEventListener('message', function(event) {
             if (event.data.type === 'copyLink') {
-                document.getElementById('s_bukti').value = event.data.url;
-                alert("Link Bukti Berhasil Disalin!");
+                if(document.getElementById('s_bukti')) document.getElementById('s_bukti').value = event.data.url;
+                if(document.getElementById('l_bukti')) document.getElementById('l_bukti').value = event.data.url;
+                alert("✅ Link Bukti Berhasil Disalin ke Form!");
             }
         }, false);
-
-        function gasKirim() {
-            // Kode fetch ke Google Apps Script lo di sini
-            alert("Data sedang dikirim ke Google Sheet...");
-        }
     </script>
-
 </body>
 </html>
-
-
