@@ -3,65 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB SYSTEM</title>
+    <title>KEUNGA MASTER SYSTEM</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --bg: #0d1117; --card: #161b22; --accent: #2f81f7; --text: #c9d1d9; --success: #238636; --border: #30363d; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding: 0 10px; }
-        .logout-btn { background: #da3633; color: white; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        <style>
-    /* CSS Kunci: Cuma 2 Kolom Sejajar */
-    .main-layout { 
-        display: grid; 
-        grid-template-columns: 1fr 1.2fr; /* Kiri pas, Kanan agak lebar buat File Manager */
-        gap: 20px; 
-    }
-    @media (max-width: 900px) {
-        .main-layout { grid-template-columns: 1fr; } /* Di HP tumpuk atas bawah */
-    }
-</style>
+        :root { 
+            --bg: #0d1117; 
+            --card: #161b22; 
+            --accent: #2f81f7; 
+            --text: #c9d1d9; 
+            --success: #238636; 
+            --border: #30363d;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            padding: 20px; 
+        }
+
+        /* LAYOUT 2 KOLOM: KIRI (FORM) & KANAN (UPLOAD) */
+        .main-layout { 
+            display: grid; 
+            grid-template-columns: 400px 1fr; 
+            gap: 20px; 
+            max-width: 1600px;
+            margin: auto;
+        }
+
+        /* BIAR FORM SETORAN & LAPORAN TUMPUK DI KIRI */
+        .left-col { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
+        }
+
+        .card { 
+            background: var(--card); 
+            border: 1px solid var(--border); 
+            border-radius: 12px; 
+            padding: 20px; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3); 
+        }
+
+        h2 { 
+            margin-top: 0; 
+            font-size: 1.1rem; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            color: var(--accent);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        label { display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600; }
+        input, select { 
+            width: 100%; 
+            padding: 10px; 
+            background: #0d1117; 
+            border: 1px solid var(--border); 
+            color: white; 
+            border-radius: 6px; 
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        .btn-kirim { 
+            width: 100%; 
+            padding: 12px; 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: 0.3s;
+        }
+
+        .btn-setoran { background: var(--success); }
+        .btn-laporan { background: var(--accent); }
+
+        iframe { 
+            width: 100%; 
+            height: 800px; 
+            border: none; 
+            border-radius: 10px; 
+            background: #000;
+        }
+
+        @media (max-width: 1000px) {
+            .main-layout { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
 
 <div class="main-layout">
     
-    <div class="col">
+    <div class="left-col">
+        
         <div class="card">
-            <h2><i class="fas fa-hand-holding-dollar"></i> SETORAN</h2>
+            <h2><i class="fas fa-hand-holding-dollar"></i> FORM SETORAN</h2>
             <label>Nama Penyetor</label>
             <input type="text" id="s_nama" value="Muhammad gibran">
-            <label>Tanggal</label>
+            
+            <label>Tanggal Setor</label>
             <input type="date" id="s_tgl">
-            <label>Bukti Setor (Link)</label>
-            <input type="text" id="s_bukti" placeholder="Link otomatis masuk sini...">
-            <button class="btn-kirim" onclick="gasKirim()">KIRIM DATA</button>
+            
+            <label>Setor Ke</label>
+            <select id="s_ke"><option>Bu Ami</option><option>Bu Tati</option></select>
+            
+            <label>Link Bukti Bukti (Otomatis)</label>
+            <input type="text" id="s_bukti" placeholder="Klik copy di kanan ->">
+            
+            <button class="btn-kirim btn-setoran" onclick="gasKirim('Setoran')">KIRIM DATA SETORAN</button>
         </div>
+
+        <div class="card">
+            <h2><i class="fas fa-file-invoice"></i> FORM LAPORAN</h2>
+            <label>Nama Pelapor</label>
+            <input type="text" id="l_nama" value="Muhammad gibran">
+            
+            <label>Jenis Laporan</label>
+            <input type="text" id="l_jenis" placeholder="Misal: Laporan Harian">
+            
+            <label>Link Bukti Laporan (Otomatis)</label>
+            <input type="text" id="l_bukti" placeholder="Klik copy di kanan ->">
+            
+            <button class="btn-kirim btn-laporan" onclick="gasKirim('Laporan')">KIRIM DATA LAPORAN</button>
+        </div>
+
     </div>
 
-    <div class="col">
+    <div class="right-col">
         <div class="card">
-            <h2><i class="fas fa-folder-open"></i> FILE MANAGER</h2>
-            <p style="font-size: 12px; color: #8b949e;">Upload bukti di sini, lalu klik icon Copy Biru.</p>
-            <iframe src="https://keunga.vercel.app/uploadapapun.html" style="width:100%; height:600px; border:none; border-radius:10px; background: #000;"></iframe>
+            <h2><i class="fas fa-folder-open"></i> FILE MANAGER & UPLOAD</h2>
+            <iframe src="https://keunga.vercel.app/uploadapapun.html"></iframe>
         </div>
     </div>
 
 </div>
 
 <script>
-    // Jembatan biar link dari File Manager (Kanan) masuk ke Input (Kiri)
+    // JEMBATAN OTOMATIS: Nangkep link buat dua-duanya
     window.addEventListener('message', function(event) {
         if (event.data.type === 'copyLink') {
-            const inputS = document.getElementById('s_bukti');
-            if(inputS) {
-                inputS.value = event.data.url;
-                alert("✅ Link Berhasil Dipasang!");
-            }
+            const linkUrl = event.data.url;
+            
+            // Link masuk ke dua kotak input sekaligus biar praktis
+            if(document.getElementById('s_bukti')) document.getElementById('s_bukti').value = linkUrl;
+            if(document.getElementById('l_bukti')) document.getElementById('l_bukti').value = linkUrl;
+            
+            alert("✅ Link Berhasil Dipasang di Setoran & Laporan!");
         }
     }, false);
+
+    function gasKirim(tipe) {
+        alert("Data " + tipe + " sedang dikirim!");
+    }
 </script>
-       
-        }, false);
-    </script>
+
 </body>
 </html>
-
