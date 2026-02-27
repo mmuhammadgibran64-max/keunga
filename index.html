@@ -25,21 +25,6 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            overflow: hidden;
-        }
-
-        /* Latar belakang variasi biar gak sepi */
-        body::before {
-            content: "";
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            background: var(--primary);
-            filter: blur(150px);
-            opacity: 0.15;
-            z-index: -1;
-            top: 10%;
-            left: 10%;
         }
 
         .auth-card {
@@ -51,7 +36,6 @@
             max-width: 400px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
             padding: 40px 30px;
-            position: relative;
             animation: fadeIn 0.8s ease-out;
         }
 
@@ -60,18 +44,14 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
         .header h1 {
-            margin: 0;
+            text-align: center;
             font-size: 28px;
             letter-spacing: 2px;
             background: linear-gradient(to right, #fff, var(--primary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
         }
 
         .tab-menu {
@@ -96,14 +76,9 @@
         }
 
         .form-content { display: none; }
-        .form-content.active { display: block; animation: slideIn 0.4s ease-out; }
+        .form-content.active { display: block; }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .input-group { margin-bottom: 20px; }
+        .input-group { margin-bottom: 20px; position: relative; }
 
         label {
             display: block;
@@ -130,6 +105,19 @@
             outline: none;
         }
 
+        /* Tombol Intip Password */
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 38px;
+            cursor: pointer;
+            color: #8b949e;
+            font-size: 12px;
+            user-select: none;
+            transition: 0.3s;
+        }
+        .toggle-password:hover { color: var(--primary); }
+
         button {
             width: 100%;
             padding: 14px;
@@ -140,13 +128,11 @@
             font-weight: 600;
             cursor: pointer;
             transition: 0.3s;
-            margin-top: 10px;
         }
 
         button:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px var(--primary-glow);
-            filter: brightness(1.1);
         }
 
         #msg {
@@ -154,10 +140,8 @@
             font-size: 12px;
             margin-top: 20px;
             color: #e3b341;
-            font-style: italic;
         }
 
-        /* Spinner Loading */
         .spinner {
             display: none;
             width: 25px;
@@ -187,13 +171,13 @@
     <div id="login-form" class="form-content active">
         <div class="input-group">
             <label>Nama Akun</label>
-            <input type="text" id="l_nama" placeholder="Username/Nama">
+            <input type="text" id="l_nama" placeholder="Masukkan Nama">
         </div>
         <div class="input-group">
             <label>Nomor WhatsApp</label>
             <input type="tel" id="l_wa" placeholder="08xxxxxxxx">
         </div>
-        <button onclick="handleLogin()">MASUK KE HUB</button>
+        <button onclick="handleLogin()">MASUK</button>
     </div>
 
     <div id="daftar-form" class="form-content">
@@ -212,8 +196,9 @@
         <div class="input-group">
             <label>Password</label>
             <input type="password" id="d_pass" placeholder="Buat Password">
+            <span class="toggle-password" onclick="togglePass()">LIHAT</span>
         </div>
-        <button onclick="handleDaftar()" style="background: var(--success);">BUAT AKUN</button>
+        <button onclick="handleDaftar()" style="background: var(--success);">DAFTAR SEKARANG</button>
     </div>
 
     <div id="load-icon" class="spinner"></div>
@@ -223,14 +208,23 @@
 <script>
     const scriptURL = 'https://script.google.com/macros/s/AKfycbw5tp9JPOA7J4tSKLPjwD-tAsfnRj4EVtVBx-MaD6dQzW7uKrfwxQB8oa7KfLD2CqyS/exec';
 
-    function toggleTab(type) {
-        const lTab = document.getElementById('t-login');
-        const dTab = document.getElementById('t-daftar');
-        const lForm = document.getElementById('login-form');
-        const dForm = document.getElementById('daftar-form');
-        const msg = document.getElementById('msg');
+    // FUNGSI LIHAT PASSWORD
+    function togglePass() {
+        const p = document.getElementById('d_pass');
+        const t = document.querySelector('.toggle-password');
+        if (p.type === "password") {
+            p.type = "text";
+            t.innerText = "SEMBUNYI";
+        } else {
+            p.type = "password";
+            t.innerText = "LIHAT";
+        }
+    }
 
-        msg.innerText = "";
+    function toggleTab(type) {
+        const lTab = document.getElementById('t-login'), dTab = document.getElementById('t-daftar');
+        const lForm = document.getElementById('login-form'), dForm = document.getElementById('daftar-form');
+        document.getElementById('msg').innerText = "";
         if(type === 'login') {
             lTab.classList.add('active'); dTab.classList.remove('active');
             lForm.classList.add('active'); dForm.classList.remove('active');
@@ -241,46 +235,21 @@
     }
 
     function handleLogin() {
-        const n = document.getElementById('l_nama').value;
-        const w = document.getElementById('l_wa').value;
-        if(!n || !w) { alert("Data belum lengkap!"); return; }
-
-        startLoading(true, "Mencocokkan data...");
-
-        fetch(scriptURL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: new URLSearchParams({'action': 'login', 'nama': n, 'wa': w})
-        }).then(() => {
-            alert("Akses Diterima! Membuka Dashboard...");
-            window.location.href = "dashboard.html";
-        }).catch(() => {
-            alert("Error Koneksi!");
-            startLoading(false);
-        });
+        const n = document.getElementById('l_nama').value, w = document.getElementById('l_wa').value;
+        if(!n || !w) { alert("Isi data!"); return; }
+        startLoading(true, "Mengecek data...");
+        fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: new URLSearchParams({'action': 'login', 'nama': n, 'wa': w}) })
+        .then(() => { alert("Login Berhasil!"); window.location.href = "dashboard.html"; })
+        .catch(() => { alert("Error!"); startLoading(false); });
     }
 
     function handleDaftar() {
-        const n = document.getElementById('d_nama').value;
-        const w = document.getElementById('d_wa').value;
-        const a = document.getElementById('d_alamat').value;
-        const p = document.getElementById('d_pass').value;
-
-        if(!n || !w || !a || !p) { alert("Lengkapi formulir!"); return; }
-
-        startLoading(true, "Mendaftarkan akun baru...");
-
-        fetch(scriptURL, {
-            method: 'POST',
-            mode: 'no-cors',
-            body: new URLSearchParams({'action': 'daftar', 'nama': n, 'wa': w, 'alamat': a, 'pass': p})
-        }).then(() => {
-            alert("Akun Berhasil Dibuat!");
-            window.location.href = "dashboard.html";
-        }).catch(() => {
-            alert("Gagal terhubung!");
-            startLoading(false);
-        });
+        const n = document.getElementById('d_nama').value, w = document.getElementById('d_wa').value, a = document.getElementById('d_alamat').value, p = document.getElementById('d_pass').value;
+        if(!n || !w || !a || !p) { alert("Lengkapi data!"); return; }
+        startLoading(true, "Mendaftarkan...");
+        fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: new URLSearchParams({'action': 'daftar', 'nama': n, 'wa': w, 'alamat': a, 'pass': p}) })
+        .then(() => { alert("Daftar Berhasil!"); window.location.href = "dashboard.html"; })
+        .catch(() => { alert("Error!"); startLoading(false); });
     }
 
     function startLoading(status, teks = "") {
