@@ -3,25 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB</title>
+    <title>GIBRAN HUB - DAFTAR AKUN</title>
     <style>
-        :root { --bg: #0d1117; --card: #161b22; --accent: #2f81f7; --text: #c9d1d9; --border: #30363d; }
-        body { font-family: sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .box { background: var(--card); border: 1px solid var(--border); padding: 25px; border-radius: 10px; width: 100%; max-width: 350px; }
-        input { width: 100%; padding: 12px; margin-bottom: 15px; background: #010409; border: 1px solid var(--border); color: white; border-radius: 6px; box-sizing: border-box; outline: none; }
-        button { width: 100%; padding: 12px; background: #238636; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        #msg { font-size: 12px; text-align: center; margin-top: 15px; color: #e3b341; }
+        /* CSS MODERN DARK THEME */
+        :root {
+            --bg: #0d1117;
+            --card: #161b22;
+            --accent: #2f81f7;
+            --text-main: #c9d1d9;
+            --border: #30363d;
+            --success: #238636;
+            --success-hover: #2ea043;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .box {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 30px;
+            width: 100%;
+            max-width: 350px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        h3 {
+            text-align: center;
+            margin: 0 0 25px 0;
+            font-size: 22px;
+            color: var(--accent);
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: #8b949e;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 18px;
+            background-color: #010409;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: white;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(47, 129, 247, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--success);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--success-hover);
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #msg {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 20px;
+            color: #e3b341;
+            min-height: 1.2em;
+        }
     </style>
 </head>
 <body>
 
 <div class="box">
-    <h3 style="text-align:center;">Daftar Akun</h3>
+    <h3>Daftar Akun</h3>
     
-    <input type="text" id="nama" placeholder="Nama">
-    <input type="tel" id="wa" placeholder="Nomor WA">
-    <input type="text" id="alamat" placeholder="Alamat Rumah">
-    <input type="password" id="pass" placeholder="Password">
+    <label>Nama Lengkap</label>
+    <input type="text" id="nama" placeholder="Masukkan nama...">
+    
+    <label>Nomor WhatsApp</label>
+    <input type="tel" id="wa" placeholder="0812xxxx">
+    
+    <label>Alamat Rumah</label>
+    <input type="text" id="alamat" placeholder="Alamat lengkap...">
+    
+    <label>Password</label>
+    <input type="password" id="pass" placeholder="******">
     
     <button onclick="kirimLengkap()">DAFTAR SEKARANG</button>
     
@@ -29,7 +124,7 @@
 </div>
 
 <script>
-    // Link Deploy Terbaru Lo
+    // Link Apps Script Terbaru Lo
     const scriptURL = 'https://script.google.com/macros/s/AKfycbyLCTMhEQEnxR8syzXkoZDZCJNCskKHhMu1AOcCkw9cYvSjDhTFMLlzcQZQBwINo-T0/exec';
 
     function kirimLengkap() {
@@ -38,12 +133,13 @@
         const a = document.getElementById('alamat').value;
         const p = document.getElementById('pass').value;
 
+        // Validasi simpel
         if (!n || !w || !a || !p) {
-            alert("Harap isi semua kolom!");
+            alert("Semua kolom wajib diisi!");
             return;
         }
 
-        document.getElementById('msg').innerText = "Sedang mengirim data...";
+        document.getElementById('msg').innerText = "Sedang mengirim data ke sistem...";
 
         fetch(scriptURL, {
             method: 'POST',
@@ -55,10 +151,13 @@
                 'pass': p
             })
         }).then(() => {
-            alert("Berhasil! Data masuk ke sheet daftar akun");
-            window.location.href = "dashboard.html";
+            document.getElementById('msg').style.color = "#238636";
+            document.getElementById('msg').innerText = "Berhasil! Data masuk ke sheet.";
+            setTimeout(() => {
+                window.location.href = "dashboard.html";
+            }, 2000);
         }).catch(err => {
-            alert("Terjadi kesalahan.");
+            document.getElementById('msg').innerText = "Gagal mengirim data.";
             console.error(err);
         });
     }
