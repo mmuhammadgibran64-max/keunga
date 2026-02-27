@@ -3,69 +3,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB - LOGIN</title>
+    <title>GIBRAN HUB - TERPADU</title>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
-        :root { --bg: #0d1117; --card: #161b22; --accent: #2f81f7; --text: #c9d1d9; --border: #30363d; --success: #238636; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-box { background: var(--card); border: 1px solid var(--border); padding: 30px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
-        h2 { color: var(--accent); margin-bottom: 25px; }
-        .google-btn-wrapper { display: flex; justify-content: center; margin-top: 20px; }
-        .status { margin-top: 20px; font-size: 13px; color: #8b949e; }
+        :root { 
+            --bg: #0d1117; 
+            --card: #161b22; 
+            --accent: #2f81f7; 
+            --text: #c9d1d9; 
+            --border: #30363d; 
+            --success: #238636; 
+        }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+        }
+        .auth-box { 
+            background: var(--card); 
+            border: 1px solid var(--border); 
+            padding: 30px; 
+            border-radius: 12px; 
+            width: 90%; 
+            max-width: 380px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+        }
+        h2 { 
+            text-align: center; 
+            color: var(--accent); 
+            margin-bottom: 25px; 
+            font-size: 1.5rem;
+            letter-spacing: 1px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+            color: #8b949e;
+        }
+        input { 
+            width: 100%; 
+            padding: 12px; 
+            margin-bottom: 15px; 
+            background: #010409; 
+            border: 1px solid var(--border); 
+            color: white; 
+            border-radius: 6px; 
+            box-sizing: border-box; 
+            outline: none;
+        }
+        input:focus {
+            border-color: var(--accent);
+        }
+        .btn-reg { 
+            width: 100%; 
+            padding: 12px; 
+            background: var(--success); 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: 0.3s;
+            font-size: 14px;
+        }
+        .btn-reg:hover { background: #2ea043; }
+        
+        .divider { 
+            display: flex; 
+            align-items: center; 
+            text-align: center; 
+            margin: 25px 0; 
+            color: #8b949e; 
+            font-size: 12px; 
+        }
+        .divider::before, .divider::after { 
+            content: ''; 
+            flex: 1; 
+            border-bottom: 1px solid var(--border); 
+        }
+        .divider:not(:empty)::before { margin-right: .5em; }
+        .divider:not(:empty)::after { margin-left: .5em; }
+        
+        .google-center { 
+            display: flex; 
+            justify-content: center; 
+            margin-bottom: 10px;
+        }
+        .status { 
+            text-align: center; 
+            font-size: 13px; 
+            margin-top: 20px; 
+            min-height: 20px;
+        }
     </style>
 </head>
 <body>
 
-<div class="login-box">
-    <h2>GIBRAN HUB LOGIN</h2>
-    <p>Silakan daftar/masuk menggunakan akun Google Anda</p>
+<div class="auth-box">
+    <h2>GIBRAN HUB</h2>
     
-    <div class="google-btn-wrapper">
+    <form id="formManual">
+        <label>Nama Lengkap</label>
+        <input type="text" id="m_nama" placeholder="Contoh: Muhammad Gibran" required>
+        
+        <label>Nomor Telepon / WA</label>
+        <input type="tel" id="m_hp" placeholder="0812xxxxxxx" required>
+        
+        <button type="submit" class="btn-reg">DAFTAR SEKARANG</button>
+    </form>
+
+    <div class="divider">ATAU DAFTAR CEPAT</div>
+
+    <div class="google-center">
         <div id="g_id_onload"
              data-client_id="594310366887-a3dsvn8plp139boru5kepf2o1c6ubkkv.apps.googleusercontent.com"
-             data-callback="handleCredentialResponse"
+             data-callback="handleGoogleResponse"
              data-auto_prompt="false">
         </div>
-        <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="filled_blue" data-text="signin_with" data-size="large" data-logo_alignment="left"></div>
+        <div class="g_id_signin" 
+             data-type="standard" 
+             data-shape="rectangular" 
+             data-theme="filled_blue" 
+             data-text="continue_with" 
+             data-size="large"
+             data-logo_alignment="left">
+        </div>
     </div>
 
     <div id="statusMsg" class="status"></div>
 </div>
 
 <script>
-    // Link Apps Script Anda
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwOFaA_xT3iffh_0JYNiJjacx4SJWsQmeHnVcCcpdRRAsaSbjmtoHIr0dMmWNAVEO1a/exec';
+    // LINK APPS SCRIPT TERBARU LO
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwfu43fsyVus54125SijU8cvkPScjLTM8Sou_eADrqruHgy5coPwEWHgT9wV1AZv7FR/exec';
 
-    function handleCredentialResponse(response) {
-        const statusMsg = document.getElementById('statusMsg');
-        statusMsg.innerText = "Sedang menghubungkan ke Google Sheet...";
+    const statusMsg = document.getElementById('statusMsg');
 
-        // Decode data dari Google
-        const responsePayload = parseJwt(response.credential);
-        
-        // Kirim data ke Google Sheets
+    // 1. HANDLE DAFTAR MANUAL
+    document.getElementById('formManual').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const nama = document.getElementById('m_nama').value;
+        const hp = document.getElementById('m_hp').value;
+        sendToCloud('manual_reg', nama, hp);
+    });
+
+    // 2. HANDLE GOOGLE LOGIN
+    function handleGoogleResponse(response) {
+        const payload = parseJwt(response.credential);
+        sendToCloud('google_login', payload.name, payload.email);
+    }
+
+    // 3. FUNGSI KIRIM DATA (FETCH)
+    function sendToCloud(action, nama, identitas) {
+        statusMsg.style.color = '#8b949e';
+        statusMsg.innerText = "Sedang memproses...";
+
         fetch(scriptURL, {
             method: 'POST',
-            mode: 'no-cors', // Penting agar tidak kena blokir CORS
+            mode: 'no-cors',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: new URLSearchParams({
-                'action': 'google_login',
-                'nama': responsePayload.name,
-                'email': responsePayload.email,
-                'sheetName': 'daftar pake gooogle' // Nama sheet tujuan
+                'action': action,
+                'nama': nama,
+                'identitas': identitas
             })
         }).then(() => {
             statusMsg.style.color = 'var(--success)';
-            statusMsg.innerText = "Data berhasil disimpan! Mengalihkan...";
-            setTimeout(() => { 
-                window.location.href = "dashboard.html"; 
-            }, 2000);
+            statusMsg.innerText = "Pendaftaran Berhasil! Mengalihkan...";
+            setTimeout(() => {
+                window.location.href = "dashboard.html";
+            }, 1500);
         }).catch(err => {
-            statusMsg.innerText = "Gagal mengirim data.";
+            statusMsg.style.color = 'red';
+            statusMsg.innerText = "Gagal terhubung ke server.";
             console.error(err);
         });
     }
 
+    // DECODE TOKEN GOOGLE
     function parseJwt (token) {
         var base64Url = token.split('.')[1];
         var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
