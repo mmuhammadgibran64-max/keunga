@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | ACCESS</title>
+    <title>GIBRAN HUB | ACCESS SYSTEM</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -28,7 +28,7 @@
             overflow: hidden;
         }
 
-        /* Loading Screen Full */
+        /* Loading Screen Overlay */
         #loading-overlay {
             display: none;
             position: fixed;
@@ -61,7 +61,7 @@
         }
 
         .tab-menu { display: flex; margin-bottom: 25px; border-bottom: 1px solid var(--border); }
-        .tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; font-weight: 600; color: #8b949e; }
+        .tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; font-weight: 600; color: #8b949e; transition: 0.3s; }
         .tab.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
 
         .form-content { display: none; }
@@ -72,9 +72,9 @@
         input {
             width: 100%; padding: 12px 15px; background: rgba(1, 4, 9, 0.8);
             border: 1px solid var(--border); border-radius: 10px; color: white;
-            font-size: 14px; box-sizing: border-box; transition: 0.3s;
+            font-size: 14px; box-sizing: border-box; outline: none; transition: 0.3s;
         }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 8px var(--primary-glow); outline: none; }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 8px var(--primary-glow); }
 
         .toggle-password {
             position: absolute; right: 15px; top: 38px;
@@ -97,15 +97,14 @@
         }
 
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
 <div id="loading-overlay">
     <div class="spinner"></div>
-    <p id="load-text" style="margin-top: 25px; font-weight: 600; font-size: 18px; color: white;">Memproses Pendaftaran...</p>
-    <p style="color: #8b949e; font-size: 12px;">Mohon tunggu sebentar (Proses 5 detik)</p>
+    <p id="load-text" style="margin-top: 25px; font-weight: 600; font-size: 18px; color: white;">Memproses Data...</p>
 </div>
 
 <div class="auth-card">
@@ -127,11 +126,11 @@
         </div>
         <div class="input-group">
             <label>Alamat</label>
-            <input type="text" id="d_alamat" placeholder="Alamat Tinggal">
+            <input type="text" id="d_alamat" placeholder="Alamat Lengkap">
         </div>
         <div class="input-group">
             <label>Password</label>
-            <input type="password" id="d_pass" placeholder="Buat Password">
+            <input type="password" id="d_pass" placeholder="Password">
             <span class="toggle-password" onclick="togglePass()">LIHAT</span>
         </div>
         <button onclick="handleDaftar()" style="background: var(--success);">DAFTAR SEKARANG</button>
@@ -139,7 +138,7 @@
 
     <div id="login-form" class="form-content">
         <div class="input-group">
-            <label>Nama Akun</label>
+            <label>Nama Pengguna</label>
             <input type="text" id="l_nama" placeholder="Masukkan Nama">
         </div>
         <div class="input-group">
@@ -151,8 +150,7 @@
 </div>
 
 <script>
-    // Link Apps Script terbaru dari lo
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzeeXNP0bJKRZpJxYOWOXM-GmGtEbRidSqGdkOyIFTovdCF_a8b6pItLinvfKxB0BxK/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby2TZTQ8w5pYvxCIAZRycnwRpLWmrN_BkTOd5ZYyxrmgAIuiM6jHDujm5G116OZx3GO/exec';
 
     function togglePass() {
         const p = document.getElementById('d_pass');
@@ -175,30 +173,31 @@
 
     function handleDaftar() {
         const n = document.getElementById('d_nama').value, w = document.getElementById('d_wa').value, a = document.getElementById('d_alamat').value, p = document.getElementById('d_pass').value;
-        if(!n || !w || !a || !p) { alert("Data harus lengkap!"); return; }
+        if(!n || !w || !a || !p) { alert("Data tidak lengkap!"); return; }
 
         document.getElementById('loading-overlay').style.display = 'flex';
+        document.getElementById('load-text').innerText = "Sedang Mendaftarkan Akun...";
 
         fetch(scriptURL, {
             method: 'POST',
             mode: 'no-cors',
             body: new URLSearchParams({'action': 'daftar', 'nama': n, 'wa': w, 'alamat': a, 'pass': p})
         }).then(() => {
-            document.getElementById('load-text').innerText = "Berhasil Terdaftar! Menuju Halaman Login...";
+            document.getElementById('load-text').innerText = "Data Tersimpan! Menuju Halaman Login...";
             setTimeout(() => {
                 document.getElementById('loading-overlay').style.display = 'none';
-                alert("Pendaftaran Sukses! Silakan Login.");
-                toggleTab('login'); 
+                alert("Pendaftaran Berhasil! Silakan Login Kembali.");
+                toggleTab('login');
             }, 5000); 
         });
     }
 
     function handleLogin() {
         const n = document.getElementById('l_nama').value, w = document.getElementById('l_wa').value;
-        if(!n || !w) { alert("Isi nama & WA!"); return; }
+        if(!n || !w) { alert("Lengkapi Nama & WA!"); return; }
 
         document.getElementById('loading-overlay').style.display = 'flex';
-        document.getElementById('load-text').innerText = "Memverifikasi...";
+        document.getElementById('load-text').innerText = "Memverifikasi Akun...";
 
         fetch(scriptURL, {
             method: 'POST',
@@ -206,7 +205,8 @@
             body: new URLSearchParams({'action': 'login', 'nama': n, 'wa': w})
         }).then(() => {
             setTimeout(() => {
-                alert("Selamat Datang!");
+                document.getElementById('loading-overlay').style.display = 'none';
+                alert("Login Berhasil! Selamat Datang.");
                 window.location.href = "dashboard.html";
             }, 2000);
         });
