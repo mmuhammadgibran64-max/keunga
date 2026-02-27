@@ -28,7 +28,7 @@
             overflow: hidden;
         }
 
-        /* Loading Screen Overlay */
+        /* Loading Screen Full */
         #loading-overlay {
             display: none;
             position: fixed;
@@ -51,7 +51,6 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
             padding: 40px 30px;
             animation: fadeIn 0.8s ease-out;
-            position: relative;
         }
 
         .header h1 {
@@ -77,7 +76,6 @@
         }
         input:focus { border-color: var(--primary); box-shadow: 0 0 8px var(--primary-glow); outline: none; }
 
-        /* Fitur Intip Password */
         .toggle-password {
             position: absolute; right: 15px; top: 38px;
             cursor: pointer; color: #8b949e; font-size: 11px; font-weight: bold;
@@ -90,7 +88,6 @@
         }
         button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px var(--primary-glow); }
 
-        /* Spinner Loading */
         .spinner {
             width: 60px; height: 60px;
             border: 6px solid rgba(255,255,255,0.1);
@@ -122,15 +119,15 @@
     <div id="daftar-form" class="form-content active">
         <div class="input-group">
             <label>Nama Lengkap</label>
-            <input type="text" id="d_nama" placeholder="Masukkan Nama">
+            <input type="text" id="d_nama" placeholder="Nama Anda">
         </div>
         <div class="input-group">
             <label>Nomor WhatsApp</label>
             <input type="tel" id="d_wa" placeholder="08xxxxxxxx">
         </div>
         <div class="input-group">
-            <label>Alamat Rumah</label>
-            <input type="text" id="d_alamat" placeholder="Alamat Anda">
+            <label>Alamat</label>
+            <input type="text" id="d_alamat" placeholder="Alamat Tinggal">
         </div>
         <div class="input-group">
             <label>Password</label>
@@ -142,24 +139,21 @@
 
     <div id="login-form" class="form-content">
         <div class="input-group">
-            <label>Nama Pengguna</label>
+            <label>Nama Akun</label>
             <input type="text" id="l_nama" placeholder="Masukkan Nama">
         </div>
         <div class="input-group">
             <label>Nomor WhatsApp</label>
-            <input type="tel" id="l_wa" placeholder="Masukkan No WA">
+            <input type="tel" id="l_wa" placeholder="08xxxxxxxx">
         </div>
-        <button onclick="handleLogin()">MASUK DASHBOARD</button>
+        <button onclick="handleLogin()">MASUK KE DASHBOARD</button>
     </div>
-
-    <p id="msg" style="text-align: center; font-size: 12px; margin-top: 20px; color: #e3b341;"></p>
 </div>
 
 <script>
-    // Link Apps Script terbaru lo
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwDIMSj61BcdFLNw7KpYOub88ZKcPftA9oMdCUzqEd7HN45abSJM1PjqbvEDm0OivBh/exec';
+    // Link Apps Script terbaru dari lo
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzeeXNP0bJKRZpJxYOWOXM-GmGtEbRidSqGdkOyIFTovdCF_a8b6pItLinvfKxB0BxK/exec';
 
-    // Toggle Intip Password
     function togglePass() {
         const p = document.getElementById('d_pass');
         const t = document.querySelector('.toggle-password');
@@ -167,7 +161,6 @@
         else { p.type = "password"; t.innerText = "LIHAT"; }
     }
 
-    // Ganti Tab Login/Daftar
     function toggleTab(type) {
         const lTab = document.getElementById('t-login'), dTab = document.getElementById('t-daftar');
         const lForm = document.getElementById('login-form'), dForm = document.getElementById('daftar-form');
@@ -180,16 +173,10 @@
         }
     }
 
-    // --- PROSES DAFTAR ---
     function handleDaftar() {
-        const n = document.getElementById('d_nama').value;
-        const w = document.getElementById('d_wa').value;
-        const a = document.getElementById('d_alamat').value;
-        const p = document.getElementById('d_pass').value;
-
+        const n = document.getElementById('d_nama').value, w = document.getElementById('d_wa').value, a = document.getElementById('d_alamat').value, p = document.getElementById('d_pass').value;
         if(!n || !w || !a || !p) { alert("Data harus lengkap!"); return; }
 
-        // Tampilkan Loading Overlay
         document.getElementById('loading-overlay').style.display = 'flex';
 
         fetch(scriptURL, {
@@ -197,24 +184,21 @@
             mode: 'no-cors',
             body: new URLSearchParams({'action': 'daftar', 'nama': n, 'wa': w, 'alamat': a, 'pass': p})
         }).then(() => {
-            // Loading selama 5 detik biar keren
-            document.getElementById('load-text').innerText = "Data tersimpan! Membuka halaman login...";
+            document.getElementById('load-text').innerText = "Berhasil Terdaftar! Menuju Halaman Login...";
             setTimeout(() => {
                 document.getElementById('loading-overlay').style.display = 'none';
-                alert("Daftar Sukses! Sekarang silakan login.");
-                toggleTab('login'); // Pindah ke tab login otomatis
+                alert("Pendaftaran Sukses! Silakan Login.");
+                toggleTab('login'); 
             }, 5000); 
         });
     }
 
-    // --- PROSES LOGIN ---
     function handleLogin() {
-        const n = document.getElementById('l_nama').value;
-        const w = document.getElementById('l_wa').value;
-        if(!n || !w) { alert("Lengkapi data login!"); return; }
+        const n = document.getElementById('l_nama').value, w = document.getElementById('l_wa').value;
+        if(!n || !w) { alert("Isi nama & WA!"); return; }
 
         document.getElementById('loading-overlay').style.display = 'flex';
-        document.getElementById('load-text').innerText = "Memverifikasi Akun...";
+        document.getElementById('load-text').innerText = "Memverifikasi...";
 
         fetch(scriptURL, {
             method: 'POST',
@@ -222,7 +206,7 @@
             body: new URLSearchParams({'action': 'login', 'nama': n, 'wa': w})
         }).then(() => {
             setTimeout(() => {
-                alert("Login Berhasil! Selamat Datang.");
+                alert("Selamat Datang!");
                 window.location.href = "dashboard.html";
             }, 2000);
         });
