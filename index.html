@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | ACCESS SYSTEM</title>
+    <title>GIBRAN HUB | SHEETDB SYSTEM</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #2f81f7;
-            --primary-glow: rgba(47, 129, 247, 0.5);
             --bg: #040d16;
             --card: rgba(22, 27, 34, 0.9);
             --text: #f0f6fc;
@@ -21,67 +20,59 @@
             background: radial-gradient(circle at center, #0d1117 0%, #040d16 100%);
             color: var(--text);
             display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; margin: 0; overflow: hidden;
+            min-height: 100vh; margin: 0;
         }
 
         #loading-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg); z-index: 9999; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center;
+            background: rgba(0,0,0,0.85); z-index: 9999; flex-direction: column;
+            justify-content: center; align-items: center;
         }
 
         .auth-card {
             background: var(--card); backdrop-filter: blur(10px);
             border: 1px solid var(--border); border-radius: 20px;
-            width: 100%; max-width: 400px; padding: 40px 30px;
+            width: 90%; max-width: 400px; padding: 30px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            animation: fadeIn 0.8s ease-out;
         }
 
-        .header h1 {
-            text-align: center; font-size: 28px; letter-spacing: 2px;
-            background: linear-gradient(to right, #fff, var(--primary));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 30px;
-        }
+        .header h1 { text-align: center; font-size: 24px; margin-bottom: 20px; color: var(--primary); }
 
-        .tab-menu { display: flex; margin-bottom: 25px; border-bottom: 1px solid var(--border); }
-        .tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; font-weight: 600; color: #8b949e; transition: 0.3s; }
-        .tab.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
+        .tab-menu { display: flex; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+        .tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; color: #8b949e; }
+        .tab.active { color: var(--primary); border-bottom: 2px solid var(--primary); font-weight: bold; }
 
         .form-content { display: none; }
         .form-content.active { display: block; }
 
-        .input-group { margin-bottom: 20px; }
-        label { display: block; font-size: 13px; margin-bottom: 8px; color: #8b949e; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 12px; margin-bottom: 5px; color: #8b949e; }
         input {
-            width: 100%; padding: 12px 15px; background: rgba(1, 4, 9, 0.8);
-            border: 1px solid var(--border); border-radius: 10px; color: white;
-            font-size: 14px; box-sizing: border-box; outline: none;
+            width: 100%; padding: 12px; background: #010409;
+            border: 1px solid var(--border); border-radius: 8px; color: white;
+            box-sizing: border-box; outline: none;
         }
-        input:focus { border-color: var(--primary); box-shadow: 0 0 8px var(--primary-glow); }
 
         button {
-            width: 100%; padding: 14px; background: var(--primary);
-            color: white; border: none; border-radius: 10px;
-            font-weight: 600; cursor: pointer; transition: 0.3s;
+            width: 100%; padding: 12px; border: none; border-radius: 8px;
+            font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 10px;
         }
-        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px var(--primary-glow); }
+        .btn-daftar { background: var(--success); color: white; }
+        .btn-login { background: var(--primary); color: white; }
 
         .spinner {
-            width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.1);
-            border-top: 5px solid var(--primary); border-radius: 50%;
+            width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.1);
+            border-top: 4px solid var(--primary); border-radius: 50%;
             animation: spin 1s linear infinite;
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
 <div id="loading-overlay">
     <div class="spinner"></div>
-    <p id="load-text" style="margin-top: 20px; color: white;">Memproses...</p>
+    <p style="color: white; margin-top: 15px;">Mohon Tunggu...</p>
 </div>
 
 <div class="auth-card">
@@ -92,22 +83,23 @@
     </div>
 
     <div id="daftar-form" class="form-content active">
-        <div class="input-group"><label>Nama</label><input type="text" id="d_nama"></div>
-        <div class="input-group"><label>WA</label><input type="tel" id="d_wa"></div>
-        <div class="input-group"><label>Alamat</label><input type="text" id="d_alamat"></div>
-        <div class="input-group"><label>Password</label><input type="password" id="d_pass"></div>
-        <button onclick="handleDaftar()" style="background: var(--success);">DAFTAR</button>
+        <div class="input-group"><label>Nama Lengkap</label><input type="text" id="d_nama" placeholder="Nama"></div>
+        <div class="input-group"><label>WhatsApp</label><input type="tel" id="d_wa" placeholder="08xxx"></div>
+        <div class="input-group"><label>Alamat</label><input type="text" id="d_alamat" placeholder="Kota"></div>
+        <div class="input-group"><label>Password</label><input type="password" id="d_pass" placeholder="***"></div>
+        <button class="btn-daftar" onclick="handleDaftar()">DAFTAR SEKARANG</button>
     </div>
 
     <div id="login-form" class="form-content">
-        <div class="input-group"><label>Nama</label><input type="text" id="l_nama"></div>
-        <div class="input-group"><label>WA</label><input type="tel" id="l_wa"></div>
-        <button onclick="handleLogin()">MASUK</button>
+        <div class="input-group"><label>Nama Pengguna</label><input type="text" id="l_nama" placeholder="Nama"></div>
+        <div class="input-group"><label>Nomor WhatsApp</label><input type="tel" id="l_wa" placeholder="08xxx"></div>
+        <button class="btn-login" onclick="handleLogin()">MASUK KE DASHBOARD</button>
     </div>
 </div>
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbzlhicWgqz8pfBFOPgG45U8k-zj5Gj2DMxCJcjSfaGFUNlAjZ_xWBhPTOmUiwILFmbu/exec';
+    // API Link SheetDB lo
+    const apiURL = 'https://sheetdb.io/api/v1/jy19m4udkidqn';
 
     function toggleTab(t) {
         document.querySelectorAll('.tab, .form-content').forEach(el => el.classList.remove('active'));
@@ -116,19 +108,54 @@
     }
 
     function handleDaftar() {
-        const n = document.getElementById('d_nama').value, w = document.getElementById('d_wa').value, a = document.getElementById('d_alamat').value, p = document.getElementById('d_pass').value;
-        if(!n||!w||!a||!p) return alert("Isi semua!");
+        const n = document.getElementById('d_nama').value,
+              w = document.getElementById('d_wa').value,
+              a = document.getElementById('d_alamat').value,
+              p = document.getElementById('d_pass').value;
+
+        if(!n||!w||!a||!p) return alert("Lengkapi data!");
         document.getElementById('loading-overlay').style.display = 'flex';
-        fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: new URLSearchParams({'action':'daftar','nama':n,'wa':w,'alamat':a,'pass':p})})
-        .then(() => { setTimeout(() => { alert("Daftar Berhasil! Silakan Login."); location.reload(); }, 2000); });
+
+        fetch(`${apiURL}?sheet=daftar_akun`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ "data": [{ "nama": n, "wa": w, "alamat": a, "password": p }] })
+        })
+        .then(res => res.json())
+        .then(() => {
+            document.getElementById('loading-overlay').style.display = 'none';
+            alert("Berhasil Daftar! Silakan Login.");
+            toggleTab('login');
+        });
     }
 
     function handleLogin() {
-        const n = document.getElementById('l_nama').value, w = document.getElementById('l_wa').value;
+        const n = document.getElementById('l_nama').value,
+              w = document.getElementById('l_wa').value;
+
         if(!n||!w) return alert("Isi Nama & WA!");
         document.getElementById('loading-overlay').style.display = 'flex';
-        fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: new URLSearchParams({'action':'login','nama':n,'wa':w})})
-        .then(() => { setTimeout(() => { alert("Login Berhasil! Cek tab 'login' di Sheet."); location.reload(); }, 2000); });
+
+        // Cari user di tab daftar_akun
+        fetch(`${apiURL}/search?sheet=daftar_akun&nama=${n}&wa=${w}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.length > 0) {
+                // Jika ketemu, catat ke tab login
+                fetch(`${apiURL}?sheet=login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ "data": [{ "nama": n, "wa": w, "waktu": new Date().toLocaleString('id-ID') }] })
+                })
+                .then(() => {
+                    alert("Login Sukses!");
+                    window.location.href = "dashboard.html"; 
+                });
+            } else {
+                document.getElementById('loading-overlay').style.display = 'none';
+                alert("Data tidak cocok atau belum terdaftar!");
+            }
+        });
     }
 </script>
 </body>
