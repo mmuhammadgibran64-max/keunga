@@ -3,83 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | FINAL FIX</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <title>GIBRAN HUB | FINAL SYSTEM</title>
     <style>
-        body { font-family: 'Poppins', sans-serif; background: #040d16; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { background: #161b22; padding: 30px; border-radius: 15px; border: 1px solid #30363d; width: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h2 { text-align: center; color: #2f81f7; margin-bottom: 25px; }
-        .input-group { margin-bottom: 15px; }
-        input { width: 100%; padding: 12px; background: #010409; border: 1px solid #30363d; border-radius: 8px; color: white; box-sizing: border-box; outline: none; }
-        button { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-        .btn-login { background: #2f81f7; color: white; }
-        .btn-daftar { background: #238636; color: white; }
-        #msg { display: none; text-align: center; margin-bottom: 15px; color: #f0e042; font-weight: bold; }
+        body { font-family: sans-serif; background: #040d16; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: #161b22; padding: 30px; border-radius: 15px; border: 1px solid #30363d; width: 320px; }
+        input { width: 100%; padding: 10px; margin-bottom: 10px; background: #010409; border: 1px solid #30363d; border-radius: 5px; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; color: white; }
+        .btn-blue { background: #2f81f7; }
+        .btn-green { background: #238636; margin-top: 10px; }
+        #loading { display: none; color: yellow; text-align: center; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>GIBRAN HUB</h2>
-    <div id="msg">Memproses...</div>
-    
-    <div id="login-form">
-        <div class="input-group"><input type="text" id="l_nama" placeholder="Nama Lengkap"></div>
-        <div class="input-group"><input type="tel" id="l_wa" placeholder="Nomor WA"></div>
-        <button class="btn-login" onclick="handleLogin()">MASUK</button>
-        <p style="font-size: 12px; text-align: center; margin-top: 15px;">Belum punya akun? <a href="#" onclick="showDaftar()" style="color: #2f81f7; text-decoration: none;">Daftar</a></p>
-    </div>
+    <h2 style="text-align:center; color:#2f81f7;">GIBRAN HUB</h2>
+    <div id="loading">SABAR... SEDANG MENGIRIM...</div>
 
-    <div id="daftar-form" style="display:none;">
-        <div class="input-group"><input type="text" id="d_nama" placeholder="Nama Lengkap"></div>
-        <div class="input-group"><input type="tel" id="d_wa" placeholder="No WhatsApp"></div>
-        <div class="input-group"><input type="text" id="d_alamat" placeholder="Alamat"></div>
-        <div class="input-group"><input type="password" id="d_pass" placeholder="Password"></div>
-        <button class="btn-daftar" onclick="handleDaftar()">SIMPAN SEKARANG</button>
-        <p style="font-size: 12px; text-align: center; margin-top: 15px;"><a href="#" onclick="showLogin()" style="color: #2f81f7; text-decoration: none;">Kembali</a></p>
+    <div id="form-box">
+        <input type="text" id="nama" placeholder="NAMA LENGKAP">
+        <input type="tel" id="wa" placeholder="NOMOR WA (Contoh: 851...)">
+        <input type="text" id="alamat" placeholder="ALAMAT RUMAH">
+        <input type="password" id="pass" placeholder="PASSWORD">
+        
+        <button class="btn-green" onclick="prosesDaftar()">DAFTAR SEKARANG</button>
+        <button class="btn-blue" onclick="prosesLogin()" style="margin-top:20px;">TEST LOGIN</button>
     </div>
 </div>
 
 <script>
+    // PASTIKAN API URL INI BENAR!
     const apiURL = 'https://sheetdb.io/api/v1/jy19m4udkidqn';
 
-    function showDaftar() { document.getElementById('login-form').style.display='none'; document.getElementById('daftar-form').style.display='block'; }
-    function showLogin() { document.getElementById('login-form').style.display='block'; document.getElementById('daftar-form').style.display='none'; }
+    function prosesDaftar() {
+        const n = document.getElementById('nama').value;
+        const w = document.getElementById('wa').value;
+        const a = document.getElementById('alamat').value;
+        const p = document.getElementById('pass').value;
 
-    // FUNGSI DAFTAR (FIX NAMA & ALAMAT)
-    function handleDaftar() {
-        const n = document.getElementById('d_nama').value;
-        const w = document.getElementById('d_wa').value;
-        const a = document.getElementById('d_alamat').value;
-        const p = document.getElementById('d_pass').value;
+        if(!n || !w || !a || !p) return alert("SEMUA HARUS DIISI!");
 
-        if(!n||!w||!a||!p) return alert("Isi semua data!");
-        document.getElementById('msg').style.display='block';
+        document.getElementById('loading').style.display = 'block';
 
         fetch(`${apiURL}?sheet=daftar%20akun`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                "data": [{ 
-                    "nama": n,      // <-- Ini nembak kolom 'nama'
-                    "wa": w,        // <-- Ini nembak kolom 'wa'
-                    "alamat": a,    // <-- Ini nembak kolom 'alamat'
-                    "password": p   // <-- Ini nembak kolom 'password'
+                "data": [{
+                    "nama": n,
+                    "wa": w,
+                    "alamat": a,
+                    "password": p
                 }]
             })
-        }).then(() => {
-            alert("Berhasil! Data " + n + " sudah masuk semua.");
-            location.reload();
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('loading').style.display = 'none';
+            if(data.created) {
+                alert("BERHASIL! NAMA " + n + " SUDAH MASUK KE SHEET.");
+                // Reset form
+                document.getElementById('nama').value = "";
+                document.getElementById('wa').value = "";
+            } else {
+                alert("GAGAL: " + JSON.stringify(data));
+            }
+        })
+        .catch(err => {
+            document.getElementById('loading').style.display = 'none';
+            alert("KONEKSI ERROR: " + err);
         });
     }
 
-    // FUNGSI LOGIN (CATAT KE TAB LOGIN)
-    function handleLogin() {
-        const n = document.getElementById('l_nama').value.trim();
-        const w = document.getElementById('l_wa').value.trim();
-        
-        if(!n||!w) return alert("Isi Nama & WA!");
-        document.getElementById('msg').style.display='block';
+    function prosesLogin() {
+        const n = document.getElementById('nama').value;
+        const w = document.getElementById('wa').value;
+        if(!n || !w) return alert("ISI NAMA & WA BUAT TEST LOGIN!");
+
+        document.getElementById('loading').style.display = 'block';
 
         fetch(`${apiURL}/search?sheet=daftar%20akun&nama=${n}&wa=${w}`)
         .then(res => res.json())
@@ -89,16 +90,14 @@
                 fetch(`${apiURL}?sheet=login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        "data": [{ "nama": n, "wa": w, "waktu": new Date().toLocaleString('id-ID') }]
-                    })
+                    body: JSON.stringify({ "data": [{ "nama": n, "wa": w, "waktu": new Date().toLocaleString() }] })
                 }).then(() => {
-                    alert("Login Berhasil!");
-                    window.location.href = "dashboard.html"; 
+                    alert("LOGIN SUKSES & TERCATAT!");
+                    document.getElementById('loading').style.display = 'none';
                 });
             } else {
-                document.getElementById('msg').style.display='none';
-                alert("Data gak ketemu! Pastiin nama & WA sama kayak pas daftar.");
+                document.getElementById('loading').style.display = 'none';
+                alert("DATA TIDAK COCOK DI SHEET!");
             }
         });
     }
