@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | FINAL SYSTEM</title>
+    <title>GIBRAN HUB | FINAL FIX</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Poppins', sans-serif; background: #040d16; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
@@ -14,19 +14,19 @@
         button { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
         .btn-login { background: #2f81f7; color: white; }
         .btn-daftar { background: #238636; color: white; }
-        #loading { display: none; text-align: center; margin-bottom: 15px; color: #f0e042; font-weight: bold; }
+        #msg { display: none; text-align: center; margin-bottom: 15px; color: #f0e042; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="card">
     <h2>GIBRAN HUB</h2>
-    <div id="loading">Memproses data...</div>
+    <div id="msg">Memproses...</div>
     
     <div id="login-form">
-        <div class="input-group"><input type="text" id="l_nama" placeholder="Ketik Nama Lengkap"></div>
-        <div class="input-group"><input type="tel" id="l_wa" placeholder="Nomor WA (Contoh: 851...)"></div>
-        <button class="btn-login" onclick="handleLogin()">MASUK DASHBOARD</button>
+        <div class="input-group"><input type="text" id="l_nama" placeholder="Nama Lengkap"></div>
+        <div class="input-group"><input type="tel" id="l_wa" placeholder="Nomor WA"></div>
+        <button class="btn-login" onclick="handleLogin()">MASUK</button>
         <p style="font-size: 12px; text-align: center; margin-top: 15px;">Belum punya akun? <a href="#" onclick="showDaftar()" style="color: #2f81f7; text-decoration: none;">Daftar</a></p>
     </div>
 
@@ -35,7 +35,7 @@
         <div class="input-group"><input type="tel" id="d_wa" placeholder="No WhatsApp"></div>
         <div class="input-group"><input type="text" id="d_alamat" placeholder="Alamat"></div>
         <div class="input-group"><input type="password" id="d_pass" placeholder="Password"></div>
-        <button class="btn-daftar" onclick="handleDaftar()">SIMPAN & DAFTAR</button>
+        <button class="btn-daftar" onclick="handleDaftar()">SIMPAN SEKARANG</button>
         <p style="font-size: 12px; text-align: center; margin-top: 15px;"><a href="#" onclick="showLogin()" style="color: #2f81f7; text-decoration: none;">Kembali</a></p>
     </div>
 </div>
@@ -46,27 +46,41 @@
     function showDaftar() { document.getElementById('login-form').style.display='none'; document.getElementById('daftar-form').style.display='block'; }
     function showLogin() { document.getElementById('login-form').style.display='block'; document.getElementById('daftar-form').style.display='none'; }
 
+    // FUNGSI DAFTAR (FIX NAMA & ALAMAT)
     function handleDaftar() {
-        const n = document.getElementById('d_nama').value, w = document.getElementById('d_wa').value, a = document.getElementById('d_alamat').value, p = document.getElementById('d_pass').value;
+        const n = document.getElementById('d_nama').value;
+        const w = document.getElementById('d_wa').value;
+        const a = document.getElementById('d_alamat').value;
+        const p = document.getElementById('d_pass').value;
+
         if(!n||!w||!a||!p) return alert("Isi semua data!");
-        document.getElementById('loading').style.display='block';
+        document.getElementById('msg').style.display='block';
 
         fetch(`${apiURL}?sheet=daftar%20akun`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ "data": [{ "nama": n, "wa": w, "alamat": a, "password": p }] }) // NAMA MASUK OTOMATIS
+            body: JSON.stringify({
+                "data": [{ 
+                    "nama": n,      // <-- Ini nembak kolom 'nama'
+                    "wa": w,        // <-- Ini nembak kolom 'wa'
+                    "alamat": a,    // <-- Ini nembak kolom 'alamat'
+                    "password": p   // <-- Ini nembak kolom 'password'
+                }]
+            })
         }).then(() => {
-            alert("Daftar Berhasil! Nama lo udah masuk.");
+            alert("Berhasil! Data " + n + " sudah masuk semua.");
             location.reload();
         });
     }
 
+    // FUNGSI LOGIN (CATAT KE TAB LOGIN)
     function handleLogin() {
-        const n = document.getElementById('l_nama').value.trim(), w = document.getElementById('l_wa').value.trim();
+        const n = document.getElementById('l_nama').value.trim();
+        const w = document.getElementById('l_wa').value.trim();
+        
         if(!n||!w) return alert("Isi Nama & WA!");
-        document.getElementById('loading').style.display='block';
+        document.getElementById('msg').style.display='block';
 
-        // Cari data di tab 'daftar akun'
         fetch(`${apiURL}/search?sheet=daftar%20akun&nama=${n}&wa=${w}`)
         .then(res => res.json())
         .then(data => {
@@ -75,14 +89,16 @@
                 fetch(`${apiURL}?sheet=login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ "data": [{ "nama": n, "wa": w, "waktu": new Date().toLocaleString('id-ID') }] })
+                    body: JSON.stringify({
+                        "data": [{ "nama": n, "wa": w, "waktu": new Date().toLocaleString('id-ID') }]
+                    })
                 }).then(() => {
-                    alert("Login Sukses!");
+                    alert("Login Berhasil!");
                     window.location.href = "dashboard.html"; 
                 });
             } else {
-                document.getElementById('loading').style.display='none';
-                alert("Data gak ketemu! Cek Nama ama WA lo lagi.");
+                document.getElementById('msg').style.display='none';
+                alert("Data gak ketemu! Pastiin nama & WA sama kayak pas daftar.");
             }
         });
     }
