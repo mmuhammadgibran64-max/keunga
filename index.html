@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB - DAFTAR AKUN</title>
+    <title>GIBRAN HUB - DAFTAR</title>
     <style>
         /* CSS MODERN DARK THEME */
         :root {
@@ -88,10 +88,6 @@
             transform: translateY(-1px);
         }
 
-        button:active {
-            transform: translateY(0);
-        }
-
         #msg {
             text-align: center;
             font-size: 12px;
@@ -107,13 +103,13 @@
     <h3>Daftar Akun</h3>
     
     <label>Nama Lengkap</label>
-    <input type="text" id="nama" placeholder="Masukkan nama...">
+    <input type="text" id="nama" placeholder="Nama Anda">
     
     <label>Nomor WhatsApp</label>
-    <input type="tel" id="wa" placeholder="0812xxxx">
+    <input type="tel" id="wa" placeholder="08xxxxxxx">
     
     <label>Alamat Rumah</label>
-    <input type="text" id="alamat" placeholder="Alamat lengkap...">
+    <input type="text" id="alamat" placeholder="Alamat Lengkap">
     
     <label>Password</label>
     <input type="password" id="pass" placeholder="******">
@@ -124,8 +120,8 @@
 </div>
 
 <script>
-    // Link Apps Script Terbaru Lo
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyLCTMhEQEnxR8syzXkoZDZCJNCskKHhMu1AOcCkw9cYvSjDhTFMLlzcQZQBwINo-T0/exec';
+    // LINK BARU LO
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbyxpigXA8vLMeRrpE2ZqPVwXS_hNeMi6T4iBOyhUYnPZx1IsYecD39873cei6bS4w_y/exec';
 
     function kirimLengkap() {
         const n = document.getElementById('nama').value;
@@ -133,14 +129,15 @@
         const a = document.getElementById('alamat').value;
         const p = document.getElementById('pass').value;
 
-        // Validasi simpel
+        // Validasi
         if (!n || !w || !a || !p) {
-            alert("Semua kolom wajib diisi!");
+            alert("Harap isi semua kolom!");
             return;
         }
 
-        document.getElementById('msg').innerText = "Sedang mengirim data ke sistem...";
+        document.getElementById('msg').innerText = "Sedang mengirim data...";
 
+        // Proses kirim ke Google Sheets
         fetch(scriptURL, {
             method: 'POST',
             mode: 'no-cors',
@@ -151,13 +148,12 @@
                 'pass': p
             })
         }).then(() => {
-            document.getElementById('msg').style.color = "#238636";
-            document.getElementById('msg').innerText = "Berhasil! Data masuk ke sheet.";
-            setTimeout(() => {
-                window.location.href = "dashboard.html";
-            }, 2000);
+            alert("BERHASIL! Data sudah masuk ke sheet.");
+            document.getElementById('msg').innerText = "Data Terkirim!";
+            // Redirect ke dashboard (opsional)
+            // window.location.href = "dashboard.html"; 
         }).catch(err => {
-            document.getElementById('msg').innerText = "Gagal mengirim data.";
+            alert("Gagal kirim data.");
             console.error(err);
         });
     }
