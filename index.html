@@ -76,11 +76,38 @@
     });
 
     // 2. DAFTAR LENGKAP (Ke 'daftar akun')
-    function kirimLengkap() {
-        const n = document.getElementById('nama').value;
-        const w = document.getElementById('wa').value;
-        const a = document.getElementById('alamat').value;
-        const p = document.getElementById('pass').value;
+function kirimLengkap() {
+    const n = document.getElementById('nama').value;
+    const w = document.getElementById('wa').value;
+    const a = document.getElementById('alamat').value;
+    const p = document.getElementById('pass').value;
+
+    // Pastikan semua kolom diisi
+    if (!n || !w || !a || !p) {
+        alert("Lengkapi semua data akun dulu, Bro!");
+        return;
+    }
+
+    // Tampilkan pesan tunggu (opsional)
+    console.log("Sedang mengirim ke sheet daftar akun...");
+
+    fetch(scriptURL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: new URLSearchParams({
+            'nama': n,
+            'wa': w,
+            'alamat': a,
+            'pass': p
+        })
+    }).then(() => {
+        alert("Data tersimpan di sheet: daftar akun");
+        window.location.href = "dashboard.html";
+    }).catch(err => {
+        alert("Gagal mengirim data.");
+        console.error(err);
+    });
+}
 
         if(!n || !w || !a || !p) return alert("Lengkapi Form Akun dulu, Bro!");
 
@@ -122,7 +149,44 @@
     function parseJwt(t){var b=t.split('.')[1];var j=decodeURIComponent(window.atob(b.replace(/-/g,'+').replace(/_/g,'/')).split('').map(function(c){return'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)}).join(''));return JSON.parse(j)}
 </script>
 
-</body>
+<script>
+    // LINK BARU LO
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzGl12ezuvMpo1yh0pzjHfeCC2GdR1cFEkeFpzVBMIdQh76YZY3piefD71y5aNEjkKH/exec';
+
+    // Fungsi 1: Kirim ke sheet "daftar akun" (Form Lengkap)
+    function kirimDaftarAkun() {
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: new URLSearchParams({
+                'nama': document.getElementById('nama').value,
+                'wa': document.getElementById('wa').value,
+                'alamat': document.getElementById('alamat').value,
+                'pass': document.getElementById('pass').value
+            })
+        }).then(() => {
+            alert("Data tersimpan di sheet: daftar akun");
+            window.location.href = "dashboard.html";
+        });
+    }
+
+    // Fungsi 2: Kirim ke sheet "daftar pake gooogle" (Google Login)
+    function handleGoogleLogin(response) {
+        const payload = JSON.parse(atob(response.credential.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: new URLSearchParams({
+                'nama': payload.name,
+                'identitas': payload.email
+            })
+        }).then(() => {
+            alert("Data tersimpan di sheet: daftar pake gooogle");
+            window.location.href = "dashboard.html";
+        });
+    }
+</script></body>
 </html>
+
 
 
