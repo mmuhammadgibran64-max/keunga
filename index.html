@@ -10,7 +10,7 @@
             --primary: #2f81f7;
             --primary-glow: rgba(47, 129, 247, 0.5);
             --bg: #040d16;
-            --card: rgba(22, 27, 34, 0.8);
+            --card: rgba(22, 27, 34, 0.9);
             --text: #f0f6fc;
             --border: #30363d;
             --success: #238636;
@@ -25,6 +25,20 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            overflow: hidden;
+        }
+
+        /* Loading Screen Overlay */
+        #loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg);
+            z-index: 9999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
         }
 
         .auth-card {
@@ -37,161 +51,86 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
             padding: 40px 30px;
             animation: fadeIn 0.8s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            position: relative;
         }
 
         .header h1 {
-            text-align: center;
-            font-size: 28px;
-            letter-spacing: 2px;
+            text-align: center; font-size: 28px; letter-spacing: 2px;
             background: linear-gradient(to right, #fff, var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             margin-bottom: 30px;
         }
 
-        .tab-menu {
-            display: flex;
-            margin-bottom: 25px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .tab {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: 600;
-            color: #8b949e;
-            transition: 0.3s;
-        }
-
-        .tab.active {
-            color: var(--primary);
-            border-bottom: 3px solid var(--primary);
-        }
+        .tab-menu { display: flex; margin-bottom: 25px; border-bottom: 1px solid var(--border); }
+        .tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; font-weight: 600; color: #8b949e; }
+        .tab.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
 
         .form-content { display: none; }
         .form-content.active { display: block; }
 
         .input-group { margin-bottom: 20px; position: relative; }
-
-        label {
-            display: block;
-            font-size: 13px;
-            margin-bottom: 8px;
-            color: #8b949e;
-        }
-
+        label { display: block; font-size: 13px; margin-bottom: 8px; color: #8b949e; }
         input {
-            width: 100%;
-            padding: 12px 15px;
-            background: rgba(1, 4, 9, 0.8);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: white;
-            font-size: 14px;
-            box-sizing: border-box;
-            transition: 0.3s;
+            width: 100%; padding: 12px 15px; background: rgba(1, 4, 9, 0.8);
+            border: 1px solid var(--border); border-radius: 10px; color: white;
+            font-size: 14px; box-sizing: border-box; transition: 0.3s;
         }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 8px var(--primary-glow); outline: none; }
 
-        input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 8px var(--primary-glow);
-            outline: none;
-        }
-
-        /* Tombol Intip Password */
+        /* Fitur Intip Password */
         .toggle-password {
-            position: absolute;
-            right: 15px;
-            top: 38px;
-            cursor: pointer;
-            color: #8b949e;
-            font-size: 12px;
-            user-select: none;
-            transition: 0.3s;
+            position: absolute; right: 15px; top: 38px;
+            cursor: pointer; color: #8b949e; font-size: 11px; font-weight: bold;
         }
-        .toggle-password:hover { color: var(--primary); }
 
         button {
-            width: 100%;
-            padding: 14px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.3s;
+            width: 100%; padding: 14px; background: var(--primary);
+            color: white; border: none; border-radius: 10px;
+            font-weight: 600; cursor: pointer; transition: 0.3s;
         }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px var(--primary-glow); }
 
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px var(--primary-glow);
-        }
-
-        #msg {
-            text-align: center;
-            font-size: 12px;
-            margin-top: 20px;
-            color: #e3b341;
-        }
-
+        /* Spinner Loading */
         .spinner {
-            display: none;
-            width: 25px;
-            height: 25px;
-            border: 3px solid rgba(255,255,255,0.1);
-            border-top: 3px solid var(--primary);
+            width: 60px; height: 60px;
+            border: 6px solid rgba(255,255,255,0.1);
+            border-top: 6px solid var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 15px auto;
         }
 
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
+<div id="loading-overlay">
+    <div class="spinner"></div>
+    <p id="load-text" style="margin-top: 25px; font-weight: 600; font-size: 18px; color: white;">Memproses Pendaftaran...</p>
+    <p style="color: #8b949e; font-size: 12px;">Mohon tunggu sebentar (Proses 5 detik)</p>
+</div>
+
 <div class="auth-card">
-    <div class="header">
-        <h1>GIBRAN HUB</h1>
-    </div>
+    <div class="header"><h1>GIBRAN HUB</h1></div>
 
     <div class="tab-menu">
-        <div class="tab active" id="t-login" onclick="toggleTab('login')">LOGIN</div>
-        <div class="tab" id="t-daftar" onclick="toggleTab('daftar')">DAFTAR</div>
+        <div class="tab" id="t-login" onclick="toggleTab('login')">LOGIN</div>
+        <div class="tab active" id="t-daftar" onclick="toggleTab('daftar')">DAFTAR</div>
     </div>
 
-    <div id="login-form" class="form-content active">
-        <div class="input-group">
-            <label>Nama Akun</label>
-            <input type="text" id="l_nama" placeholder="Masukkan Nama">
-        </div>
-        <div class="input-group">
-            <label>Nomor WhatsApp</label>
-            <input type="tel" id="l_wa" placeholder="08xxxxxxxx">
-        </div>
-        <button onclick="handleLogin()">MASUK</button>
-    </div>
-
-    <div id="daftar-form" class="form-content">
+    <div id="daftar-form" class="form-content active">
         <div class="input-group">
             <label>Nama Lengkap</label>
-            <input type="text" id="d_nama" placeholder="Nama Anda">
+            <input type="text" id="d_nama" placeholder="Masukkan Nama">
         </div>
         <div class="input-group">
             <label>Nomor WhatsApp</label>
             <input type="tel" id="d_wa" placeholder="08xxxxxxxx">
         </div>
         <div class="input-group">
-            <label>Alamat</label>
-            <input type="text" id="d_alamat" placeholder="Alamat Tinggal">
+            <label>Alamat Rumah</label>
+            <input type="text" id="d_alamat" placeholder="Alamat Anda">
         </div>
         <div class="input-group">
             <label>Password</label>
@@ -201,30 +140,37 @@
         <button onclick="handleDaftar()" style="background: var(--success);">DAFTAR SEKARANG</button>
     </div>
 
-    <div id="load-icon" class="spinner"></div>
-    <p id="msg"></p>
+    <div id="login-form" class="form-content">
+        <div class="input-group">
+            <label>Nama Pengguna</label>
+            <input type="text" id="l_nama" placeholder="Masukkan Nama">
+        </div>
+        <div class="input-group">
+            <label>Nomor WhatsApp</label>
+            <input type="tel" id="l_wa" placeholder="Masukkan No WA">
+        </div>
+        <button onclick="handleLogin()">MASUK DASHBOARD</button>
+    </div>
+
+    <p id="msg" style="text-align: center; font-size: 12px; margin-top: 20px; color: #e3b341;"></p>
 </div>
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbw5tp9JPOA7J4tSKLPjwD-tAsfnRj4EVtVBx-MaD6dQzW7uKrfwxQB8oa7KfLD2CqyS/exec';
+    // Link Apps Script terbaru lo
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwDIMSj61BcdFLNw7KpYOub88ZKcPftA9oMdCUzqEd7HN45abSJM1PjqbvEDm0OivBh/exec';
 
-    // FUNGSI LIHAT PASSWORD
+    // Toggle Intip Password
     function togglePass() {
         const p = document.getElementById('d_pass');
         const t = document.querySelector('.toggle-password');
-        if (p.type === "password") {
-            p.type = "text";
-            t.innerText = "SEMBUNYI";
-        } else {
-            p.type = "password";
-            t.innerText = "LIHAT";
-        }
+        if (p.type === "password") { p.type = "text"; t.innerText = "TUTUP"; }
+        else { p.type = "password"; t.innerText = "LIHAT"; }
     }
 
+    // Ganti Tab Login/Daftar
     function toggleTab(type) {
         const lTab = document.getElementById('t-login'), dTab = document.getElementById('t-daftar');
         const lForm = document.getElementById('login-form'), dForm = document.getElementById('daftar-form');
-        document.getElementById('msg').innerText = "";
         if(type === 'login') {
             lTab.classList.add('active'); dTab.classList.remove('active');
             lForm.classList.add('active'); dForm.classList.remove('active');
@@ -234,27 +180,52 @@
         }
     }
 
-    function handleLogin() {
-        const n = document.getElementById('l_nama').value, w = document.getElementById('l_wa').value;
-        if(!n || !w) { alert("Isi data!"); return; }
-        startLoading(true, "Mengecek data...");
-        fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: new URLSearchParams({'action': 'login', 'nama': n, 'wa': w}) })
-        .then(() => { alert("Login Berhasil!"); window.location.href = "dashboard.html"; })
-        .catch(() => { alert("Error!"); startLoading(false); });
-    }
-
+    // --- PROSES DAFTAR ---
     function handleDaftar() {
-        const n = document.getElementById('d_nama').value, w = document.getElementById('d_wa').value, a = document.getElementById('d_alamat').value, p = document.getElementById('d_pass').value;
-        if(!n || !w || !a || !p) { alert("Lengkapi data!"); return; }
-        startLoading(true, "Mendaftarkan...");
-        fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: new URLSearchParams({'action': 'daftar', 'nama': n, 'wa': w, 'alamat': a, 'pass': p}) })
-        .then(() => { alert("Daftar Berhasil!"); window.location.href = "dashboard.html"; })
-        .catch(() => { alert("Error!"); startLoading(false); });
+        const n = document.getElementById('d_nama').value;
+        const w = document.getElementById('d_wa').value;
+        const a = document.getElementById('d_alamat').value;
+        const p = document.getElementById('d_pass').value;
+
+        if(!n || !w || !a || !p) { alert("Data harus lengkap!"); return; }
+
+        // Tampilkan Loading Overlay
+        document.getElementById('loading-overlay').style.display = 'flex';
+
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: new URLSearchParams({'action': 'daftar', 'nama': n, 'wa': w, 'alamat': a, 'pass': p})
+        }).then(() => {
+            // Loading selama 5 detik biar keren
+            document.getElementById('load-text').innerText = "Data tersimpan! Membuka halaman login...";
+            setTimeout(() => {
+                document.getElementById('loading-overlay').style.display = 'none';
+                alert("Daftar Sukses! Sekarang silakan login.");
+                toggleTab('login'); // Pindah ke tab login otomatis
+            }, 5000); 
+        });
     }
 
-    function startLoading(status, teks = "") {
-        document.getElementById('load-icon').style.display = status ? 'block' : 'none';
-        document.getElementById('msg').innerText = teks;
+    // --- PROSES LOGIN ---
+    function handleLogin() {
+        const n = document.getElementById('l_nama').value;
+        const w = document.getElementById('l_wa').value;
+        if(!n || !w) { alert("Lengkapi data login!"); return; }
+
+        document.getElementById('loading-overlay').style.display = 'flex';
+        document.getElementById('load-text').innerText = "Memverifikasi Akun...";
+
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: new URLSearchParams({'action': 'login', 'nama': n, 'wa': w})
+        }).then(() => {
+            setTimeout(() => {
+                alert("Login Berhasil! Selamat Datang.");
+                window.location.href = "dashboard.html";
+            }, 2000);
+        });
     }
 </script>
 </body>
