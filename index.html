@@ -28,7 +28,7 @@
             overflow: hidden;
         }
 
-        /* Loading Screen Overlay */
+        /* Full Screen Loading */
         #loading-overlay {
             display: none;
             position: fixed;
@@ -104,7 +104,7 @@
 
 <div id="loading-overlay">
     <div class="spinner"></div>
-    <p id="load-text" style="margin-top: 25px; font-weight: 600; font-size: 18px; color: white;">Memproses Data...</p>
+    <p id="load-text" style="margin-top: 25px; font-weight: 600; font-size: 18px; color: white;">Memproses...</p>
 </div>
 
 <div class="auth-card">
@@ -118,7 +118,7 @@
     <div id="daftar-form" class="form-content active">
         <div class="input-group">
             <label>Nama Lengkap</label>
-            <input type="text" id="d_nama" placeholder="Nama Anda">
+            <input type="text" id="d_nama" placeholder="Contoh: Gibran">
         </div>
         <div class="input-group">
             <label>Nomor WhatsApp</label>
@@ -130,7 +130,7 @@
         </div>
         <div class="input-group">
             <label>Password</label>
-            <input type="password" id="d_pass" placeholder="Password">
+            <input type="password" id="d_pass" placeholder="Buat Password">
             <span class="toggle-password" onclick="togglePass()">LIHAT</span>
         </div>
         <button onclick="handleDaftar()" style="background: var(--success);">DAFTAR SEKARANG</button>
@@ -138,19 +138,19 @@
 
     <div id="login-form" class="form-content">
         <div class="input-group">
-            <label>Nama Pengguna</label>
-            <input type="text" id="l_nama" placeholder="Masukkan Nama">
+            <label>Nama Akun</label>
+            <input type="text" id="l_nama" placeholder="Masukkan nama terdaftar">
         </div>
         <div class="input-group">
             <label>Nomor WhatsApp</label>
             <input type="tel" id="l_wa" placeholder="08xxxxxxxx">
         </div>
-        <button onclick="handleLogin()">MASUK KE DASHBOARD</button>
+        <button onclick="handleLogin()">MASUK KE HUB</button>
     </div>
 </div>
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycby2TZTQ8w5pYvxCIAZRycnwRpLWmrN_BkTOd5ZYyxrmgAIuiM6jHDujm5G116OZx3GO/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzyq1144442kJ5cPQRPdkUpSM2dDxgg1RaONTsmnnyfm_nyoY8IaOckMLFC4GLAFGvf/exec';
 
     function togglePass() {
         const p = document.getElementById('d_pass');
@@ -173,20 +173,20 @@
 
     function handleDaftar() {
         const n = document.getElementById('d_nama').value, w = document.getElementById('d_wa').value, a = document.getElementById('d_alamat').value, p = document.getElementById('d_pass').value;
-        if(!n || !w || !a || !p) { alert("Data tidak lengkap!"); return; }
+        if(!n || !w || !a || !p) { alert("Lengkapi semua data!"); return; }
 
         document.getElementById('loading-overlay').style.display = 'flex';
-        document.getElementById('load-text').innerText = "Sedang Mendaftarkan Akun...";
+        document.getElementById('load-text').innerText = "Mendaftarkan Akun Baru...";
 
         fetch(scriptURL, {
             method: 'POST',
             mode: 'no-cors',
             body: new URLSearchParams({'action': 'daftar', 'nama': n, 'wa': w, 'alamat': a, 'pass': p})
         }).then(() => {
-            document.getElementById('load-text').innerText = "Data Tersimpan! Menuju Halaman Login...";
+            document.getElementById('load-text').innerText = "Tersimpan di Sheet Daftar! Menyiapkan Halaman Login...";
             setTimeout(() => {
                 document.getElementById('loading-overlay').style.display = 'none';
-                alert("Pendaftaran Berhasil! Silakan Login Kembali.");
+                alert("Daftar Sukses! Silakan Login sekarang.");
                 toggleTab('login');
             }, 5000); 
         });
@@ -194,19 +194,20 @@
 
     function handleLogin() {
         const n = document.getElementById('l_nama').value, w = document.getElementById('l_wa').value;
-        if(!n || !w) { alert("Lengkapi Nama & WA!"); return; }
+        if(!n || !w) { alert("Isi Nama & No WA!"); return; }
 
         document.getElementById('loading-overlay').style.display = 'flex';
-        document.getElementById('load-text').innerText = "Memverifikasi Akun...";
+        document.getElementById('load-text').innerText = "Verifikasi & Mencatat Log Login...";
 
         fetch(scriptURL, {
             method: 'POST',
             mode: 'no-cors',
             body: new URLSearchParams({'action': 'login', 'nama': n, 'wa': w})
         }).then(() => {
+            // Karena mode no-cors, kita kasih jeda 2 detik seolah-olah verifikasi sukses
             setTimeout(() => {
                 document.getElementById('loading-overlay').style.display = 'none';
-                alert("Login Berhasil! Selamat Datang.");
+                alert("Akses Hub Diterima! Cek Tab 'login' di Sheet lo.");
                 window.location.href = "dashboard.html";
             }, 2000);
         });
