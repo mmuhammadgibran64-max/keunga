@@ -3,89 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB - DAFTAR</title>
+    <title>GIBRAN HUB | ACCESS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /* CSS MODERN DARK THEME */
         :root {
-            --bg: #0d1117;
-            --card: #161b22;
-            --accent: #2f81f7;
-            --text-main: #c9d1d9;
+            --primary: #2f81f7;
+            --primary-glow: rgba(47, 129, 247, 0.5);
+            --bg: #040d16;
+            --card: rgba(22, 27, 34, 0.8);
+            --text: #f0f6fc;
             --border: #30363d;
             --success: #238636;
-            --success-hover: #2ea043;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            background-color: var(--bg);
-            color: var(--text-main);
-            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at center, #0d1117 0%, #040d16 100%);
+            color: var(--text);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
         }
 
-        .box {
-            background-color: var(--card);
+        /* Latar belakang variasi biar gak sepi */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: var(--primary);
+            filter: blur(150px);
+            opacity: 0.15;
+            z-index: -1;
+            top: 10%;
+            left: 10%;
+        }
+
+        .auth-card {
+            background: var(--card);
+            backdrop-filter: blur(10px);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 30px;
+            border-radius: 20px;
             width: 100%;
-            max-width: 350px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            padding: 40px 30px;
+            position: relative;
+            animation: fadeIn 0.8s ease-out;
         }
 
-        h3 {
-            text-align: center;
-            margin: 0 0 25px 0;
-            font-size: 22px;
-            color: var(--accent);
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tab-menu {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: #8b949e;
+            transition: 0.3s;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .form-content { display: none; }
+        .form-content.active { display: block; animation: slideIn 0.4s ease-out; }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .input-group { margin-bottom: 20px; }
 
         label {
             display: block;
             font-size: 13px;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             color: #8b949e;
         }
 
         input {
             width: 100%;
-            padding: 12px;
-            margin-bottom: 18px;
-            background-color: #010409;
+            padding: 12px 15px;
+            background: rgba(1, 4, 9, 0.8);
             border: 1px solid var(--border);
-            border-radius: 6px;
+            border-radius: 10px;
             color: white;
             font-size: 14px;
             box-sizing: border-box;
-            transition: 0.2s;
+            transition: 0.3s;
         }
 
         input:focus {
-            border-color: var(--accent);
+            border-color: var(--primary);
+            box-shadow: 0 0 8px var(--primary-glow);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(47, 129, 247, 0.2);
         }
 
         button {
             width: 100%;
-            padding: 12px;
-            background-color: var(--success);
+            padding: 14px;
+            background: var(--primary);
             color: white;
             border: none;
-            border-radius: 6px;
-            font-size: 15px;
+            border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
+            transition: 0.3s;
+            margin-top: 10px;
         }
 
         button:hover {
-            background-color: var(--success-hover);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--primary-glow);
+            filter: brightness(1.1);
         }
 
         #msg {
@@ -93,71 +154,139 @@
             font-size: 12px;
             margin-top: 20px;
             color: #e3b341;
-            min-height: 1.2em;
+            font-style: italic;
         }
+
+        /* Spinner Loading */
+        .spinner {
+            display: none;
+            width: 25px;
+            height: 25px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 15px auto;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h3>Daftar Akun</h3>
-    
-    <label>Nama Lengkap</label>
-    <input type="text" id="nama" placeholder="Nama Anda">
-    
-    <label>Nomor WhatsApp</label>
-    <input type="tel" id="wa" placeholder="08xxxxxxx">
-    
-    <label>Alamat Rumah</label>
-    <input type="text" id="alamat" placeholder="Alamat Lengkap">
-    
-    <label>Password</label>
-    <input type="password" id="pass" placeholder="******">
-    
-    <button onclick="kirimLengkap()">DAFTAR SEKARANG</button>
-    
+<div class="auth-card">
+    <div class="header">
+        <h1>GIBRAN HUB</h1>
+    </div>
+
+    <div class="tab-menu">
+        <div class="tab active" id="t-login" onclick="toggleTab('login')">LOGIN</div>
+        <div class="tab" id="t-daftar" onclick="toggleTab('daftar')">DAFTAR</div>
+    </div>
+
+    <div id="login-form" class="form-content active">
+        <div class="input-group">
+            <label>Nama Akun</label>
+            <input type="text" id="l_nama" placeholder="Username/Nama">
+        </div>
+        <div class="input-group">
+            <label>Nomor WhatsApp</label>
+            <input type="tel" id="l_wa" placeholder="08xxxxxxxx">
+        </div>
+        <button onclick="handleLogin()">MASUK KE HUB</button>
+    </div>
+
+    <div id="daftar-form" class="form-content">
+        <div class="input-group">
+            <label>Nama Lengkap</label>
+            <input type="text" id="d_nama" placeholder="Nama Anda">
+        </div>
+        <div class="input-group">
+            <label>Nomor WhatsApp</label>
+            <input type="tel" id="d_wa" placeholder="08xxxxxxxx">
+        </div>
+        <div class="input-group">
+            <label>Alamat</label>
+            <input type="text" id="d_alamat" placeholder="Alamat Tinggal">
+        </div>
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" id="d_pass" placeholder="Buat Password">
+        </div>
+        <button onclick="handleDaftar()" style="background: var(--success);">BUAT AKUN</button>
+    </div>
+
+    <div id="load-icon" class="spinner"></div>
     <p id="msg"></p>
 </div>
 
 <script>
-    // LINK BARU LO
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyxpigXA8vLMeRrpE2ZqPVwXS_hNeMi6T4iBOyhUYnPZx1IsYecD39873cei6bS4w_y/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbw5tp9JPOA7J4tSKLPjwD-tAsfnRj4EVtVBx-MaD6dQzW7uKrfwxQB8oa7KfLD2CqyS/exec';
 
-    function kirimLengkap() {
-        const n = document.getElementById('nama').value;
-        const w = document.getElementById('wa').value;
-        const a = document.getElementById('alamat').value;
-        const p = document.getElementById('pass').value;
+    function toggleTab(type) {
+        const lTab = document.getElementById('t-login');
+        const dTab = document.getElementById('t-daftar');
+        const lForm = document.getElementById('login-form');
+        const dForm = document.getElementById('daftar-form');
+        const msg = document.getElementById('msg');
 
-        // Validasi
-        if (!n || !w || !a || !p) {
-            alert("Harap isi semua kolom!");
-            return;
+        msg.innerText = "";
+        if(type === 'login') {
+            lTab.classList.add('active'); dTab.classList.remove('active');
+            lForm.classList.add('active'); dForm.classList.remove('active');
+        } else {
+            dTab.classList.add('active'); lTab.classList.remove('active');
+            dForm.classList.add('active'); lForm.classList.remove('active');
         }
+    }
 
-        document.getElementById('msg').innerText = "Sedang mengirim data...";
+    function handleLogin() {
+        const n = document.getElementById('l_nama').value;
+        const w = document.getElementById('l_wa').value;
+        if(!n || !w) { alert("Data belum lengkap!"); return; }
 
-        // Proses kirim ke Google Sheets
+        startLoading(true, "Mencocokkan data...");
+
         fetch(scriptURL, {
             method: 'POST',
             mode: 'no-cors',
-            body: new URLSearchParams({
-                'nama': n,
-                'wa': w,
-                'alamat': a,
-                'pass': p
-            })
+            body: new URLSearchParams({'action': 'login', 'nama': n, 'wa': w})
         }).then(() => {
-            alert("BERHASIL! Data sudah masuk ke sheet.");
-            document.getElementById('msg').innerText = "Data Terkirim!";
-            // Redirect ke dashboard (opsional)
-            // window.location.href = "dashboard.html"; 
-        }).catch(err => {
-            alert("Gagal kirim data.");
-            console.error(err);
+            alert("Akses Diterima! Membuka Dashboard...");
+            window.location.href = "dashboard.html";
+        }).catch(() => {
+            alert("Error Koneksi!");
+            startLoading(false);
         });
     }
-</script>
 
+    function handleDaftar() {
+        const n = document.getElementById('d_nama').value;
+        const w = document.getElementById('d_wa').value;
+        const a = document.getElementById('d_alamat').value;
+        const p = document.getElementById('d_pass').value;
+
+        if(!n || !w || !a || !p) { alert("Lengkapi formulir!"); return; }
+
+        startLoading(true, "Mendaftarkan akun baru...");
+
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: new URLSearchParams({'action': 'daftar', 'nama': n, 'wa': w, 'alamat': a, 'pass': p})
+        }).then(() => {
+            alert("Akun Berhasil Dibuat!");
+            window.location.href = "dashboard.html";
+        }).catch(() => {
+            alert("Gagal terhubung!");
+            startLoading(false);
+        });
+    }
+
+    function startLoading(status, teks = "") {
+        document.getElementById('load-icon').style.display = status ? 'block' : 'none';
+        document.getElementById('msg').innerText = teks;
+    }
+</script>
 </body>
 </html>
