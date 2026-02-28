@@ -1,50 +1,59 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-    <title>GIBRAN HUB ONLINE</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIBRAN HUB | DATABASE</title>
     <style>
-        body { background: #0d1117; color: white; font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; }
-        .box { background: #161b22; padding: 20px; border-radius: 10px; border: 1px solid #30363d; width: 300px; }
-        input { width: 100%; padding: 10px; margin: 5px 0; box-sizing: border-box; background: #010409; color: white; border: 1px solid #30363d; }
-        button { width: 100%; padding: 10px; background: #238636; color: white; border: none; cursor: pointer; font-weight: bold; }
+        body { font-family: sans-serif; background: #0d1117; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: #161b22; padding: 30px; border-radius: 12px; border: 1px solid #30363d; width: 320px; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 8px 0; background: #010409; border: 1px solid #30363d; border-radius: 8px; color: white; box-sizing: border-box; outline: none; }
+        button { width: 100%; padding: 12px; background: #238636; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        #status { font-size: 12px; margin-top: 15px; color: #f0e042; }
     </style>
 </head>
 <body>
-    <div class="box">
-        <h3 style="text-align:center">DAFTAR GIBRAN HUB</h3>
+    <div class="card">
+        <h2 style="color: #58a6ff;">DAFTAR AKUN</h2>
+        <div id="status">Status: Ready</div>
         <input type="text" id="nama" placeholder="Nama Lengkap">
         <input type="tel" id="wa" placeholder="Nomor WA">
         <input type="text" id="alamat" placeholder="Alamat">
         <input type="password" id="pass" placeholder="Password">
-        <button onclick="kirim()">DAFTAR SEKARANG</button>
-        <p id="msg" style="font-size:12px; text-align:center; color: yellow;"></p>
+        <button onclick="simpan()">SIMPAN KE SHEET</button>
     </div>
 
     <script>
-        function kirim() {
-            const status = document.getElementById('msg');
-            const data = {
+        function simpan() {
+            const status = document.getElementById('status');
+            const payload = {
                 nama: document.getElementById('nama').value,
                 wa: document.getElementById('wa').value,
                 alamat: document.getElementById('alamat').value,
                 password: document.getElementById('pass').value
             };
-            
-            status.innerText = "Sabar, lagi ngirim...";
+
+            if(!payload.nama || !payload.wa) return alert("Nama & WA wajib!");
+
+            status.innerText = "Mengirim...";
 
             fetch('https://sheetdb.io/api/v1/jy19m4udkidqn?sheet=daftar%20akun', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({"data": [data]})
+                body: JSON.stringify({"data": [payload]})
             })
             .then(res => res.json())
             .then(res => {
                 if(res.created) {
-                    alert("MANTAP! Data Nama " + data.nama + " SUDAH MASUK SHEET!");
-                    status.innerText = "BERHASIL!";
+                    alert("SUKSES! Data " + payload.nama + " masuk.");
+                    status.innerText = "Berhasil Terkirim!";
+                    document.querySelectorAll('input').forEach(i => i.value = '');
                 }
             })
-            .catch(err => alert("Gagal! Cek internet lo."));
+            .catch(err => {
+                status.innerText = "Gagal Koneksi!";
+                console.error(err);
+            });
         }
     </script>
 </body>
