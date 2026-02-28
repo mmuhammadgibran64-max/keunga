@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | DASHBOARD SYSTEM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;600&display=swap" rel="stylesheet">
+    <title>GIBRAN HUB | NEXUS DASHBOARD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://tally.so/widgets/embed.js"></script>
     <style>
         :root { 
             --neon: #58a6ff; 
             --bg: #05070a; 
-            --panel: rgba(22, 27, 34, 0.7); 
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -25,26 +26,28 @@
             position: relative;
         }
 
-        /* EFEK CAHAYA LATAR (Kaya Index) */
+        /* EFEK CAHAYA LATAR (Sama kayak Index) */
         .bg-glow {
-            position: absolute; width: 400px; height: 400px;
-            background: var(--neon); filter: blur(180px); opacity: 0.1;
-            z-index: 0; animation: pulse 8s infinite alternate;
-        }
-        @keyframes pulse {
-            from { transform: translate(-10%, -10%); }
-            to { transform: translate(20%, 20%); }
+            position: absolute; 
+            width: 500px; height: 500px;
+            background: var(--neon); 
+            filter: blur(180px); 
+            opacity: 0.12;
+            z-index: 0; 
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
         }
 
-        /* SIDEBAR (Glassmorphism) */
+        /* SIDEBAR (Glassmorphism Style) */
         .sidebar {
-            width: 260px;
-            background: rgba(13, 17, 23, 0.8);
-            backdrop-filter: blur(15px);
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            width: 280px;
+            background: rgba(13, 17, 23, 0.7);
+            backdrop-filter: blur(25px);
+            border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            padding: 30px 20px;
+            padding: 35px 25px;
             z-index: 10;
         }
 
@@ -52,14 +55,16 @@
             font-family: 'Orbitron';
             color: var(--neon);
             font-size: 20px;
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             margin-bottom: 50px;
+            text-shadow: 0 0 20px rgba(88, 166, 255, 0.6);
             text-align: center;
-            text-shadow: 0 0 15px rgba(88, 166, 255, 0.5);
         }
 
+        .nav-menu { flex: 1; }
+
         .nav-link {
-            padding: 15px;
+            padding: 14px 18px;
             color: #8b949e;
             text-decoration: none;
             border-radius: 12px;
@@ -67,8 +72,7 @@
             font-size: 13px;
             font-weight: 600;
             transition: 0.3s;
-            display: flex;
-            align-items: center;
+            display: block;
             border: 1px solid transparent;
         }
 
@@ -77,10 +81,11 @@
             color: white;
             border: 1px solid rgba(88, 166, 255, 0.3);
             box-shadow: 0 0 15px rgba(88, 166, 255, 0.1);
+            transform: translateX(5px);
         }
 
         /* AREA UTAMA */
-        .main-content {
+        .main-view {
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -94,46 +99,73 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(5, 7, 10, 0.4);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
         }
 
-        .system-status {
+        .status-box {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             font-size: 12px;
+            letter-spacing: 1px;
             color: #8b949e;
         }
 
-        .status-dot {
+        .dot {
             width: 8px; height: 8px;
             background: #238636;
             border-radius: 50%;
-            box-shadow: 0 0 10px #238636;
+            box-shadow: 0 0 12px #238636;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
         }
 
         .clock {
             font-family: 'Orbitron';
             color: var(--neon);
-            font-size: 16px;
+            font-size: 18px;
+            text-shadow: 0 0 10px rgba(88, 166, 255, 0.3);
         }
 
-        /* BOX KONTEN (Pusat Form Tally) */
-        .content-scroll {
+        /* KONTEN UTAMA */
+        .content-area {
             flex: 1;
-            padding: 30px;
+            padding: 40px;
             overflow-y: auto;
+            display: flex;
+            justify-content: center;
         }
 
-        .glass-container {
-            background: var(--panel);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 25px;
-            height: 700px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+        .glass-panel {
+            width: 100%;
+            max-width: 1200px;
+            background: rgba(22, 27, 34, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 30px;
+            height: 750px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
             overflow: hidden;
             position: relative;
+        }
+
+        /* Bingkai Cahaya buat Form Tally */
+        .glass-panel::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 30px;
+            padding: 1px; 
+            background: linear-gradient(135deg, rgba(88,166,255,0.3), transparent, rgba(88,166,255,0.3));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            pointer-events: none;
         }
 
         iframe {
@@ -142,23 +174,25 @@
             border: none;
         }
 
-        .btn-exit {
+        .btn-logout {
             margin-top: auto;
             color: #f85149;
             text-decoration: none;
             text-align: center;
-            padding: 12px;
-            border: 1px solid rgba(248, 81, 73, 0.3);
+            padding: 14px;
+            border: 1px solid rgba(248, 81, 73, 0.2);
             border-radius: 12px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: bold;
             transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .btn-exit:hover {
-            background: #f85149;
-            color: white;
-            box-shadow: 0 0 20px rgba(248, 81, 73, 0.4);
+        .btn-logout:hover {
+            background: rgba(248, 81, 73, 0.1);
+            border-color: #f85149;
+            box-shadow: 0 0 20px rgba(248, 81, 73, 0.2);
         }
     </style>
 </head>
@@ -166,47 +200,47 @@
 
     <div class="bg-glow"></div>
 
-    <div class="sidebar">
+    <aside class="sidebar">
         <div class="logo">GIBRAN HUB</div>
         
-        <nav style="flex: 1;">
-            <a href="#" class="nav-link active">📊 MAIN CONTROL</a>
+        <div class="nav-menu">
+            <a href="#" class="nav-link active">📊 OVERVIEW</a>
             <a href="#" class="nav-link">💳 FINANCE LOG</a>
-            <a href="#" class="nav-link">📁 USER DATABASE</a>
-            <a href="#" class="nav-link">⚙️ SYSTEM SETTINGS</a>
-        </nav>
+            <a href="#" class="nav-link">📁 DATABASE</a>
+            <a href="#" class="nav-link">⚙️ SETTINGS</a>
+        </div>
 
-        <a href="index.html" class="btn-exit">TERMINATE SESSION</a>
-    </div>
+        <a href="index.html" class="btn-logout">EXIT SYSTEM</a>
+    </aside>
 
-    <div class="main-content">
+    <main class="main-view">
         <header>
-            <div class="system-status">
-                <div class="status-dot"></div>
-                <span>SYSTEM: <strong style="color: white;">OPERATIONAL</strong></span>
+            <div class="status-box">
+                <div class="dot"></div>
+                <span>SYSTEM STATUS: <strong style="color: white;">ACTIVE</strong></span>
             </div>
-            <div class="clock" id="jam">00:00:00</div>
+            <div class="clock" id="realtime-clock">00:00:00</div>
         </header>
 
-        <div class="content-scroll">
-            <div class="glass-container">
+        <section class="content-area">
+            <div class="glass-panel">
                 <iframe 
                     src="https://tally.so/embed/b5l8b6?hideTitle=1&transparentBackground=1" 
-                    title="DASHBOARD FORM">
+                    title="GIBRAN HUB SYSTEM">
                 </iframe>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <script>
-        // Update Jam Real-time
-        function updateTime() {
-            const clockEl = document.getElementById('jam');
+        // Real-time Clock Function
+        function updateClock() {
+            const clock = document.getElementById('realtime-clock');
             const now = new Date();
-            clockEl.innerText = now.toLocaleTimeString();
+            clock.innerText = now.toLocaleTimeString();
         }
-        setInterval(updateTime, 1000);
-        updateTime();
+        setInterval(updateClock, 1000);
+        updateClock();
     </script>
 
 </body>
