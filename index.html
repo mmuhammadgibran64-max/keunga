@@ -2,100 +2,64 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | SYSTEM TERVERIFIKASI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>GIBRAN HUB | OFFICIAL SYSTEM</title>
+    <script src="https://tally.so/widgets/embed.js"></script>
     <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background: #0d1117; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { background: #161b22; padding: 30px; border-radius: 15px; border: 1px solid #30363d; width: 340px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h2 { color: #58a6ff; text-align: center; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
-        #status { font-size: 13px; text-align: center; margin-bottom: 20px; padding: 10px; border-radius: 8px; font-weight: bold; transition: 0.3s; }
-        input { width: 100%; padding: 12px; margin: 8px 0; background: #010409; border: 1px solid #30363d; border-radius: 8px; color: white; outline: none; }
-        input:focus { border-color: #58a6ff; box-shadow: 0 0 5px rgba(88, 166, 255, 0.3); }
-        button { width: 100%; padding: 14px; background: #238636; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 15px; }
-        button:disabled { background: #1b4d25; color: #8b949e; cursor: not-allowed; }
-        .waiting { background: rgba(240, 224, 66, 0.1); color: #f0e042; }
-        .done { background: rgba(46, 160, 67, 0.1); color: #3fb950; }
-        .fail { background: rgba(248, 81, 73, 0.1); color: #f85149; }
+        html, body { 
+            margin: 0; 
+            padding: 0; 
+            height: 100%; 
+            overflow: hidden; 
+            background-color: #0d1117; /* Warna gelap khas GitHub */
+        }
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        /* Header tipis biar brand Gibran Hub tetep kelihatan */
+        .header-bar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 50px;
+            background: #161b22;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #30363d;
+            z-index: 10;
+        }
+        .header-bar h1 {
+            color: #58a6ff;
+            font-size: 16px;
+            font-family: sans-serif;
+            letter-spacing: 2px;
+        }
+        .container {
+            padding-top: 50px; /* Jarak biar gak ketutup header */
+            height: 100%;
+        }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2>Gibran Hub</h2>
-    <div id="status" class="waiting">STATUS: SIAP MENERIMA DATA</div>
-    
-    <input type="text" id="nama" placeholder="Nama Lengkap">
-    <input type="tel" id="wa" placeholder="Nomor WhatsApp">
-    <input type="text" id="alamat" placeholder="Alamat Lengkap">
-    <input type="password" id="pass" placeholder="Password">
-    
-    <button id="btn" onclick="simpanKeSheet()">SIMPAN DATA SEKARANG</button>
-</div>
+    <div class="header-bar">
+        <h1>GIBRAN HUB</h1>
+    </div>
 
-<script>
-    // API BARU YANG LO KASIH TADI
-    const apiURL = 'https://sheetdb.io/api/v1/yfgu516we1w5f';
+    <div class="container">
+        <iframe 
+            data-tally-src="https://tally.so/r/rjldbM?transparentBackground=1" 
+            width="100%" 
+            height="100%" 
+            title="GIBRAN HUB">
+        </iframe>
+    </div>
 
-    async function simpanKeSheet() {
-        const btn = document.getElementById('btn');
-        const stat = document.getElementById('status');
-        
-        // Ambil input dan bersihkan spasi (trim)
-        const d_nama = document.getElementById('nama').value.trim();
-        const d_wa = document.getElementById('wa').value.trim();
-        const d_alamat = document.getElementById('alamat').value.trim();
-        const d_pass = document.getElementById('pass').value.trim();
-
-        if(!d_nama || !d_wa || !d_pass) {
-            alert("Bro, Nama, WA, dan Password wajib diisi!");
-            return;
-        }
-
-        // Tampilan saat proses kirim
-        stat.innerText = "SEDANG MENGIRIM... JANGAN DI-CLOSE!";
-        stat.className = "status waiting";
-        btn.disabled = true;
-
-        try {
-            // Kita tembak langsung ke API dengan data yang sesuai kolom A1, B1, C1, D1
-            const response = await fetch(apiURL, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "data": [
-                        {
-                            "nama": d_nama,
-                            "wa": d_wa,
-                            "alamat": d_alamat,
-                            "password": d_pass
-                        }
-                    ]
-                })
-            });
-
-            const result = await response.json();
-
-            if (result.created === 1) {
-                stat.innerText = "✅ BERHASIL! DATA SUDAH MASUK SHEET";
-                stat.className = "status done";
-                alert("Sukses! Silakan cek Google Sheet lo sekarang.");
-                // Reset form
-                document.querySelectorAll('input').forEach(i => i.value = '');
-            } else {
-                throw new Error("Respon API bermasalah");
-            }
-        } catch (error) {
-            stat.innerText = "❌ GAGAL! CEK LIMIT API ATAU KONEKSI";
-            stat.className = "status fail";
-            console.error(error);
-        } finally {
-            btn.disabled = false;
-        }
-    }
-</script>
 </body>
 </html>
