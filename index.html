@@ -3,58 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | DATABASE</title>
+    <title>GIBRAN HUB | FINAL FIXED</title>
     <style>
         body { font-family: sans-serif; background: #0d1117; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { background: #161b22; padding: 30px; border-radius: 12px; border: 1px solid #30363d; width: 320px; text-align: center; }
+        .card { background: #161b22; padding: 30px; border-radius: 15px; border: 1px solid #30363d; width: 330px; text-align: center; }
         input { width: 100%; padding: 12px; margin: 8px 0; background: #010409; border: 1px solid #30363d; border-radius: 8px; color: white; box-sizing: border-box; outline: none; }
         button { width: 100%; padding: 12px; background: #238636; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        #status { font-size: 12px; margin-top: 15px; color: #f0e042; }
+        #log { font-size: 13px; margin-top: 15px; font-weight: bold; }
+        .kuning { color: #f0e042; }
+        .hijau { color: #3fb950; }
+        .merah { color: #f85149; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h2 style="color: #58a6ff;">DAFTAR AKUN</h2>
-        <div id="status">Status: Ready</div>
-        <input type="text" id="nama" placeholder="Nama Lengkap">
-        <input type="tel" id="wa" placeholder="Nomor WA">
-        <input type="text" id="alamat" placeholder="Alamat">
-        <input type="password" id="pass" placeholder="Password">
-        <button onclick="simpan()">SIMPAN KE SHEET</button>
-    </div>
 
-    <script>
-        function simpan() {
-            const status = document.getElementById('status');
-            const payload = {
-                nama: document.getElementById('nama').value,
-                wa: document.getElementById('wa').value,
-                alamat: document.getElementById('alamat').value,
-                password: document.getElementById('pass').value
-            };
+<div class="card">
+    <h2 style="color: #58a6ff; margin-bottom: 20px;">DAFTAR AKUN</h2>
+    <div id="log">Status: Siap Kirim</div>
+    
+    <input type="text" id="nama" placeholder="Nama Lengkap">
+    <input type="tel" id="wa" placeholder="Nomor WA">
+    <input type="text" id="alamat" placeholder="Alamat">
+    <input type="password" id="pass" placeholder="Password">
+    
+    <button id="btn" onclick="simpanData()">SIMPAN KE SHEET</button>
+</div>
 
-            if(!payload.nama || !payload.wa) return alert("Nama & WA wajib!");
+<script>
+    async function simpanData() {
+        const log = document.getElementById('log');
+        const btn = document.getElementById('btn');
+        
+        // Ambil data
+        const payload = {
+            "nama": document.getElementById('nama').value,
+            "wa": document.getElementById('wa').value,
+            "alamat": document.getElementById('alamat').value,
+            "password": document.getElementById('pass').value
+        };
 
-            status.innerText = "Mengirim...";
+        if(!payload.nama || !payload.wa) return alert("Nama & WA wajib diisi!");
 
-            fetch('https://sheetdb.io/api/v1/jy19m4udkidqn?sheet=daftar%20akun', {
+        // Set Loading
+        log.innerText = "SEDANG PROSES KIRIM...";
+        log.className = "kuning";
+        btn.disabled = true;
+
+        try {
+            // Kita pakai URL tanpa embel-embel sheet dulu buat ngetes koneksi utama
+            const response = await fetch('https://sheetdb.io/api/v1/jy19m4udkidqn', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({"data": [payload]})
-            })
-            .then(res => res.json())
-            .then(res => {
-                if(res.created) {
-                    alert("SUKSES! Data " + payload.nama + " masuk.");
-                    status.innerText = "Berhasil Terkirim!";
-                    document.querySelectorAll('input').forEach(i => i.value = '');
-                }
-            })
-            .catch(err => {
-                status.innerText = "Gagal Koneksi!";
-                console.error(err);
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "data": [payload] })
             });
+
+            const hasil = await response.json();
+
+            if(hasil.created) {
+                log.innerText = "BERHASIL MASUK SHEET!";
+                log.className = "hijau";
+                alert("MANTAP! Data Nama " + payload.nama + " SUDAH MASUK!");
+                // Kosongin input
+                document.querySelectorAll('input').forEach(i => i.value = '');
+            } else {
+                log.innerText = "GAGAL: " + JSON.stringify(hasil);
+                log.className = "merah";
+            }
+        } catch (err) {
+            log.innerText = "KONEKSI ERROR / LIMIT HABIS";
+            log.className = "merah";
+            console.error(err);
+        } finally {
+            btn.disabled = false;
         }
-    </script>
+    }
+</script>
 </body>
 </html>
