@@ -1,15 +1,128 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=https://tally.so/r/rjldbM">
-    <title>GIBRAN HUB | REDIRECT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIBRAN HUB | PREMIER SYSTEM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;500&display=swap" rel="stylesheet">
+    <script src="https://tally.so/widgets/embed.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: #05070a; 
+            color: white; 
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Background Animasi Bulatan Cahaya */
+        .bg-glow {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1e3a8a 0%, #05070a 70%);
+            z-index: -1; opacity: 0.5;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            color: #58a6ff;
+            text-transform: uppercase;
+            letter-spacing: 8px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(88, 166, 255, 0.6);
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #8b949e;
+            max-width: 600px;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        /* Tombol Glowing */
+        .btn-glow {
+            padding: 18px 40px;
+            background: #58a6ff;
+            color: #05070a;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 50px;
+            box-shadow: 0 0 30px rgba(88, 166, 255, 0.4);
+            transition: 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-glow:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 50px rgba(88, 166, 255, 0.8);
+        }
+
+        /* Grid Fitur (Pajangan) */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            width: 80%;
+            margin-top: 60px;
+        }
+
+        .card {
+            background: rgba(22, 27, 34, 0.5);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(88, 166, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .card h3 { color: #58a6ff; margin-bottom: 10px; font-size: 14px; }
+        .card p { font-size: 12px; color: #8b949e; }
+    </style>
 </head>
-<body style="background:#0d1117; color:white; display:flex; justify-content:center; align-items:center; height:100vh;">
-    <p>Mohon tunggu, sedang membuka Gibran Hub...</p>
-    <script>
-        // Back up kalau meta refresh gagal
-        window.location.href = "https://tally.so/r/rjldbM";
-    </script>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <section class="hero">
+        <h1>GIBRAN HUB</h1>
+        <p>Sistem Terpusat untuk Manajemen Keuangan dan Database Akun. Aman, Cepat, dan Terintegrasi.</p>
+        
+        <button class="btn-glow" data-tally-open="rjldbM" data-tally-emoji-text="👋" data-tally-emoji-animation="wave">
+            DAFTAR SEKARANG
+        </button>
+
+        <div class="features">
+            <div class="card">
+                <h3>DATABASE SECURE</h3>
+                <p>Data tersimpan otomatis di sistem cloud Gibran Hub.</p>
+            </div>
+            <div class="card">
+                <h3>AUTO SINKRON</h3>
+                <p>Terhubung langsung dengan Google Sheets secara real-time.</p>
+            </div>
+            <div class="card">
+                <h3>AKSES MUDAH</h3>
+                <p>Login menggunakan akun Google tanpa ribet ketik password.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer style="padding: 20px; text-align: center; color: #30363d; font-size: 12px;">
+        © 2026 GIBRAN HUB DEVELOPMENT • ALL RIGHTS RESERVED
+    </footer>
+
 </body>
 </html>
