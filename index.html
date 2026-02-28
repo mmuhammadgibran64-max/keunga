@@ -3,115 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | SYSTEM</title>
+    <title>GIBRAN HUB | SYSTEM TERVERIFIKASI</title>
     <style>
-        * { box-sizing: border-box; font-family: sans-serif; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { background: #0d1117; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { background: #161b22; padding: 30px; border-radius: 15px; border: 1px solid #30363d; width: 340px; }
-        input { width: 100%; padding: 12px; margin: 8px 0; background: #010409; border: 1px solid #30363d; border-radius: 8px; color: white; }
-        button { width: 100%; padding: 14px; background: #238636; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .btn-login { background: #2f81f7; margin-top: 20px; }
-        #status { font-size: 13px; text-align: center; margin-top: 15px; color: #f0e042; }
-        .hidden { display: none; }
+        .card { background: #161b22; padding: 30px; border-radius: 15px; border: 1px solid #30363d; width: 340px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h2 { color: #58a6ff; text-align: center; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        #status { font-size: 13px; text-align: center; margin-bottom: 20px; padding: 10px; border-radius: 8px; font-weight: bold; transition: 0.3s; }
+        input { width: 100%; padding: 12px; margin: 8px 0; background: #010409; border: 1px solid #30363d; border-radius: 8px; color: white; outline: none; }
+        input:focus { border-color: #58a6ff; box-shadow: 0 0 5px rgba(88, 166, 255, 0.3); }
+        button { width: 100%; padding: 14px; background: #238636; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 15px; }
+        button:disabled { background: #1b4d25; color: #8b949e; cursor: not-allowed; }
+        .waiting { background: rgba(240, 224, 66, 0.1); color: #f0e042; }
+        .done { background: rgba(46, 160, 67, 0.1); color: #3fb950; }
+        .fail { background: rgba(248, 81, 73, 0.1); color: #f85149; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2 id="title" style="text-align:center; color:#58a6ff;">DAFTAR AKUN</h2>
-    <div id="status">Status: Ready</div>
-
-    <div id="form-daftar">
-        <input type="text" id="reg-nama" placeholder="Nama Lengkap">
-        <input type="tel" id="reg-wa" placeholder="Nomor WA">
-        <input type="text" id="reg-alamat" placeholder="Alamat">
-        <input type="password" id="reg-pass" placeholder="Password">
-        <button onclick="prosesDaftar()">SIMPAN & DAFTAR</button>
-        <p style="text-align:center; font-size:12px;">Sudah punya akun? <a href="#" onclick="showLogin()" style="color:#58a6ff;">Login di sini</a></p>
-    </div>
-
-    <div id="form-login" class="hidden">
-        <input type="text" id="log-nama" placeholder="Nama Lengkap">
-        <input type="password" id="log-pass" placeholder="Password">
-        <button class="btn-login" onclick="prosesLogin()">MASUK KE DASHBOARD</button>
-        <p style="text-align:center; font-size:12px;"><a href="#" onclick="showDaftar()" style="color:#58a6ff;">Kembali ke Daftar</a></p>
-    </div>
+    <h2>Gibran Hub</h2>
+    <div id="status" class="waiting">STATUS: SIAP MENERIMA DATA</div>
+    
+    <input type="text" id="nama" placeholder="Nama Lengkap">
+    <input type="tel" id="wa" placeholder="Nomor WhatsApp">
+    <input type="text" id="alamat" placeholder="Alamat Lengkap">
+    <input type="password" id="pass" placeholder="Password">
+    
+    <button id="btn" onclick="simpanKeSheet()">SIMPAN DATA SEKARANG</button>
 </div>
 
 <script>
-    // PAKAI API BARU LO
+    // API BARU YANG LO KASIH TADI
     const apiURL = 'https://sheetdb.io/api/v1/yfgu516we1w5f';
 
-    function showLogin() {
-        document.getElementById('form-daftar').classList.add('hidden');
-        document.getElementById('form-login').classList.remove('hidden');
-        document.getElementById('title').innerText = "LOGIN USER";
-    }
+    async function simpanKeSheet() {
+        const btn = document.getElementById('btn');
+        const stat = document.getElementById('status');
+        
+        // Ambil input dan bersihkan spasi (trim)
+        const d_nama = document.getElementById('nama').value.trim();
+        const d_wa = document.getElementById('wa').value.trim();
+        const d_alamat = document.getElementById('alamat').value.trim();
+        const d_pass = document.getElementById('pass').value.trim();
 
-    function showDaftar() {
-        document.getElementById('form-login').classList.add('hidden');
-        document.getElementById('form-daftar').classList.remove('hidden');
-        document.getElementById('title').innerText = "DAFTAR AKUN";
-    }
+        if(!d_nama || !d_wa || !d_pass) {
+            alert("Bro, Nama, WA, dan Password wajib diisi!");
+            return;
+        }
 
-    // 1. FUNGSI DAFTAR
-    async function prosesDaftar() {
-        const data = {
-            nama: document.getElementById('reg-nama').value,
-            wa: document.getElementById('reg-wa').value,
-            alamat: document.getElementById('reg-alamat').value,
-            password: document.getElementById('reg-pass').value
-        };
-
-        if(!data.nama || !data.wa || !data.password) return alert("Isi yang lengkap!");
-
-        document.getElementById('status').innerText = "Mendaftarkan...";
+        // Tampilan saat proses kirim
+        stat.innerText = "SEDANG MENGIRIM... JANGAN DI-CLOSE!";
+        stat.className = "status waiting";
+        btn.disabled = true;
 
         try {
-            const res = await fetch(apiURL + '?sheet=daftar%20akun', {
+            // Kita tembak langsung ke API dengan data yang sesuai kolom A1, B1, C1, D1
+            const response = await fetch(apiURL, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({"data": [data]})
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "data": [
+                        {
+                            "nama": d_nama,
+                            "wa": d_wa,
+                            "alamat": d_alamat,
+                            "password": d_pass
+                        }
+                    ]
+                })
             });
-            const hasil = await res.json();
-            if(hasil.created) {
-                alert("Pendaftaran Berhasil! Sekarang silakan Login.");
-                showLogin();
-            }
-        } catch (e) { alert("Gagal Daftar!"); }
-    }
 
-    // 2. FUNGSI LOGIN (PENYEBAB LO NYANGKUT)
-    async function prosesLogin() {
-        const nama = document.getElementById('log-nama').value;
-        const pass = document.getElementById('log-pass').value;
+            const result = await response.json();
 
-        document.getElementById('status').innerText = "Mengecek akun...";
-
-        try {
-            // Cari data di tab 'daftar akun'
-            const res = await fetch(`${apiURL}/search?sheet=daftar%20akun&nama=${nama}&password=${pass}`);
-            const data = await res.json();
-
-            if(data.length > 0) {
-                document.getElementById('status').innerText = "Login Berhasil! Mengalihkan...";
-                
-                // CATAT KE TAB LOGIN (OPSIONAL)
-                fetch(apiURL + '?sheet=login', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({"data": [{"nama": nama, "wa": data[0].wa, "waktu": new Date().toLocaleString()}]})
-                });
-
-                // --- BAGIAN PALING PENTING: PINDAH HALAMAN ---
-                // Ganti 'dashboard.html' dengan nama file halaman utama lo
-                window.location.href = "dashboard.html"; 
-                
+            if (result.created === 1) {
+                stat.innerText = "✅ BERHASIL! DATA SUDAH MASUK SHEET";
+                stat.className = "status done";
+                alert("Sukses! Silakan cek Google Sheet lo sekarang.");
+                // Reset form
+                document.querySelectorAll('input').forEach(i => i.value = '');
             } else {
-                alert("Nama atau Password SALAH!");
-                document.getElementById('status').innerText = "Gagal Login.";
+                throw new Error("Respon API bermasalah");
             }
-        } catch (e) { alert("Error koneksi!"); }
+        } catch (error) {
+            stat.innerText = "❌ GAGAL! CEK LIMIT API ATAU KONEKSI";
+            stat.className = "status fail";
+            console.error(error);
+        } finally {
+            btn.disabled = false;
+        }
     }
 </script>
 </body>
