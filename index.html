@@ -3,60 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | INPUT SYSTEM</title>
+    <title>GIBRAN HUB | DATABASE SECURE</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { 
-            background: #05070a; 
-            color: white; 
-            font-family: 'Orbitron', sans-serif; 
-            margin: 0; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            min-height: 100vh;
-        }
-        .header { margin-top: 30px; text-align: center; color: #00d2ff; text-shadow: 0 0 10px #00d2ff; }
-        
-        /* Container Form Airtable */
-        .form-box {
-            width: 90%;
-            max-width: 800px;
-            height: 800px; /* Sesuaikan tinggi form lo */
-            margin: 20px auto;
-            border: 2px solid #00d2ff;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
-        }
-        iframe { width: 100%; height: 100%; border: none; }
-
-        .btn-back {
-            margin-top: 20px;
-            padding: 10px 30px;
-            border: 1px solid #00d2ff;
-            background: transparent;
-            color: #00d2ff;
-            cursor: pointer;
-            border-radius: 50px;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        .btn-back:hover { background: #00d2ff; color: black; }
+        body { background: #05070a; color: #00d2ff; font-family: 'Orbitron', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        .container { background: rgba(0, 210, 255, 0.05); padding: 30px; border: 2px solid #00d2ff; border-radius: 15px; box-shadow: 0 0 25px #00d2ff; width: 90%; max-width: 450px; }
+        h2 { text-align: center; text-shadow: 0 0 10px #00d2ff; margin-bottom: 20px; font-size: 20px; letter-spacing: 2px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; background: #0a0c10; border: 1px solid #00d2ff; color: white; border-radius: 8px; box-sizing: border-box; font-family: sans-serif; }
+        input:focus { outline: none; box-shadow: 0 0 10px #00d2ff; border-color: #fff; }
+        button { width: 100%; padding: 15px; background: #00d2ff; border: none; color: black; font-weight: bold; cursor: pointer; border-radius: 8px; margin-top: 15px; font-family: 'Orbitron'; transition: 0.3s; }
+        button:hover { background: #fff; box-shadow: 0 0 25px #fff; transform: scale(1.02); }
+        #status { text-align: center; margin-top: 20px; font-size: 13px; font-weight: bold; }
+        .back-link { margin-top: 20px; color: rgba(255,255,255,0.5); text-decoration: none; font-size: 12px; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>GIBRAN HUB DATABASE</h1>
-        <p>INPUT DATA SETORAN REAL-TIME</p>
+    <div class="container">
+        <h2>SECURE DATA INPUT</h2>
+        <form id="gibranForm">
+            <input type="text" name="Nama" placeholder="MASUKKAN NAMA" required>
+            <input type="text" name="WA" placeholder="NOMOR WHATSAPP (CONTOH: 0812...)" required>
+            <input type="text" name="Alamat" placeholder="ALAMAT LENGKAP" required>
+            <input type="password" name="Password" placeholder="PASSWORD" required>
+            
+            <button type="submit" id="submitBtn">KIRIM KE DATABASE ⚡</button>
+        </form>
+        <div id="status"></div>
     </div>
 
-    <div class="form-box">
-        <iframe src="https://airtable.com/embed/appqiOLm7h2Xqj9a6/pagZYvz9zak1SE7aD/form?backgroundColor=cyan"></iframe>
-    </div>
+    <a href="dashboard.html" class="back-link">KEMBALI KE DASHBOARD</a>
 
-    <a href="dashboard.html" class="btn-back">KEMBALI KE DASHBOARD</a>
+    <script>
+        const form = document.getElementById('gibranForm');
+        const status = document.getElementById('status');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            status.style.color = "#00d2ff";
+            status.innerHTML = "MENGHUBUNGKAN KE SERVER...";
+            
+            // LINK API SHEETBEST LO YANG TADI
+            fetch('https://api.sheetbest.com/sheets/6417feaa-bbdc-4b47-81ab-5f18d0e19a48', {
+                method: 'POST',
+                mode: 'cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(Object.fromEntries(new FormData(form)))
+            })
+            .then(res => {
+                status.style.color = "#00ff88"; // Warna hijau neon kalau berhasil
+                status.innerHTML = "✅ DATA BERHASIL DI-UPLOAD KE GOOGLE SHEETS!";
+                form.reset();
+            })
+            .catch(err => {
+                status.style.color = "#ff4444"; // Warna merah kalau error
+                status.innerHTML = "❌ GAGAL! CEK KONEKSI / SETTING API.";
+                console.log(err);
+            });
+        });
+    </script>
 
 </body>
 </html>
