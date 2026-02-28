@@ -3,66 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | DASHBOARD SYSTEM</title>
+    <title>GIBRAN HUB | SYSTEM DASHBOARD</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;600&display=swap" rel="stylesheet">
     <script src="https://tally.so/widgets/embed.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body { 
-            background: #05070a; color: white; font-family: 'Inter', sans-serif;
-            display: flex; height: 100vh; overflow: hidden;
+            background: #05070a; 
+            color: white; 
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        /* SIDEBAR KIRI */
+        /* 1. SIDEBAR (NAVIGASI) */
         .sidebar {
-            width: 260px; background: #0d1117; border-right: 1px solid #30363d;
-            display: flex; flex-direction: column; padding: 30px 20px;
+            width: 250px;
+            background: #0d1117;
+            border-right: 1px solid #30363d;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            z-index: 10;
         }
-        .sidebar h2 { 
-            font-family: 'Orbitron', sans-serif; color: #58a6ff; 
-            font-size: 18px; letter-spacing: 2px; margin-bottom: 50px; 
-        }
-        .nav-item {
-            padding: 15px; color: #8b949e; text-decoration: none;
-            border-radius: 10px; margin-bottom: 10px; transition: 0.3s;
-            font-size: 14px; font-weight: 600;
-        }
-        .nav-item.active { background: rgba(88, 166, 255, 0.1); color: #58a6ff; }
-        .nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
 
-        /* MAIN CONTENT AREA */
-        .main-content { flex: 1; display: flex; flex-direction: column; background: #05070a; }
+        .sidebar h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #58a6ff;
+            font-size: 16px;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
 
-        /* TOP HEADER */
+        .nav-link {
+            padding: 12px 15px;
+            color: #8b949e;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: 0.3s;
+            font-size: 13px;
+            display: block;
+        }
+
+        .nav-link.active {
+            background: rgba(88, 166, 255, 0.1);
+            color: #58a6ff;
+            font-weight: bold;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        /* 2. AREA UTAMA */
+        .main-view {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #05070a;
+            position: relative;
+        }
+
+        /* Background Glow Effect */
+        .main-view::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 400px; height: 400px;
+            background: #1e3a8a;
+            filter: blur(180px);
+            opacity: 0.2;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+        }
+
+        /* Header Dashboard */
         header {
-            height: 70px; padding: 0 40px; display: flex; align-items: center;
-            justify-content: space-between; border-bottom: 1px solid #30363d;
-            background: rgba(13, 17, 23, 0.8); backdrop-filter: blur(10px);
+            height: 65px;
+            padding: 0 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #30363d;
+            background: rgba(13, 17, 23, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 5;
         }
-        .user-profile { display: flex; align-items: center; gap: 10px; }
-        .status-dot { width: 100px; height: 25px; background: #238636; border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; }
 
-        /* DASHBOARD GRID */
-        .content-body { flex: 1; padding: 30px; overflow-y: auto; }
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
-        .stat-card {
-            background: #161b22; border: 1px solid #30363d; padding: 20px; border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        .header-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
-        .stat-card h4 { color: #8b949e; font-size: 12px; text-transform: uppercase; margin-bottom: 10px; }
-        .stat-card p { font-size: 24px; font-family: 'Orbitron', sans-serif; color: #58a6ff; }
 
-        /* TALLY CONTAINER (SISTEM UTAMA) */
-        .system-frame {
-            background: #161b22; border: 1px solid #30363d; border-radius: 20px;
-            height: 600px; overflow: hidden; position: relative;
+        .status-dot {
+            width: 10px; height: 10px;
+            background: #238636;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #238636;
         }
-        iframe { width: 100%; height: 100%; border: none; }
 
-        .btn-logout { 
-            margin-top: auto; color: #f85149; text-decoration: none; 
-            font-size: 14px; font-weight: bold; text-align: center;
-            padding: 10px; border: 1px solid #f85149; border-radius: 8px;
+        /* 3. BINGKAI TALLY (b5l8b6) */
+        .content-area {
+            flex: 1;
+            padding: 25px;
+            z-index: 5;
+            display: flex;
+            justify-content: center;
+        }
+
+        .glass-panel {
+            width: 100%;
+            max-width: 1100px;
+            background: rgba(22, 27, 34, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .btn-logout {
+            margin-top: auto;
+            color: #f85149;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            padding: 12px;
+            border: 1px solid #f85149;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: #f85149;
+            color: white;
         }
     </style>
 </head>
@@ -70,39 +156,25 @@
 
     <div class="sidebar">
         <h2>GIBRAN HUB</h2>
-        <a href="#" class="nav-item active">OVERVIEW</a>
-        <a href="#" class="nav-item">MY ACCOUNT</a>
-        <a href="#" class="nav-item">REPORTS</a>
-        <a href="#" class="nav-item">SETTINGS</a>
+        <a href="#" class="nav-link active">📊 MAIN DASHBOARD</a>
+        <a href="#" class="nav-link">📁 DATABASE</a>
+        <a href="#" class="nav-link">💳 FINANCE LOG</a>
+        <a href="#" class="nav-link">⚙️ SETTINGS</a>
         
-        <a href="index.html" class="btn-logout">LOGOUT SYSTEM</a>
+        <a href="index.html" class="btn-logout">EXIT SYSTEM</a>
     </div>
 
-    <div class="main-content">
+    <div class="main-view">
         <header>
-            <div class="user-profile">
-                <span>Welcome back, <strong>Admin</strong></span>
+            <div class="header-info">
+                <div class="status-dot"></div>
+                <span style="font-size: 12px; color: #8b949e;">SECURE CONNECTION: <strong>ACTIVE</strong></span>
             </div>
-            <div class="status-dot">SYSTEM ACTIVE</div>
+            <div id="clock" style="font-family: 'Orbitron'; color: #58a6ff; font-size: 14px;">00:00:00</div>
         </header>
 
-        <div class="content-body">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h4>Total Balance</h4>
-                    <p>Rp --.---.---</p>
-                </div>
-                <div class="stat-card">
-                    <h4>Safe Mode</h4>
-                    <p>ACTIVE</p>
-                </div>
-                <div class="stat-card">
-                    <h4>Server Time</h4>
-                    <p id="clock">00:00:00</p>
-                </div>
-            </div>
-
-            <div class="system-frame">
+        <div class="content-area">
+            <div class="glass-panel">
                 <iframe 
                     src="https://tally.so/embed/b5l8b6?hideTitle=1&transparentBackground=1" 
                     title="GIBRAN HUB DASHBOARD">
@@ -112,7 +184,7 @@
     </div>
 
     <script>
-        // Jam Digital biar Dashboard kelihatan hidup
+        // Jam Digital
         function updateClock() {
             const now = new Date();
             document.getElementById('clock').innerText = now.toLocaleTimeString();
@@ -120,5 +192,6 @@
         setInterval(updateClock, 1000);
         updateClock();
     </script>
+
 </body>
 </html>
