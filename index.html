@@ -3,112 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | PREMIUM SYSTEM</title>
+    <title>GIBRAN HUB | OFFICIAL SYSTEM</title>
     <script src="https://tally.so/widgets/embed.js"></script>
     <style>
-        /* 1. RESET & BACKGROUND ANIMASI */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body { 
-            background: #0d1117; 
-            background: radial-gradient(circle at top right, #161b22, #0d1117);
-            height: 100vh;
+            background-color: #0d1117; /* Warna gelap GitHub */
+            font-family: 'Segoe UI', sans-serif;
             display: flex;
             flex-direction: column;
+            height: 100vh;
             overflow: hidden;
         }
 
-        /* 2. HEADER MODERN DENGAN EFEK GLOW */
-        header {
-            height: 70px;
-            background: rgba(22, 27, 34, 0.8);
-            backdrop-filter: blur(10px);
+        /* Header Tetap Simpel */
+        .header {
+            height: 60px;
+            background: #161b22;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-bottom: 1px solid rgba(88, 166, 255, 0.2);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-            z-index: 100;
+            border-bottom: 1px solid #30363d;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 10;
         }
 
-        header h1 {
+        .header h1 {
             color: #58a6ff;
-            font-size: 20px;
-            letter-spacing: 4px;
+            font-size: 18px;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            text-shadow: 0 0 15px rgba(88, 166, 255, 0.5);
         }
 
-        /* 3. CONTAINER FORM (GLASSMORPHISM) */
-        .main-container {
+        /* Kontainer Utama buat Form */
+        .form-container {
             flex: 1;
+            width: 100%;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 20px;
-            position: relative;
+            background: #0d1117;
         }
 
-        /* Efek cahaya di belakang form */
-        .main-container::before {
-            content: '';
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            background: #58a6ff;
-            filter: blur(150px);
-            opacity: 0.15;
-            z-index: 0;
-        }
-
-        .glass-card {
-            width: 100%;
-            max-width: 850px;
-            height: 90%;
-            background: rgba(22, 27, 34, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            backdrop-filter: blur(5px);
-            overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-            z-index: 1;
-            transition: transform 0.3s ease;
-        }
-
-        .glass-card:hover {
-            border-color: rgba(88, 166, 255, 0.4);
-        }
-
+        /* Iframe dibuat transparan & full */
         iframe {
             width: 100%;
+            max-width: 800px; /* Batasin lebar biar gak terlalu molor */
             height: 100%;
             border: none;
         }
 
-        /* 4. FOOTER AKSEN */
         footer {
-            height: 40px;
+            height: 30px;
             text-align: center;
             color: #8b949e;
-            font-size: 11px;
-            letter-spacing: 1px;
+            font-size: 10px;
+            padding-bottom: 10px;
+            background: #0d1117;
         }
     </style>
 </head>
 <body>
 
-    <header>
+    <div class="header">
         <h1>GIBRAN HUB</h1>
-    </header>
+    </div>
 
-    <div class="main-container">
-        <div class="glass-card">
-            <iframe 
-                src="https://tally.so/embed/rjldbM?hideTitle=1&transparentBackground=1&dynamicHeight=1" 
-                loading="lazy"
-                title="GIBRAN HUB FORM">
-            </iframe>
-        </div>
+    <div class="form-container">
+        <iframe 
+            src="https://tally.so/embed/rjldbM?hideTitle=1&transparentBackground=1&dynamicHeight=1" 
+            loading="lazy"
+            title="GIBRAN HUB FORM">
+        </iframe>
     </div>
 
     <footer>
