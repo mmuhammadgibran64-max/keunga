@@ -13,116 +13,140 @@
             color: white; 
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
         }
 
-        /* Background Animasi Bulatan Cahaya */
+        /* Background Animasi */
         .bg-glow {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, #1e3a8a 0%, #05070a 70%);
-            z-index: -1; opacity: 0.5;
+            background: radial-gradient(circle at 50% 50%, #1e3a8a 0%, #05070a 80%);
+            z-index: -1; opacity: 0.6;
         }
 
         /* Hero Section */
-        .hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        .container {
             text-align: center;
-            padding: 20px;
+            padding: 40px 20px;
+            max-width: 800px;
         }
 
-        .hero h1 {
+        h1 {
             font-family: 'Orbitron', sans-serif;
-            font-size: 3.5rem;
+            font-size: 3rem;
             color: #58a6ff;
-            text-transform: uppercase;
-            letter-spacing: 8px;
-            margin-bottom: 10px;
-            text-shadow: 0 0 20px rgba(88, 166, 255, 0.6);
+            letter-spacing: 6px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(88, 166, 255, 0.5);
         }
 
-        .hero p {
-            font-size: 1.1rem;
+        p {
             color: #8b949e;
-            max-width: 600px;
             margin-bottom: 40px;
             line-height: 1.6;
         }
 
-        /* Tombol Glowing */
-        .btn-glow {
-            padding: 18px 40px;
+        /* Group Tombol */
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 35px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.4s;
+            text-decoration: none;
+            border: none;
+            display: inline-block;
+        }
+
+        /* Tombol Daftar (Biru Glow) */
+        .btn-daftar {
             background: #58a6ff;
             color: #05070a;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: bold;
-            text-decoration: none;
-            border-radius: 50px;
-            box-shadow: 0 0 30px rgba(88, 166, 255, 0.4);
-            transition: 0.3s;
-            cursor: pointer;
-            border: none;
+            box-shadow: 0 0 20px rgba(88, 166, 255, 0.4);
         }
 
-        .btn-glow:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 50px rgba(88, 166, 255, 0.8);
+        .btn-daftar:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 40px rgba(88, 166, 255, 0.7);
         }
 
-        /* Grid Fitur (Pajangan) */
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            width: 80%;
-            margin-top: 60px;
+        /* Tombol Login (Garis Biru) */
+        .btn-login {
+            background: transparent;
+            color: #58a6ff;
+            border: 2px solid #58a6ff;
         }
 
-        .card {
-            background: rgba(22, 27, 34, 0.5);
-            padding: 25px;
-            border-radius: 15px;
-            border: 1px solid rgba(88, 166, 255, 0.1);
-            backdrop-filter: blur(10px);
+        .btn-login:hover {
+            background: rgba(88, 166, 255, 0.1);
+            box-shadow: 0 0 20px rgba(88, 166, 255, 0.2);
         }
 
-        .card h3 { color: #58a6ff; margin-bottom: 10px; font-size: 14px; }
-        .card p { font-size: 12px; color: #8b949e; }
+        /* Footer */
+        footer {
+            position: fixed;
+            bottom: 20px;
+            color: #30363d;
+            font-size: 12px;
+            letter-spacing: 2px;
+        }
     </style>
 </head>
 <body>
 
     <div class="bg-glow"></div>
 
-    <section class="hero">
+    <div class="container">
         <h1>GIBRAN HUB</h1>
-        <p>Sistem Terpusat untuk Manajemen Keuangan dan Database Akun. Aman, Cepat, dan Terintegrasi.</p>
-        
-        <button class="btn-glow" data-tally-open="rjldbM" data-tally-emoji-text="👋" data-tally-emoji-animation="wave">
-            DAFTAR SEKARANG
-        </button>
+        <p>Akses pintu masuk menuju ekosistem database terpadu. <br> Silakan daftar jika belum punya akun, atau langsung masuk jika sudah terverifikasi.</p>
 
-        <div class="features">
-            <div class="card">
-                <h3>DATABASE SECURE</h3>
-                <p>Data tersimpan otomatis di sistem cloud Gibran Hub.</p>
-            </div>
-            <div class="card">
-                <h3>AUTO SINKRON</h3>
-                <p>Terhubung langsung dengan Google Sheets secara real-time.</p>
-            </div>
-            <div class="card">
-                <h3>AKSES MUDAH</h3>
-                <p>Login menggunakan akun Google tanpa ribet ketik password.</p>
-            </div>
+        <div class="btn-group">
+            <button class="btn btn-daftar" data-tally-open="rjldbM" data-tally-emoji-text="📝" data-tally-emoji-animation="wave">
+                DAFTAR AKUN
+            </button>
+
+            <button class="btn btn-login" data-tally-open="obA7jM" data-tally-emoji-text="🔐" data-tally-emoji-animation="tada">
+                MASUK (LOGIN)
+            </button>
         </div>
-    </section>
+    </div>
 
-    <footer style="padding: 20px; text-align: center; color: #30363d; font-size: 12px;">
-        © 2026 GIBRAN HUB DEVELOPMENT • ALL RIGHTS RESERVED
-    </footer>
+    <footer>GIBRAN HUB SYSTEM v3.0</footer>
+
+    <script>
+        /** * TRIK SAKTI: 
+         * Setelah user sukses submit form "DAFTAR", 
+         * Tally bakal kirim event, terus kita otomatis buka form "LOGIN".
+         */
+        window.addEventListener('message', (e) => {
+            if (e.data && e.data.includes('Tally.FormSubmitted')) {
+                const payload = JSON.parse(e.data);
+                // Cek kalau yang beres itu form DAFTAR (rjldbM)
+                if (payload.formId === 'rjldbM') {
+                    console.log("Pendaftaran sukses, mengarahkan ke login...");
+                    
+                    // Tunggu 1.5 detik biar user gak kaget
+                    setTimeout(() => {
+                        Tally.openPopup('obA7jM', {
+                            emoji: { text: '✅', animation: 'tada' }
+                        });
+                    }, 1500);
+                }
+            }
+        });
+    </script>
 
 </body>
 </html>
