@@ -3,61 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>GIBRAN HUB | OFFICIAL SYSTEM</title>
+    <title>GIBRAN HUB | SYSTEM</title>
     <script src="https://tally.so/widgets/embed.js"></script>
     <style>
-        html, body { 
-            margin: 0; 
-            padding: 0; 
-            height: 100%; 
-            overflow: hidden; 
-            background-color: #0d1117; /* Warna gelap khas GitHub */
+        html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; background-color: #0d1117; }
+        iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .header {
+            position: fixed; top: 0; width: 100%; height: 50px;
+            background: #161b22; display: flex; align-items: center;
+            justify-content: center; border-bottom: 1px solid #30363d; z-index: 10;
         }
-        iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        /* Header tipis biar brand Gibran Hub tetep kelihatan */
-        .header-bar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            height: 50px;
-            background: #161b22;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-bottom: 1px solid #30363d;
-            z-index: 10;
-        }
-        .header-bar h1 {
-            color: #58a6ff;
-            font-size: 16px;
-            font-family: sans-serif;
-            letter-spacing: 2px;
-        }
-        .container {
-            padding-top: 50px; /* Jarak biar gak ketutup header */
-            height: 100%;
-        }
+        .header h1 { color: #58a6ff; font-size: 16px; font-family: sans-serif; letter-spacing: 2px; }
+        .content { padding-top: 50px; height: 100%; }
     </style>
 </head>
 <body>
 
-    <div class="header-bar">
+    <div class="header">
         <h1>GIBRAN HUB</h1>
     </div>
 
-    <div class="container">
+    <div class="content">
         <iframe 
             data-tally-src="https://tally.so/r/rjldbM?transparentBackground=1" 
             width="100%" 
             height="100%" 
-            title="GIBRAN HUB">
+            title="GIBRAN HUB SYSTEM">
         </iframe>
     </div>
 
