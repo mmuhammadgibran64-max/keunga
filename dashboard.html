@@ -3,239 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | NEXUS DASHBOARD</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>GIBRAN HUB | NEXUS OVERDRIVE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;600&display=swap" rel="stylesheet">
     <script src="https://tally.so/widgets/embed.js"></script>
     <style>
         :root { 
-            --neon: #58a6ff; 
-            --bg: #05070a; 
-            --panel: #0d1117;
-            --border: rgba(88, 166, 255, 0.4);
+            --neon-blue: #00d2ff; 
+            --neon-red: #ff0055;
+            --bg-dark: #020408;
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body { 
-            background: var(--bg); 
+            background: var(--bg-dark); 
             color: white; 
             font-family: 'Inter', sans-serif;
             display: flex;
             height: 100vh;
             overflow: hidden;
-            position: relative;
         }
 
-        /* EFEK CAHAYA LATAR */
-        .bg-glow {
-            position: absolute; 
-            width: 700px; height: 700px;
-            background: radial-gradient(circle, rgba(88,166,255,0.15) 0%, transparent 70%);
-            filter: blur(100px);
-            z-index: 0; 
-            top: 50%; left: 50%;
+        /* EFEK CAHAYA LATAR SUPER TERANG (BIAR TENGAHNYA GAK HITAM) */
+        .ambient-light {
+            position: absolute;
+            width: 800px; height: 800px;
+            background: radial-gradient(circle, rgba(0, 210, 255, 0.2) 0%, transparent 70%);
+            filter: blur(120px);
+            top: 50%; left: 60%;
             transform: translate(-50%, -50%);
+            z-index: 1;
             pointer-events: none;
+            animation: colorShift 10s infinite alternate;
         }
 
-        /* SIDEBAR (Glassmorphism) */
+        @keyframes colorShift {
+            0% { background: radial-gradient(circle, rgba(0, 210, 255, 0.2) 0%, transparent 70%); }
+            100% { background: radial-gradient(circle, rgba(255, 0, 85, 0.2) 0%, transparent 70%); }
+        }
+
+        /* SIDEBAR */
         .sidebar {
             width: 280px;
-            background: rgba(13, 17, 23, 0.85);
-            backdrop-filter: blur(25px);
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(5, 10, 20, 0.8);
+            backdrop-filter: blur(30px);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
             flex-direction: column;
-            padding: 35px 25px;
+            padding: 40px 25px;
             z-index: 10;
         }
 
         .logo {
             font-family: 'Orbitron';
-            color: var(--neon);
-            font-size: 20px;
-            letter-spacing: 4px;
-            margin-bottom: 50px;
-            text-shadow: 0 0 20px rgba(88, 166, 255, 0.6);
+            color: var(--neon-blue);
+            font-size: 22px;
+            letter-spacing: 5px;
+            margin-bottom: 60px;
             text-align: center;
+            text-shadow: 0 0 20px var(--neon-blue);
         }
 
-        .nav-menu { flex: 1; }
-
         .nav-link {
-            padding: 14px 18px;
-            color: #8b949e;
+            padding: 16px;
+            color: #636e7b;
             text-decoration: none;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            font-size: 13px;
-            font-weight: 600;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            border: 1px solid transparent;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: 0.4s;
+            border-left: 3px solid transparent;
         }
 
         .nav-link:hover, .nav-link.active {
-            background: rgba(88, 166, 255, 0.1);
+            background: linear-gradient(90deg, rgba(0, 210, 255, 0.1), transparent);
             color: white;
-            border: 1px solid var(--border);
-            box-shadow: 0 0 15px rgba(88, 166, 255, 0.2);
-            transform: translateX(5px);
+            border-left: 3px solid var(--neon-blue);
+            text-shadow: 0 0 10px var(--neon-blue);
         }
 
-        /* AREA UTAMA */
-        .main-view {
+        /* MAIN CONTENT AREA */
+        .main-container {
             flex: 1;
             display: flex;
             flex-direction: column;
             z-index: 5;
-            position: relative;
         }
 
         header {
-            height: 80px;
-            padding: 0 40px;
+            height: 90px;
+            padding: 0 50px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(5, 7, 10, 0.6);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(2, 4, 8, 0.5);
+            backdrop-filter: blur(10px);
         }
 
-        .status-box {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 11px;
-            letter-spacing: 2px;
-            color: #8b949e;
+        .system-status {
+            display: flex; align-items: center; gap: 15px;
+            font-family: 'Orbitron'; font-size: 10px; color: #8b949e;
         }
 
-        .dot {
-            width: 8px; height: 8px;
-            background: #238636;
+        .pulse-dot {
+            width: 10px; height: 10px;
+            background: #00ff88;
             border-radius: 50%;
-            box-shadow: 0 0 12px #238636;
-            animation: pulse-green 2s infinite;
+            box-shadow: 0 0 15px #00ff88;
+            animation: pulse 1.5s infinite;
         }
 
-        @keyframes pulse-green {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(35, 134, 54, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(35, 134, 54, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(35, 134, 54, 0); }
+        @keyframes pulse {
+            0% { transform: scale(0.9); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+            100% { transform: scale(0.9); opacity: 1; }
         }
 
-        .clock {
-            font-family: 'Orbitron';
-            color: var(--neon);
-            font-size: 18px;
-            text-shadow: 0 0 10px rgba(88, 166, 255, 0.5);
-        }
-
-        /* KONTEN UTAMA (KOTAK DASHBOARD) */
-        .content-area {
+        /* AREA TENGAH YANG KEREN */
+        .viewport {
             flex: 1;
-            padding: 30px;
+            padding: 40px;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            overflow-y: auto;
+            align-items: center;
+            position: relative;
         }
 
-        .glass-panel {
+        /* FRAME FORM DENGAN CAHAYA MERAH/BIRU DI PINGGIR */
+        .dashboard-frame {
             width: 100%;
             max-width: 1100px;
-            background: #0d1117; /* Background gelap solid buat Form */
-            border: 2px solid var(--neon); /* Garis Neon Biru */
-            border-radius: 24px;
-            height: 750px;
+            height: 80vh;
+            background: rgba(10, 15, 25, 0.6);
+            border-radius: 35px;
             position: relative;
-            box-shadow: 0 0 30px rgba(88, 166, 255, 0.3), 
-                        inset 0 0 20px rgba(88, 166, 255, 0.1);
+            z-index: 5;
             overflow: hidden;
-            animation: glow-pulse 4s infinite alternate;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 100px rgba(0, 210, 255, 0.15); /* Soft Glow */
         }
 
-        @keyframes glow-pulse {
-            from { border-color: rgba(88, 166, 255, 0.4); box-shadow: 0 0 20px rgba(88, 166, 255, 0.2); }
-            to { border-color: rgba(88, 166, 255, 1); box-shadow: 0 0 40px rgba(88, 166, 255, 0.5); }
+        /* Animasi Garis Neon Mengalir (Border yang muter) */
+        .dashboard-frame::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: conic-gradient(transparent, var(--neon-blue), transparent, var(--neon-red), transparent);
+            animation: rotate 6s linear infinite;
+            z-index: -1;
+        }
+
+        .dashboard-frame::after {
+            content: '';
+            position: absolute;
+            inset: 4px; /* Ketebalan border neon */
+            background: #0d1117; /* Warna dalam kotak */
+            border-radius: 31px;
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+            width: 100%; height: 100%; border: none;
+            /* Bikin konten Tally sedikit lebih terang */
+            filter: contrast(110%) brightness(110%);
         }
 
-        .btn-logout {
+        .btn-disconnect {
             margin-top: auto;
-            color: #f85149;
-            text-decoration: none;
+            color: var(--neon-red);
             text-align: center;
-            padding: 14px;
-            border: 1px solid rgba(248, 81, 73, 0.2);
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: bold;
+            padding: 15px;
+            border: 1px solid rgba(255, 0, 85, 0.3);
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 800;
+            text-decoration: none;
             transition: 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
         }
 
-        .btn-logout:hover {
-            background: rgba(248, 81, 73, 0.1);
-            border-color: #f85149;
-            box-shadow: 0 0 20px rgba(248, 81, 73, 0.3);
+        .btn-disconnect:hover {
+            background: var(--neon-red);
+            color: white;
+            box-shadow: 0 0 30px rgba(255, 0, 85, 0.4);
+        }
+
+        .clock-v2 {
+            font-family: 'Orbitron';
+            font-size: 20px;
+            color: white;
+            text-shadow: 0 0 15px var(--neon-blue);
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-glow"></div>
+    <div class="ambient-light"></div>
 
     <aside class="sidebar">
-        <div class="logo">GIBRAN HUB</div>
-        
-        <div class="nav-menu">
-            <a href="#" class="nav-link active">📊 OVERVIEW</a>
-            <a href="#" class="nav-link">💳 FINANCE LOG</a>
-            <a href="#" class="nav-link">📁 DATABASE</a>
-            <a href="#" class="nav-link">⚙️ SETTINGS</a>
-        </div>
-
-        <a href="index.html" class="btn-logout">DISCONNECT SYSTEM</a>
+        <div class="logo">GIBRAN</div>
+        <nav style="flex: 1;">
+            <a href="#" class="nav-link active">MAIN TERMINAL</a>
+            <a href="#" class="nav-link">CASH FLOW</a>
+            <a href="#" class="nav-link">DATA CENTER</a>
+            <a href="#" class="nav-link">SYSTEM CORE</a>
+        </nav>
+        <a href="index.html" class="btn-disconnect">DISCONNECT</a>
     </aside>
 
-    <main class="main-view">
+    <main class="main-container">
         <header>
-            <div class="status-box">
-                <div class="dot"></div>
-                <span>SYSTEM STATUS: <strong style="color: white;">OPERATIONAL</strong></span>
+            <div class="system-status">
+                <div class="pulse-dot"></div>
+                <span>CORE STATUS: <strong style="color: white;">STABLE</strong></span>
             </div>
-            <div class="clock" id="realtime-clock">00:00:00</div>
+            <div class="clock-v2" id="live-clock">00:00:00</div>
         </header>
 
-        <section class="content-area">
-            <div class="glass-panel">
+        <section class="viewport">
+            <div class="dashboard-frame">
                 <iframe 
                     src="https://tally.so/embed/b5l8b6?hideTitle=1&transparentBackground=1" 
-                    title="GIBRAN HUB">
+                    title="SYSTEM INTERFACE">
                 </iframe>
             </div>
         </section>
     </main>
 
     <script>
-        function updateClock() {
-            const clock = document.getElementById('realtime-clock');
+        function startClock() {
+            const clock = document.getElementById('live-clock');
             const now = new Date();
-            clock.innerText = now.toLocaleTimeString();
+            clock.innerText = now.toLocaleTimeString('en-US', { hour12: false });
         }
-        setInterval(updateClock, 1000);
-        updateClock();
+        setInterval(startClock, 1000);
+        startClock();
     </script>
-
 </body>
 </html>
