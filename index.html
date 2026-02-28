@@ -3,101 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | FINAL SYSTEM</title>
+    <title>GIBRAN HUB | 100% CONNECTED</title>
     <style>
         body { font-family: sans-serif; background: #040d16; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { background: #161b22; padding: 30px; border-radius: 15px; border: 1px solid #30363d; width: 320px; }
-        input { width: 100%; padding: 10px; margin-bottom: 10px; background: #010409; border: 1px solid #30363d; border-radius: 5px; color: white; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; color: white; }
-        .btn-blue { background: #2f81f7; }
-        .btn-green { background: #238636; margin-top: 10px; }
-        #loading { display: none; color: yellow; text-align: center; margin-bottom: 10px; }
+        .card { background: #161b22; padding: 25px; border-radius: 12px; border: 1px solid #30363d; width: 320px; }
+        input { width: 100%; padding: 12px; margin: 8px 0; background: #010409; border: 1px solid #30363d; border-radius: 8px; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; margin-top: 10px; }
+        .btn-daftar { background: #238636; }
+        .btn-login { background: #2f81f7; }
+        #status { font-size: 13px; text-align: center; margin-top: 15px; color: #f0e042; }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2 style="text-align:center; color:#2f81f7;">GIBRAN HUB</h2>
-    <div id="loading">SABAR... SEDANG MENGIRIM...</div>
-
-    <div id="form-box">
-        <input type="text" id="nama" placeholder="NAMA LENGKAP">
-        <input type="tel" id="wa" placeholder="NOMOR WA (Contoh: 851...)">
-        <input type="text" id="alamat" placeholder="ALAMAT RUMAH">
-        <input type="password" id="pass" placeholder="PASSWORD">
-        
-        <button class="btn-green" onclick="prosesDaftar()">DAFTAR SEKARANG</button>
-        <button class="btn-blue" onclick="prosesLogin()" style="margin-top:20px;">TEST LOGIN</button>
-    </div>
+    <h2 style="text-align: center; color: #2f81f7;">GIBRAN HUB</h2>
+    <div id="status">Status: Menunggu aksi...</div>
+    
+    <input type="text" id="nama" placeholder="Nama Lengkap">
+    <input type="tel" id="wa" placeholder="Nomor WA">
+    <input type="text" id="alamat" placeholder="Alamat">
+    <input type="password" id="pass" placeholder="Password">
+    
+    <button class="btn-daftar" onclick="daftarAkun()">SIMPAN PENDAFTARAN</button>
+    <button class="btn-login" onclick="loginAkun()">TEST LOGIN</button>
 </div>
 
 <script>
-    // PASTIKAN API URL INI BENAR!
+    // ID API: jy19m4udkidqn
     const apiURL = 'https://sheetdb.io/api/v1/jy19m4udkidqn';
 
-    function prosesDaftar() {
-        const n = document.getElementById('nama').value;
-        const w = document.getElementById('wa').value;
-        const a = document.getElementById('alamat').value;
-        const p = document.getElementById('pass').value;
+    function daftarAkun() {
+        const payload = {
+            nama: document.getElementById('nama').value,
+            wa: document.getElementById('wa').value,
+            alamat: document.getElementById('alamat').value,
+            password: document.getElementById('pass').value
+        };
 
-        if(!n || !w || !a || !p) return alert("SEMUA HARUS DIISI!");
+        if(!payload.nama || !payload.wa) return alert("Nama & WA jangan kosong!");
+        document.getElementById('status').innerText = "Status: Sedang mendaftar...";
 
-        document.getElementById('loading').style.display = 'block';
-
+        // Kirim ke tab 'daftar akun'
         fetch(`${apiURL}?sheet=daftar%20akun`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                "data": [{
-                    "nama": n,
-                    "wa": w,
-                    "alamat": a,
-                    "password": p
-                }]
-            })
+            body: JSON.stringify({ "data": [payload] })
         })
         .then(res => res.json())
         .then(data => {
-            document.getElementById('loading').style.display = 'none';
             if(data.created) {
-                alert("BERHASIL! NAMA " + n + " SUDAH MASUK KE SHEET.");
-                // Reset form
-                document.getElementById('nama').value = "";
-                document.getElementById('wa').value = "";
-            } else {
-                alert("GAGAL: " + JSON.stringify(data));
+                document.getElementById('status').innerText = "Status: BERHASIL DAFTAR!";
+                alert("Sukses! " + payload.nama + " masuk ke Sheet.");
             }
         })
-        .catch(err => {
-            document.getElementById('loading').style.display = 'none';
-            alert("KONEKSI ERROR: " + err);
-        });
+        .catch(err => alert("Error: " + err));
     }
 
-    function prosesLogin() {
+    function loginAkun() {
         const n = document.getElementById('nama').value;
         const w = document.getElementById('wa').value;
-        if(!n || !w) return alert("ISI NAMA & WA BUAT TEST LOGIN!");
 
-        document.getElementById('loading').style.display = 'block';
+        if(!n || !w) return alert("Isi Nama & WA buat test login!");
+        document.getElementById('status').innerText = "Status: Mengecek database...";
 
+        // Cari data
         fetch(`${apiURL}/search?sheet=daftar%20akun&nama=${n}&wa=${w}`)
         .then(res => res.json())
         .then(data => {
             if (data.length > 0) {
-                // Catat ke tab 'login'
+                // Jika ketemu, kirim ke tab 'login'
                 fetch(`${apiURL}?sheet=login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ "data": [{ "nama": n, "wa": w, "waktu": new Date().toLocaleString() }] })
+                    body: JSON.stringify({
+                        "data": [{ "nama": n, "wa": w, "waktu": new Date().toLocaleString('id-ID') }]
+                    })
                 }).then(() => {
-                    alert("LOGIN SUKSES & TERCATAT!");
-                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('status').innerText = "Status: LOGIN SUKSES & DICATAT!";
+                    alert("Mantap! Data login masuk ke Sheet 'login'.");
                 });
             } else {
-                document.getElementById('loading').style.display = 'none';
-                alert("DATA TIDAK COCOK DI SHEET!");
+                document.getElementById('status').innerText = "Status: DATA TIDAK DITEMUKAN!";
             }
         });
     }
