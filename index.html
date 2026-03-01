@@ -3,45 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | REGISTER</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500&display=swap" rel="stylesheet">
+    <title>GIBRAN HUB | OFFICIAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
     <style>
         body {
+            margin: 0; padding: 0;
             background-color: #05070a;
-            color: #fff;
-            font-family: 'Rajdhani', sans-serif;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            background-image: radial-gradient(circle at 50% 50%, rgba(0, 210, 255, 0.1) 0%, transparent 80%);
-        }
-        header { padding: 50px 20px; text-align: center; }
-        .logo {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5rem;
             color: #00d2ff;
-            text-shadow: 0 0 20px #00d2ff;
-            letter-spacing: 8px;
+            font-family: 'Orbitron', sans-serif;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh;
         }
-        .status { color: #00ff88; font-size: 0.8rem; margin-top: 20px; font-family: 'Orbitron'; }
-        .status-dot {
-            display: inline-block; width: 8px; height: 8px;
-            background: #00ff88; border-radius: 50%; margin-right: 10px;
-            box-shadow: 0 0 10px #00ff88;
-        }
-        /* Wadah Form yang diperbaiki */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
+        header { padding: 40px 0; text-align: center; }
+        .logo { font-size: 2.5rem; text-shadow: 0 0 20px #00d2ff; letter-spacing: 5px; }
+        .status { color: #00ff88; font-size: 0.8rem; margin-top: 10px; }
+        
+        /* Box pembungkus Typeform */
+        .glass-box {
+            width: 90%;
+            max-width: 700px;
+            height: 550px;
+            background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(0, 210, 255, 0.3);
             border-radius: 20px;
-            width: 90%;
-            max-width: 600px;
-            height: 500px; /* Tinggi tetap biar kelihatan */
-            margin-bottom: 50px;
             overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
         }
     </style>
 </head>
@@ -49,10 +35,10 @@
 
     <header>
         <div class="logo">GIBRAN HUB</div>
-        <div class="status"><span class="status-dot"></span> SYSTEM ONLINE</div>
+        <div class="status">● SYSTEM ONLINE</div>
     </header>
 
-    <div class="glass-card">
+    <div class="glass-box">
         <div data-tf-live="01JNA0Y53F7A0YJ9Y7R1K8N5A4"></div>
         <script src="//embed.typeform.com/next/embed.js"></script>
     </div>
