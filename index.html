@@ -3,186 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | SECURE DATABASE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500&display=swap" rel="stylesheet">
+    <title>GIBRAN HUB | REGISTER SYSTEM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --neon-blue: #00d2ff;
+            --neon-purple: #9d00ff;
             --dark-bg: #05070a;
         }
 
-        body { 
-            background: var(--dark-bg); 
-            color: white; 
-            font-family: 'Rajdhani', sans-serif; 
-            margin: 0; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center;
-            min-height: 100vh;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #fff;
+            font-family: 'Rajdhani', sans-serif;
             overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(0, 210, 255, 0.1) 0%, transparent 80%);
         }
 
         /* Background Grid Efek */
-        body::before {
-            content: "";
+        .grid-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(0, 210, 255, 0.05) 1px, transparent 1px),
                         linear-gradient(90deg, rgba(0, 210, 255, 0.05) 1px, transparent 1px);
-            background-size: 30px 30px;
+            background-size: 50px 50px;
             z-index: -1;
         }
 
-        .container { 
-            background: rgba(0, 210, 255, 0.03); 
-            padding: 40px; 
-            border: 2px solid var(--neon-blue); 
-            border-radius: 20px; 
-            box-shadow: 0 0 30px rgba(0, 210, 255, 0.2), inset 0 0 15px rgba(0, 210, 255, 0.1); 
-            width: 90%; 
-            max-width: 450px; 
+        header {
+            padding: 40px 20px;
             text-align: center;
         }
 
-        h2 { 
+        .logo {
             font-family: 'Orbitron', sans-serif;
-            text-shadow: 0 0 15px var(--neon-blue); 
-            margin-bottom: 30px; 
-            font-size: 22px; 
-            letter-spacing: 3px;
+            font-size: 3rem;
+            font-weight: 700;
             color: var(--neon-blue);
+            text-shadow: 0 0 20px var(--neon-blue);
+            letter-spacing: 10px;
+            text-transform: uppercase;
         }
 
-        .input-group {
+        .tagline {
+            font-size: 1rem;
+            letter-spacing: 5px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 10px;
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            min-height: 70vh;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 210, 255, 0.3);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 800px;
+            padding: 10px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 210, 255, 0.1);
             position: relative;
-            margin-bottom: 20px;
+            overflow: hidden;
         }
 
-        input { 
-            width: 100%; 
-            padding: 12px 15px; 
-            background: rgba(10, 12, 16, 0.8); 
-            border: 1px solid var(--neon-blue); 
-            color: white; 
-            border-radius: 5px; 
-            box-sizing: border-box; 
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 16px;
-            transition: 0.3s;
+        .glass-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: 0.5s;
         }
 
-        input:focus {
-            outline: none;
-            box-shadow: 0 0 15px var(--neon-blue);
-            border-color: #fff;
+        .glass-card:hover::before {
+            left: 100%;
         }
 
-        button { 
-            width: 100%; 
-            padding: 15px; 
-            background: var(--neon-blue); 
-            border: none; 
-            color: black; 
-            font-weight: bold; 
-            cursor: pointer; 
-            border-radius: 5px; 
-            margin-top: 10px; 
-            font-family: 'Orbitron', sans-serif; 
+        /* Container khusus Typeform agar responsif */
+        .typeform-container {
+            width: 100%;
+            height: 500px; /* Tinggi form */
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.3);
             letter-spacing: 2px;
-            transition: 0.4s; 
         }
 
-        button:hover { 
-            background: #fff; 
-            box-shadow: 0 0 30px #fff; 
-            transform: translateY(-3px);
+        /* Animasi Neon Pulse */
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
         }
 
-        #status { 
-            margin-top: 25px; 
-            font-size: 14px; 
-            font-weight: bold;
-            min-height: 20px;
+        .status-dot {
+            display: inline-block;
+            width: 10px; height: 10px;
+            background: #00ff88;
+            border-radius: 50%;
+            margin-right: 10px;
+            box-shadow: 0 0 10px #00ff88;
+            animation: pulse 2s infinite;
         }
 
-        .footer-link {
-            margin-top: 30px;
-            text-decoration: none;
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 12px;
-            letter-spacing: 1px;
-            transition: 0.3s;
+        .system-msg {
+            margin-bottom: 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: #00ff88;
         }
 
-        .footer-link:hover {
-            color: var(--neon-blue);
+        @media (max-width: 768px) {
+            .logo { font-size: 1.8rem; letter-spacing: 5px; }
+            .typeform-container { height: 600px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>REGISTRASI AKUN</h2>
-        <form id="gibranForm">
-            <div class="input-group">
-                <input type="text" name="nama" placeholder="NAMA LENGKAP" required>
+    <div class="grid-bg"></div>
+
+    <header>
+        <div class="logo">Gibran Hub</div>
+        <div class="tagline">SECURE DATA REGISTRATION V.2.0</div>
+    </header>
+
+    <div class="main-container">
+        <div class="system-msg">
+            <span class="status-dot"></span> SYSTEM ONLINE: CONNECTED TO CLOUD_DATABASE
+        </div>
+
+        <div class="glass-card">
+            <div class="typeform-container">
+                <div data-tf-live="01JNA0Y53F7A0YJ9Y7R1K8N5A4"></div>
+                <script src="//embed.typeform.com/next/embed.js"></script>
             </div>
-            <div class="input-group">
-                <input type="text" name="wa" placeholder="NOMOR WHATSAPP" required>
-            </div>
-            <div class="input-group">
-                <input type="text" name="alamat" placeholder="ALAMAT" required>
-            </div>
-            <div class="input-group">
-                <input type="password" name="password" placeholder="PASSWORD" required>
-            </div>
-            
-            <button type="submit" id="submitBtn">AKSES DATABASE ⚡</button>
-        </form>
-        <div id="status"></div>
+        </div>
     </div>
 
-    <a href="dashboard.html" class="footer-link">KEMBALI KE TERMINAL UTAMA</a>
-
-    <script>
-        const form = document.getElementById('gibranForm');
-        const status = document.getElementById('status');
-        const btn = document.getElementById('submitBtn');
-
-        form.addEventListener('submit', e => {
-            e.preventDefault();
-            
-            // Animasi Loading
-            status.style.color = var(--neon-blue);
-            status.innerHTML = "MENGIRIM DATA KE CLOUD...";
-            btn.disabled = true;
-            btn.style.opacity = "0.5";
-            
-            // LINK API SHEETBEST LO YANG BARU
-            fetch('https://api.sheetbest.com/sheets/23374d09-4205-4778-9588-e00e061c06ee', {
-                method: 'POST',
-                mode: 'cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(Object.fromEntries(new FormData(form)))
-            })
-            .then(res => {
-                status.style.color = "#00ff88"; // Hijau Neon
-                status.innerHTML = "✅ DATA BERHASIL DI-UPLOAD!";
-                form.reset();
-                btn.disabled = false;
-                btn.style.opacity = "1";
-            })
-            .catch(err => {
-                status.style.color = "#ff4444"; // Merah Error
-                status.innerHTML = "❌ KONEKSI GAGAL! COBA LAGI.";
-                btn.disabled = false;
-                btn.style.opacity = "1";
-                console.log(err);
-            });
-        });
-    </script>
+    <footer>
+        &copy; 2026 GIBRAN HUB | ENCRYPTED PROTOCOL
+    </footer>
 
 </body>
 </html>
