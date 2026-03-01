@@ -3,166 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | REGISTER SYSTEM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
-    
+    <title>GIBRAN HUB | REGISTER</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --neon-blue: #00d2ff;
-            --neon-purple: #9d00ff;
-            --dark-bg: #05070a;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
-            background-color: var(--dark-bg);
+            background-color: #05070a;
             color: #fff;
             font-family: 'Rajdhani', sans-serif;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 50% 50%, rgba(0, 210, 255, 0.1) 0%, transparent 80%);
-        }
-
-        /* Background Grid Efek */
-        .grid-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(0, 210, 255, 0.05) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(0, 210, 255, 0.05) 1px, transparent 1px);
-            background-size: 50px 50px;
-            z-index: -1;
-        }
-
-        header {
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        .logo {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--neon-blue);
-            text-shadow: 0 0 20px var(--neon-blue);
-            letter-spacing: 10px;
-            text-transform: uppercase;
-        }
-
-        .tagline {
-            font-size: 1rem;
-            letter-spacing: 5px;
-            color: rgba(255, 255, 255, 0.6);
-            margin-top: 10px;
-        }
-
-        .main-container {
+            margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 20px;
-            min-height: 70vh;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 50% 50%, rgba(0, 210, 255, 0.1) 0%, transparent 80%);
         }
-
+        header { padding: 50px 20px; text-align: center; }
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            color: #00d2ff;
+            text-shadow: 0 0 20px #00d2ff;
+            letter-spacing: 8px;
+        }
+        .status { color: #00ff88; font-size: 0.8rem; margin-top: 20px; font-family: 'Orbitron'; }
+        .status-dot {
+            display: inline-block; width: 8px; height: 8px;
+            background: #00ff88; border-radius: 50%; margin-right: 10px;
+            box-shadow: 0 0 10px #00ff88;
+        }
+        /* Wadah Form yang diperbaiki */
         .glass-card {
             background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(0, 210, 255, 0.3);
             border-radius: 20px;
-            width: 100%;
-            max-width: 800px;
-            padding: 10px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 210, 255, 0.1);
-            position: relative;
+            width: 90%;
+            max-width: 600px;
+            height: 500px; /* Tinggi tetap biar kelihatan */
+            margin-bottom: 50px;
             overflow: hidden;
-        }
-
-        .glass-card::before {
-            content: "";
-            position: absolute;
-            top: 0; left: -100%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            transition: 0.5s;
-        }
-
-        .glass-card:hover::before {
-            left: 100%;
-        }
-
-        /* Container khusus Typeform agar responsif */
-        .typeform-container {
-            width: 100%;
-            height: 500px; /* Tinggi form */
-            border-radius: 15px;
-            overflow: hidden;
-        }
-
-        footer {
-            text-align: center;
-            padding: 40px;
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.3);
-            letter-spacing: 2px;
-        }
-
-        /* Animasi Neon Pulse */
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.05); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.8; }
-        }
-
-        .status-dot {
-            display: inline-block;
-            width: 10px; height: 10px;
-            background: #00ff88;
-            border-radius: 50%;
-            margin-right: 10px;
-            box-shadow: 0 0 10px #00ff88;
-            animation: pulse 2s infinite;
-        }
-
-        .system-msg {
-            margin-bottom: 20px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.9rem;
-            color: #00ff88;
-        }
-
-        @media (max-width: 768px) {
-            .logo { font-size: 1.8rem; letter-spacing: 5px; }
-            .typeform-container { height: 600px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="grid-bg"></div>
-
     <header>
-        <div class="logo">Gibran Hub</div>
-        <div class="tagline">SECURE DATA REGISTRATION V.2.0</div>
+        <div class="logo">GIBRAN HUB</div>
+        <div class="status"><span class="status-dot"></span> SYSTEM ONLINE</div>
     </header>
 
-    <div class="main-container">
-        <div class="system-msg">
-            <span class="status-dot"></span> SYSTEM ONLINE: CONNECTED TO CLOUD_DATABASE
-        </div>
-
-        <div class="glass-card">
-            <div class="typeform-container">
-                <div data-tf-live="01JNA0Y53F7A0YJ9Y7R1K8N5A4"></div>
-                <script src="//embed.typeform.com/next/embed.js"></script>
-            </div>
-        </div>
+    <div class="glass-card">
+        <div data-tf-live="01JNA0Y53F7A0YJ9Y7R1K8N5A4"></div>
+        <script src="//embed.typeform.com/next/embed.js"></script>
     </div>
-
-    <footer>
-        &copy; 2026 GIBRAN HUB | ENCRYPTED PROTOCOL
-    </footer>
 
 </body>
 </html>
