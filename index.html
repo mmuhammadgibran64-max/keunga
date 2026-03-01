@@ -3,61 +3,182 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | DATABASE SECURE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <title>GIBRAN HUB | SECURE DATABASE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500&display=swap" rel="stylesheet">
     <style>
-        body { background: #05070a; color: #00d2ff; font-family: 'Orbitron', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-        .container { background: rgba(0, 210, 255, 0.05); padding: 30px; border: 2px solid #00d2ff; border-radius: 15px; box-shadow: 0 0 25px #00d2ff; width: 90%; max-width: 450px; }
-        h2 { text-align: center; text-shadow: 0 0 10px #00d2ff; margin-bottom: 20px; font-size: 20px; letter-spacing: 2px; }
-        input { width: 100%; padding: 12px; margin: 10px 0; background: #0a0c10; border: 1px solid #00d2ff; color: white; border-radius: 8px; box-sizing: border-box; font-family: sans-serif; }
-        input:focus { outline: none; box-shadow: 0 0 10px #00d2ff; border-color: #fff; }
-        button { width: 100%; padding: 15px; background: #00d2ff; border: none; color: black; font-weight: bold; cursor: pointer; border-radius: 8px; margin-top: 15px; font-family: 'Orbitron'; transition: 0.3s; }
-        button:hover { background: #fff; box-shadow: 0 0 25px #fff; transform: scale(1.02); }
-        #status { text-align: center; margin-top: 20px; font-size: 13px; font-weight: bold; }
-        .back-link { margin-top: 20px; color: rgba(255,255,255,0.5); text-decoration: none; font-size: 12px; }
+        :root {
+            --neon-blue: #00d2ff;
+            --dark-bg: #05070a;
+        }
+
+        body { 
+            background: var(--dark-bg); 
+            color: white; 
+            font-family: 'Rajdhani', sans-serif; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Background Grid Efek */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0, 210, 255, 0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0, 210, 255, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: -1;
+        }
+
+        .container { 
+            background: rgba(0, 210, 255, 0.03); 
+            padding: 40px; 
+            border: 2px solid var(--neon-blue); 
+            border-radius: 20px; 
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.2), inset 0 0 15px rgba(0, 210, 255, 0.1); 
+            width: 90%; 
+            max-width: 450px; 
+            text-align: center;
+        }
+
+        h2 { 
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 15px var(--neon-blue); 
+            margin-bottom: 30px; 
+            font-size: 22px; 
+            letter-spacing: 3px;
+            color: var(--neon-blue);
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        input { 
+            width: 100%; 
+            padding: 12px 15px; 
+            background: rgba(10, 12, 16, 0.8); 
+            border: 1px solid var(--neon-blue); 
+            color: white; 
+            border-radius: 5px; 
+            box-sizing: border-box; 
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 15px var(--neon-blue);
+            border-color: #fff;
+        }
+
+        button { 
+            width: 100%; 
+            padding: 15px; 
+            background: var(--neon-blue); 
+            border: none; 
+            color: black; 
+            font-weight: bold; 
+            cursor: pointer; 
+            border-radius: 5px; 
+            margin-top: 10px; 
+            font-family: 'Orbitron', sans-serif; 
+            letter-spacing: 2px;
+            transition: 0.4s; 
+        }
+
+        button:hover { 
+            background: #fff; 
+            box-shadow: 0 0 30px #fff; 
+            transform: translateY(-3px);
+        }
+
+        #status { 
+            margin-top: 25px; 
+            font-size: 14px; 
+            font-weight: bold;
+            min-height: 20px;
+        }
+
+        .footer-link {
+            margin-top: 30px;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 12px;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+        .footer-link:hover {
+            color: var(--neon-blue);
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h2>SECURE DATA INPUT</h2>
+        <h2>REGISTRASI AKUN</h2>
         <form id="gibranForm">
-            <input type="text" name="Nama" placeholder="MASUKKAN NAMA" required>
-            <input type="text" name="WA" placeholder="NOMOR WHATSAPP (CONTOH: 0812...)" required>
-            <input type="text" name="Alamat" placeholder="ALAMAT LENGKAP" required>
-            <input type="password" name="Password" placeholder="PASSWORD" required>
+            <div class="input-group">
+                <input type="text" name="nama" placeholder="NAMA LENGKAP" required>
+            </div>
+            <div class="input-group">
+                <input type="text" name="wa" placeholder="NOMOR WHATSAPP" required>
+            </div>
+            <div class="input-group">
+                <input type="text" name="alamat" placeholder="ALAMAT" required>
+            </div>
+            <div class="input-group">
+                <input type="password" name="password" placeholder="PASSWORD" required>
+            </div>
             
-            <button type="submit" id="submitBtn">KIRIM KE DATABASE ⚡</button>
+            <button type="submit" id="submitBtn">AKSES DATABASE ⚡</button>
         </form>
         <div id="status"></div>
     </div>
 
-    <a href="dashboard.html" class="back-link">KEMBALI KE DASHBOARD</a>
+    <a href="dashboard.html" class="footer-link">KEMBALI KE TERMINAL UTAMA</a>
 
     <script>
         const form = document.getElementById('gibranForm');
         const status = document.getElementById('status');
+        const btn = document.getElementById('submitBtn');
 
         form.addEventListener('submit', e => {
             e.preventDefault();
-            status.style.color = "#00d2ff";
-            status.innerHTML = "MENGHUBUNGKAN KE SERVER...";
             
-            // LINK API SHEETBEST LO YANG TADI
-            fetch('https://api.sheetbest.com/sheets/6417feaa-bbdc-4b47-81ab-5f18d0e19a48', {
+            // Animasi Loading
+            status.style.color = var(--neon-blue);
+            status.innerHTML = "MENGIRIM DATA KE CLOUD...";
+            btn.disabled = true;
+            btn.style.opacity = "0.5";
+            
+            // LINK API SHEETBEST LO YANG BARU
+            fetch('https://api.sheetbest.com/sheets/23374d09-4205-4778-9588-e00e061c06ee', {
                 method: 'POST',
                 mode: 'cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(Object.fromEntries(new FormData(form)))
             })
             .then(res => {
-                status.style.color = "#00ff88"; // Warna hijau neon kalau berhasil
-                status.innerHTML = "✅ DATA BERHASIL DI-UPLOAD KE GOOGLE SHEETS!";
+                status.style.color = "#00ff88"; // Hijau Neon
+                status.innerHTML = "✅ DATA BERHASIL DI-UPLOAD!";
                 form.reset();
+                btn.disabled = false;
+                btn.style.opacity = "1";
             })
             .catch(err => {
-                status.style.color = "#ff4444"; // Warna merah kalau error
-                status.innerHTML = "❌ GAGAL! CEK KONEKSI / SETTING API.";
+                status.style.color = "#ff4444"; // Merah Error
+                status.innerHTML = "❌ KONEKSI GAGAL! COBA LAGI.";
+                btn.disabled = false;
+                btn.style.opacity = "1";
                 console.log(err);
             });
         });
