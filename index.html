@@ -3,15 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | REGISTER</title>
+    <title>GIBRAN HUB | ACCESS PORTAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #05070a; }
-        iframe { width: 100%; height: 100vh; border: none; }
+        body, html { 
+            margin: 0; padding: 0; height: 100%; 
+            background: #05070a; color: #00d2ff; 
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Efek Background Grid */
+        .grid {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0, 210, 255, 0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0, 210, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px; z-index: -1;
+        }
+
+        header { padding: 40px 20px; text-align: center; }
+        .logo { 
+            font-family: 'Orbitron', sans-serif; font-size: 2.5rem; 
+            text-shadow: 0 0 15px #00d2ff; letter-spacing: 5px; 
+        }
+
+        .btn-container {
+            display: flex; justify-content: center; gap: 20px; margin-bottom: 30px;
+        }
+
+        .nav-btn {
+            padding: 10px 25px; border: 1px solid #00d2ff; background: transparent;
+            color: #00d2ff; font-family: 'Orbitron'; cursor: pointer; transition: 0.3s;
+            border-radius: 5px; text-decoration: none; font-size: 12px;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background: #00d2ff; color: #000; box-shadow: 0 0 20px #00d2ff;
+        }
+
+        /* Box Form */
+        .main-frame {
+            width: 90%; max-width: 800px; height: 550px;
+            margin: 0 auto 50px auto; border: 1px solid rgba(0, 210, 255, 0.3);
+            border-radius: 15px; overflow: hidden; background: rgba(0,0,0,0.5);
+            box-shadow: 0 0 40px rgba(0,0,0,1);
+        }
+
+        iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
 <body>
 
-    <iframe src="https://form.typeform.com/to/UKx4K7N3"></iframe>
+    <div class="grid"></div>
+
+    <header>
+        <div class="logo">GIBRAN HUB</div>
+        <p style="letter-spacing: 3px; color: rgba(255,255,255,0.5);">SECURE PROTOCOL v3.0</p>
+    </header>
+
+    <div class="btn-container">
+        <a href="#" class="nav-btn active" onclick="loadForm('UKx4K7N3')">DAFTAR</a>
+        <a href="#" class="nav-btn" onclick="loadForm('NJ61eM1H')">LOGIN</a>
+    </div>
+
+    <div class="main-frame">
+        <iframe id="content-frame" src="https://form.typeform.com/to/UKx4K7N3"></iframe>
+    </div>
+
+    <script>
+        function loadForm(id) {
+            // Ganti src iframe
+            document.getElementById('content-frame').src = 'https://form.typeform.com/to/' + id;
+            
+            // Atur tombol aktif
+            const btns = document.querySelectorAll('.nav-btn');
+            btns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    </script>
 
 </body>
 </html>
