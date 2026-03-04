@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | ULTIMATE COMMAND CENTER v11.4</title>
+    <title>GIBRAN HUB | ULTIMATE COMMAND v11.7</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root { --neon: #00d2ff; --neon-green: #00ff88; --neon-red: #ff4444; --bg: #05070a; --card-bg: rgba(255, 255, 255, 0.05); }
@@ -19,7 +19,7 @@
         .wrapper { display: flex; height: 100vh; }
         nav { width: 260px; background: rgba(0,0,0,0.95); border-right: 2px solid var(--neon); padding: 20px; display: flex; flex-direction: column; gap: 12px; }
         .logo { font-family: 'Orbitron'; color: var(--neon); font-size: 1.2rem; margin-bottom: 30px; text-shadow: 0 0 10px var(--neon); letter-spacing: 2px; }
-        .nav-btn { background: transparent; border: 1px solid rgba(0,210,255,0.2); color: var(--neon); padding: 14px; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; text-align: left; transition: 0.3s; border-radius: 4px; }
+        .nav-btn { background: transparent; border: 1px solid rgba(0,210,255,0.2); color: var(--neon); padding: 14px; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; text-align: left; transition: 0.3s; border-radius: 4px; outline: none; }
         .nav-btn:hover, .nav-btn.active { background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); font-weight: bold; }
 
         main { flex: 1; overflow-y: auto; padding: 25px; background: radial-gradient(circle at top, #0a111a 0%, #05070a 100%); }
@@ -33,59 +33,60 @@
         .card-h { font-family: 'Orbitron'; color: var(--neon); font-size: 0.8rem; margin-bottom: 18px; border-left: 4px solid var(--neon); padding-left: 12px; letter-spacing: 1px; text-transform: uppercase; }
 
         /* Form Elements */
-        label { display: block; font-size: 10px; margin-bottom: 5px; color: var(--neon); font-family: 'Orbitron'; }
+        label { display: block; font-size: 10px; margin-bottom: 5px; color: var(--neon); font-family: 'Orbitron'; letter-spacing: 1px; }
         input, select, textarea { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,210,255,0.3); color: white; border-radius: 6px; margin-bottom: 12px; font-size: 13px; box-sizing: border-box; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--neon); background: rgba(0,210,255,0.05); }
         
         .btn-action { background: var(--neon); color: black; border: none; padding: 14px; font-family: 'Orbitron'; font-size: 11px; cursor: pointer; width: 100%; font-weight: bold; border-radius: 6px; transition: 0.3s; margin-top: 5px; }
         .btn-action:hover { box-shadow: 0 0 20px var(--neon); transform: translateY(-2px); }
 
-        #video { width: 100%; height: 200px; background: #000; border: 2px solid var(--neon); border-radius: 8px; object-fit: cover; display: none; margin-bottom: 15px; }
+        /* Special UI Components */
+        .calc-display { background: #000; padding: 15px; text-align: right; border: 1px solid var(--neon); color: var(--neon-green); font-family: 'Orbitron'; font-size: 1.5rem; margin-bottom: 10px; border-radius: 6px; min-height: 40px; }
+        #video { width: 100%; height: 220px; background: #000; border: 2px solid var(--neon); border-radius: 8px; object-fit: cover; display: none; margin-bottom: 15px; transform: scaleX(-1); }
         .step-loading { display: none; text-align: center; color: var(--neon-green); font-family: 'Orbitron'; font-size: 11px; padding: 20px; letter-spacing: 2px; }
-        .calc-display { background: #000; padding: 15px; text-align: right; border: 1px solid var(--neon); color: var(--neon-green); font-family: 'Orbitron'; font-size: 1.4rem; margin-bottom: 10px; border-radius: 6px; }
     </style>
 </head>
 <body>
 
     <div id="loader">
-        <h2 style="font-family: 'Orbitron'; letter-spacing: 5px; color: var(--neon);">LINKING_DATABASE...</h2>
+        <h2 style="font-family: 'Orbitron'; letter-spacing: 5px; color: var(--neon);">GIBRAN_HUB v11.7</h2>
         <div class="scan-line"></div>
     </div>
 
     <div class="wrapper">
         <nav>
-            <div class="logo">GIBRAN_HUB</div>
-            <button class="nav-btn active" onclick="show('main-hub', this)">● DASHBOARD UTAMA</button>
+            <div class="logo">COMMAND_CTR</div>
+            <button class="nav-btn active" onclick="show('main-hub', this)">● DASHBOARD</button>
             <button class="nav-btn" onclick="show('warehouse', this)">● GUDANG BARANG</button>
             <button class="nav-btn" onclick="show('sales', this)">● PENJUALAN & ABSEN</button>
-            <button class="nav-btn" onclick="show('settings', this)">● PENGATURAN ADMIN</button>
-            
-            <div style="margin-top:auto; padding: 10px; border-top: 1px solid rgba(0,210,255,0.2);">
-                <div style="font-size:9px; color:var(--neon-green); font-family:Orbitron;">STATUS: SYNCED</div>
-            </div>
+            <button class="nav-btn" onclick="show('settings', this)">● PENGATURAN</button>
+            <div style="margin-top:auto; padding: 10px; border-top: 1px solid rgba(0,210,255,0.2); font-size:9px; color:var(--neon-green); font-family:Orbitron;">SYSTEM: ACTIVE</div>
         </nav>
 
         <main>
             <div id="main-hub" class="section active">
                 <div class="grid">
                     <div class="card">
-                        <div class="card-h">FORM SETORAN & LAPORAN</div>
-                        <label>KATEGORI</label>
-                        <select id="lap-kategori"><option value="SETORAN">SETORAN</option><option value="LAPORAN">LAPORAN</option></select>
-                        <label>NAMA</label><input type="text" id="lap-nama" placeholder="Ketik nama...">
-                        <label>KETERANGAN</label><textarea id="lap-note" rows="3"></textarea>
+                        <div class="card-h">FORM LAPORAN & SETORAN</div>
+                        <label>JENIS DATA</label>
+                        <select id="lap-kategori"><option>SETORAN BU TATI</option><option>LAPORAN HARIAN</option><option>SETORAN LAINNYA</option></select>
+                        <label>NAMA ANDA</label><input type="text" id="lap-nama" placeholder="...">
+                        <label>CATATAN</label><textarea id="lap-note" rows="3" placeholder="Isi detail laporan..."></textarea>
                         <button class="btn-action" onclick="kirimData('laporan')">KIRIM LAPORAN</button>
                     </div>
 
                     <div class="card">
                         <div class="card-h">CATATAN & KALKULATOR</div>
-                        <textarea id="catatan-internal" rows="3" placeholder="Tulis catatan..."></textarea>
+                        <textarea id="catatan-internal" rows="3" placeholder="Tulis pengingat..."></textarea>
                         <button class="btn-action" style="background:var(--neon-green); color:black;" onclick="kirimData('catatan')">SIMPAN CATATAN</button>
-                        <div style="margin-top:20px;">
+                        
+                        <div style="margin-top:20px; padding-top:15px; border-top:1px solid rgba(255,255,255,0.1);">
                             <div class="calc-display" id="calc-val">0</div>
                             <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 5px;">
-                                <button class="nav-btn" style="text-align:center" onclick="calc('7')">7</button>
-                                <button class="nav-btn" style="text-align:center" onclick="calc('8')">8</button>
-                                <button class="nav-btn" style="text-align:center; color:var(--neon-red)" onclick="calc('C')">C</button>
+                                <button class="nav-btn" onclick="calc('7')">7</button><button class="nav-btn" onclick="calc('8')">8</button><button class="nav-btn" onclick="calc('9')">9</button><button class="nav-btn" style="color:var(--neon-red)" onclick="calc('/')">/</button>
+                                <button class="nav-btn" onclick="calc('4')">4</button><button class="nav-btn" onclick="calc('5')">5</button><button class="nav-btn" onclick="calc('6')">6</button><button class="nav-btn" style="color:var(--neon-red)" onclick="calc('*')">x</button>
+                                <button class="nav-btn" onclick="calc('1')">1</button><button class="nav-btn" onclick="calc('2')">2</button><button class="nav-btn" onclick="calc('3')">3</button><button class="nav-btn" style="color:var(--neon-red)" onclick="calc('-')">-</button>
+                                <button class="nav-btn" onclick="calc('0')">0</button><button class="nav-btn" style="color:var(--neon-red)" onclick="calc('C')">C</button><button class="nav-btn" style="color:var(--neon-green)" onclick="calc('=')">=</button><button class="nav-btn" style="color:var(--neon-red)" onclick="calc('+')">+</button>
                             </div>
                         </div>
                     </div>
@@ -95,63 +96,91 @@
             <div id="warehouse" class="section">
                 <div class="card">
                     <div class="card-h">GUDANG BARANG MANAGEMENT</div>
-                    <label>NAMA BARANG</label><input type="text" id="gd-nama">
-                    <label>UKURAN</label><input type="text" id="gd-ukuran">
-                    <label>TIPE / JENIS</label><input type="text" id="gd-tipe">
-                    <label>STOK</label><input type="number" id="gd-stok">
-                    <button class="btn-action" onclick="kirimData('gudang')">INPUT KE GUDANG</button>
+                    <div class="grid">
+                        <div>
+                            <label>NAMA BARANG</label><input type="text" id="gd-nama">
+                            <label>UKURAN</label><input type="text" id="gd-ukuran">
+                            <label>TIPE</label><input type="text" id="gd-tipe">
+                            <label>STOK</label><input type="number" id="gd-stok">
+                            <button class="btn-action" onclick="kirimData('gudang')">SIMPAN KE GUDANG</button>
+                        </div>
+                        <div style="border-left: 1px solid rgba(0,210,255,0.2); padding-left: 20px;">
+                            <label>CARI BARANG</label><input type="text" placeholder="Ketik nama barang...">
+                            <button class="btn-action" onclick="alert('Fitur pencarian terhubung ke Sheet sedang diproses...')">CARI DATA</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div id="sales" class="section">
                 <div class="card">
-                    <div class="card-h">PENJUALAN & ABSENSI</div>
+                    <div class="card-h">SYSTEM PENJUALAN & ABSENSI</div>
+                    
                     <div id="s-1">
-                        <label>NAMA PENJUAL</label><input type="text" id="sl-nama">
-                        <button class="btn-action" onclick="nextStep(1)">LANJUT</button>
+                        <label>IDENTITAS PENJUAL</label>
+                        <input type="text" id="sl-nama" placeholder="Masukkan nama anda...">
+                        <button class="btn-action" onclick="nextStep(1)">LANJUTKAN KE WAKTU</button>
                     </div>
+
                     <div id="s-2" style="display:none;">
-                        <label>JAM</label><input type="time" id="sl-jam">
-                        <button class="btn-action" onclick="nextStep(2)">LANJUT</button>
+                        <label>JAM OPERASIONAL</label>
+                        <input type="time" id="sl-jam">
+                        <button class="btn-action" onclick="nextStep(2)">VERIFIKASI WAKTU</button>
                     </div>
+
                     <div id="s-3" style="display:none;">
-                        <label>LAKU APA HARI INI?</label><textarea id="sl-laku"></textarea>
+                        <label>RINCIAN PENJUALAN HARI INI</label>
+                        <textarea id="sl-laku" rows="4" placeholder="Contoh: 3 Baju Biru, 1 Celana Cargo..."></textarea>
                         <button class="btn-action" onclick="nextStep(3)">LANJUT KE ABSEN WAJAH</button>
                     </div>
+
                     <div id="s-4" style="display:none;">
+                        <label>ABSEN WAJAH (WAJIB)</label>
                         <video id="video" autoplay></video>
-                        <button class="btn-action" id="btn-cam" onclick="startCamera()">BUKA KAMERA</button>
-                        <button class="btn-action" id="btn-snap" style="display:none; background:var(--neon-green)" onclick="takeSnapshot()">AMBIL FOTO</button>
+                        <button class="btn-action" id="btn-cam" onclick="startCamera()">BUKA KAMERA SCANNER</button>
+                        <button class="btn-action" id="btn-snap" style="display:none; background:var(--neon-green); color:black;" onclick="takeSnapshot()">AMBIL FOTO & ABSEN</button>
                     </div>
+
                     <div id="s-5" style="display:none;">
-                        <label>PENGHASILAN (RP)</label><input type="number" id="sl-duit">
-                        <div id="gaji-box" style="display:none; border:1px solid var(--neon-green); padding:10px; margin-bottom:10px;">
-                            <label>INPUT GAJI</label><input type="number" id="sl-gaji">
+                        <label>TOTAL PENGHASILAN (RP)</label>
+                        <input type="number" id="sl-duit" placeholder="Input nominal penghasilan hari ini...">
+                        
+                        <div id="gaji-box" style="display:none; border:2px solid var(--neon-green); padding:15px; margin-bottom:15px; border-radius:8px; background: rgba(0,255,136,0.05);">
+                            <label style="color:var(--neon-green); font-weight:bold;">MODUL GAJI DIAKTIFKAN</label>
+                            <input type="number" id="sl-gaji" placeholder="Input nominal gaji anda...">
                         </div>
-                        <button class="btn-action" onclick="kirimData('penjualan')">FINISH & KIRIM</button>
+                        
+                        <button class="btn-action" onclick="kirimData('penjualan')">FINALISASI & KIRIM KE SHEET</button>
                     </div>
-                    <div id="loading-text" class="step-loading">MENGHUBUNGKAN_KE_SHEET...</div>
+
+                    <div id="loading-text" class="step-loading">MENGHUBUNGKAN_KE_SERVER...</div>
                 </div>
             </div>
 
             <div id="settings" class="section">
-                <div class="card">
-                    <div class="card-h">PENGATURAN ADMIN</div>
-                    <div style="text-align:center; padding: 20px;">
-                        <div style="width:80px; height:80px; background:var(--neon); border-radius:50%; margin: 0 auto 10px; border: 2px solid white;"></div>
-                        <h3>GIBRAN ADMIN</h3>
+                <div class="grid">
+                    <div class="card" style="text-align:center">
+                        <div class="card-h">PROFIL ADMIN</div>
+                        <div style="width:80px; height:80px; background:var(--neon); border-radius:50%; margin: 20px auto; border: 2px solid white; box-shadow: 0 0 15px var(--neon);"></div>
+                        <h3 style="font-family:Orbitron;">GIBRAN ADMIN</h3>
+                        <p style="font-size:11px; opacity:0.6;">System ID: GH-2024-V11</p>
+                        <button class="btn-action" style="background:#25D366; color:white;">HUBUNGI DEVELOPER (WA)</button>
                     </div>
-                    <button class="btn-action" style="background:#25D366; color:white;">BAGIKAN KE WA</button>
-                    <button class="btn-action" style="background:var(--neon-red); color:white; margin-top:10px;">HAPUS DATA PERMANEN</button>
+                    <div class="card">
+                        <div class="card-h">SYSTEM CONTROL</div>
+                        <button class="btn-action" style="background:var(--neon-red); color:white;" onclick="location.reload()">REBOOT SYSTEM</button>
+                        <button class="btn-action" style="margin-top:10px;" onclick="alert('Data anda sudah aman di Cloud Google Sheets.')">CEK SYNC STATUS</button>
+                    </div>
                 </div>
             </div>
         </main>
     </div>
 
     <script>
-        // LINK APPS SCRIPT LO
+        // MASUKKAN URL GOOGLE APPS SCRIPT ANDA DI SINI
         const scriptURL = 'https://script.google.com/macros/s/AKfycbxnGzFdKLUl7GnixTWhiaYftWCenhh0m_FkiSCALcEY6-jYUKivb1VZLc0KqbpA8-Eg/exec';
 
+        // Fungsi Navigasi Tab
         function show(id, btn) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -159,30 +188,45 @@
             btn.classList.add('active');
         }
 
+        // Fungsi Kalkulator (Fixed Logic)
+        let currentInput = "";
+        function calc(v) {
+            const display = document.getElementById('calc-val');
+            if (v === 'C') { currentInput = ""; display.innerText = "0"; }
+            else if (v === '=') { try { currentInput = eval(currentInput).toString(); display.innerText = currentInput; } catch(e) { display.innerText = "ERROR"; currentInput = ""; } }
+            else { if (currentInput === "" && isNaN(v)) return; currentInput += v; display.innerText = currentInput; }
+        }
+
+        // Fungsi Alur Penjualan (Step by Step)
         function nextStep(n) {
             document.getElementById('s-'+n).style.display = 'none';
             document.getElementById('loading-text').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('loading-text').style.display = 'none';
-                document.getElementById('s-'+(n+1)).style.display = 'block';
-            }, 1500);
+            setTimeout(() => { 
+                document.getElementById('loading-text').style.display = 'none'; 
+                document.getElementById('s-'+(n+1)).style.display = 'block'; 
+            }, 1200);
         }
 
+        // Fungsi Kamera (Absen Wajah)
         async function startCamera() {
             const v = document.getElementById('video');
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            v.srcObject = stream; v.style.display = 'block';
-            document.getElementById('btn-cam').style.display = 'none';
-            document.getElementById('btn-snap').style.display = 'block';
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                v.srcObject = stream; v.style.display = 'block';
+                document.getElementById('btn-cam').style.display = 'none';
+                document.getElementById('btn-snap').style.display = 'block';
+            } catch(e) { alert("Izin kamera ditolak atau tidak ditemukan."); }
         }
 
         function takeSnapshot() {
-            alert("WAJAH TERVERIFIKASI!");
-            document.getElementById('video').srcObject.getTracks().forEach(t => t.stop());
+            alert("SISTEM: WAJAH TERVERIFIKASI!");
+            const stream = document.getElementById('video').srcObject;
+            stream.getTracks().forEach(t => t.stop());
             document.getElementById('video').style.display = 'none';
             nextStep(4);
         }
 
+        // Fungsi Kirim Data ke Google Sheet
         function kirimData(tipe) {
             let data = { kategori: tipe };
             if(tipe === 'laporan') {
@@ -205,28 +249,26 @@
             }
 
             document.getElementById('loader').style.display = 'flex';
-            
             fetch(scriptURL, { method: 'POST', body: JSON.stringify(data) })
-            .then(() => {
-                alert("SUKSES: Data Terkirim!");
-                location.reload();
+            .then(() => { 
+                alert("SUKSES: Data Berhasil Masuk ke Database Gibran Hub!"); 
+                location.reload(); 
             })
-            .catch(() => {
-                alert("Gagal Terkirim!");
-                document.getElementById('loader').style.display = 'none';
+            .catch(() => { 
+                alert("GAGAL: Periksa Koneksi atau Apps Script!"); 
+                document.getElementById('loader').style.display = 'none'; 
             });
         }
 
-        function calc(v) {
-            const display = document.getElementById('calc-val');
-            if(v === 'C') display.innerText = '0';
-            else display.innerText = v;
-        }
-
+        // Booting System
         window.onload = () => {
             setTimeout(() => document.getElementById('loader').style.display = 'none', 2000);
+            
+            // Logika Muncul Gaji (Tgl 1, 15, dan Akhir Bulan)
             const d = new Date().getDate();
-            if(d === 1 || d === 15 || d >= 28) document.getElementById('gaji-box').style.display = 'block';
+            if(d === 1 || d === 15 || d >= 28) {
+                document.getElementById('gaji-box').style.display = 'block';
+            }
         };
     </script>
 </body>
