@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | DUAL SYSTEM</title>
+    <title>GIBRAN HUB | TRIPLE SYSTEM</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -18,141 +18,111 @@
         header { padding: 15px 30px; border-bottom: 2px solid var(--neon); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.9); }
         .logo { font-family: 'Orbitron'; font-size: 1.4rem; color: var(--neon); text-shadow: 0 0 10px var(--neon); }
         
-        .container { padding: 25px; display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
+        .container { padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
         
-        .card { background: var(--card-bg); border: 1px solid rgba(0, 210, 255, 0.1); padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .card-h { font-family: 'Orbitron'; color: var(--neon); font-size: 0.7rem; margin-bottom: 15px; letter-spacing: 2px; border-left: 3px solid var(--neon); padding-left: 10px; }
+        .card { background: var(--card-bg); border: 1px solid rgba(0, 210, 255, 0.1); padding: 15px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .card-h { font-family: 'Orbitron'; color: var(--neon); font-size: 0.65rem; margin-bottom: 15px; letter-spacing: 2px; border-left: 3px solid var(--neon); padding-left: 10px; }
 
-        .form-group { margin-bottom: 12px; }
-        label { display: block; font-size: 10px; margin-bottom: 5px; color: var(--neon); font-family: 'Orbitron'; }
-        input, select { width: 100%; padding: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,210,255,0.3); color: white; border-radius: 5px; box-sizing: border-box; font-size: 13px; }
+        .form-group { margin-bottom: 10px; }
+        label { display: block; font-size: 9px; margin-bottom: 4px; color: var(--neon); font-family: 'Orbitron'; }
+        input, select, textarea { width: 100%; padding: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,210,255,0.3); color: white; border-radius: 5px; box-sizing: border-box; font-size: 12px; }
         
-        canvas.sig-pad { border: 1px dashed var(--neon); background: #000; width: 100%; height: 100px; cursor: crosshair; }
+        canvas.sig-pad { border: 1px dashed var(--neon); background: #000; width: 100%; height: 80px; cursor: crosshair; }
 
-        .btn { background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 10px; cursor: pointer; font-family: 'Orbitron'; font-size: 10px; transition: 0.3s; width: 100%; margin-top: 10px; }
+        .btn { background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 8px; cursor: pointer; font-family: 'Orbitron'; font-size: 9px; transition: 0.3s; width: 100%; margin-top: 5px; }
         .btn:hover { background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); }
-        .btn-clear { border-color: var(--neon-red); color: var(--neon-red); font-size: 8px; padding: 2px; margin-top: 5px; }
+
+        /* Calculator Style */
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 10px; }
+        .calc-btn { padding: 10px; background: rgba(255,255,255,0.1); border: 1px solid var(--neon); color: white; border-radius: 5px; cursor: pointer; font-family: 'Orbitron'; font-size: 12px; }
+        .calc-btn:hover { background: var(--neon); color: black; }
+        .calc-display { grid-column: span 4; background: #000; color: var(--neon-green); padding: 10px; text-align: right; font-family: 'Orbitron'; margin-bottom: 5px; border: 1px solid var(--neon); }
     </style>
 </head>
 <body>
 
     <div id="loader">
-        <h2 style="font-family: 'Orbitron'; letter-spacing: 5px;">SYNCING DUAL SYSTEM...</h2>
+        <h2 style="font-family: 'Orbitron'; letter-spacing: 5px;">ESTABLISHING TRIPLE NODE...</h2>
         <div class="scan-line"></div>
     </div>
 
     <header>
-        <div class="logo">GIBRAN_HUB v5.2</div>
-        <div style="font-family: 'Orbitron'; font-size: 10px; color: var(--neon-green);">DUAL NODE ACTIVE</div>
+        <div class="logo">GIBRAN_MAINFRAME v6.0</div>
+        <div style="font-family: 'Orbitron'; font-size: 10px; color: var(--neon-green);">ALL SYSTEMS ONLINE</div>
     </header>
-
-    <div style="padding: 25px 25px 0 25px;">
-        <div class="card" style="height: 200px;">
-            <div class="card-h">LIVE TRAFFIC ANALYTICS</div>
-            <canvas id="liveChart" style="max-height: 150px;"></canvas>
-        </div>
-    </div>
 
     <div class="container">
         <div class="card">
             <div class="card-h">FORM SETORAN</div>
-            <div class="form-group">
-                <label>NAMA PENYETOR</label>
-                <input type="text" id="setor-nama" placeholder="...">
-            </div>
-            <div class="form-group">
-                <label>TANGGAL SETOR</label>
-                <input type="date" id="setor-tgl">
-            </div>
-            <div class="form-group">
-                <label>BUKTI FOTO SETOR</label>
-                <input type="file" accept="image/*">
-            </div>
-            <div class="form-group">
-                <label>TANDA TANGAN</label>
-                <canvas id="sig-setor" class="sig-pad"></canvas>
-                <button class="btn btn-clear" onclick="clearPad('sig-setor')">HAPUS TANDA TANGAN</button>
-            </div>
-            <div class="form-group">
-                <label>PENERIMA</label>
-                <select>
-                    <option>Bu Tati</option>
-                    <option>Bu Ami</option>
-                </select>
-            </div>
-            <button class="btn" onclick="sendData('SETORAN')">KIRIM SETORAN</button>
+            <div class="form-group"><label>NAMA PENYETOR</label><input type="text" placeholder="..."></div>
+            <div class="form-group"><label>TANGGAL</label><input type="date"></div>
+            <div class="form-group"><label>FOTO BUKTI</label><input type="file" accept="image/*"></div>
+            <div class="form-group"><label>TANDA TANGAN</label><canvas id="sig-setor" class="sig-pad"></canvas></div>
+            <div class="form-group"><label>KEPADA</label><select><option>Bu Tati</option><option>Bu Ami</option></select></div>
+            <button class="btn" onclick="alert('Setoran Terkirim ke tempat masuk nya data')">KIRIM SETORAN</button>
         </div>
 
         <div class="card">
             <div class="card-h">FORM LAPORAN</div>
+            <div class="form-group"><label>NAMA PELAPOR</label><input type="text" placeholder="..."></div>
+            <div class="form-group"><label>TANGGAL</label><input type="date"></div>
+            <div class="form-group"><label>BUKTI LAPORAN</label><input type="file" accept="image/*"></div>
+            <div class="form-group"><label>TANDA TANGAN</label><canvas id="sig-lapor" class="sig-pad"></canvas></div>
+            <div class="form-group"><label>LAPOR KE</label><select><option>Bu Tati</option><option>Bu Ami</option></select></div>
+            <button class="btn" onclick="alert('Laporan Terkirim ke tempat masuk nya data')">KIRIM LAPORAN</button>
+        </div>
+
+        <div class="card">
+            <div class="card-h">CATATAN & KALKULATOR</div>
             <div class="form-group">
-                <label>NAMA PELAPOR</label>
-                <input type="text" id="lapor-nama" placeholder="...">
+                <label>INTERNAL NOTES</label>
+                <textarea id="note-text" rows="4" placeholder="Tulis catatan di sini..."></textarea>
+                <button class="btn" style="border-color: var(--neon-green); color: var(--neon-green);" onclick="alert('Catatan disimpan ke sheet: catatan')">SIMPAN KE SHEET CATATAN</button>
             </div>
-            <div class="form-group">
-                <label>TANGGAL LAPOR</label>
-                <input type="date" id="lapor-tgl">
+            <hr style="border: 0.1px solid rgba(0,210,255,0.2); margin: 15px 0;">
+            <label>SYSTEM CALCULATOR</label>
+            <div class="calc-display" id="display">0</div>
+            <div class="calc-grid">
+                <button class="calc-btn" onclick="clearCalc()">C</button>
+                <button class="calc-btn" onclick="inputCalc('/')">/</button>
+                <button class="calc-btn" onclick="inputCalc('*')">*</button>
+                <button class="calc-btn" onclick="inputCalc('-')">-</button>
+                <button class="calc-btn" onclick="inputCalc('7')">7</button>
+                <button class="calc-btn" onclick="inputCalc('8')">8</button>
+                <button class="calc-btn" onclick="inputCalc('9')">9</button>
+                <button class="calc-btn" onclick="inputCalc('+')">+</button>
+                <button class="calc-btn" onclick="inputCalc('4')">4</button>
+                <button class="calc-btn" onclick="inputCalc('5')">5</button>
+                <button class="calc-btn" onclick="inputCalc('6')">6</button>
+                <button class="calc-btn" onclick="calculate()">=</button>
+                <button class="calc-btn" onclick="inputCalc('1')">1</button>
+                <button class="calc-btn" onclick="inputCalc('2')">2</button>
+                <button class="calc-btn" onclick="inputCalc('3')">3</button>
+                <button class="calc-btn" onclick="inputCalc('0')">0</button>
             </div>
-            <div class="form-group">
-                <label>BUKTI LAPORAN (FOTO)</label>
-                <input type="file" accept="image/*">
-            </div>
-            <div class="form-group">
-                <label>TANDA TANGAN</label>
-                <canvas id="sig-lapor" class="sig-pad"></canvas>
-                <button class="btn btn-clear" onclick="clearPad('sig-lapor')">HAPUS TANDA TANGAN</button>
-            </div>
-            <div class="form-group">
-                <label>LAPOR KEPADA</label>
-                <select>
-                    <option>Bu Tati</option>
-                    <option>Bu Ami</option>
-                </select>
-            </div>
-            <button class="btn" onclick="sendData('LAPORAN')">KIRIM LAPORAN</button>
         </div>
     </div>
 
     <script>
-        // Loader
         setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 2000);
 
-        // Chart
-        const ctx = document.getElementById('liveChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['1','2','3','4','5','6'],
-                datasets: [{ data: [15, 30, 20, 45, 35, 55], borderColor: '#00d2ff', fill: true, backgroundColor: 'rgba(0,210,255,0.05)', tension: 0.4 }]
-            },
-            options: { plugins: { legend: { display: false } }, scales: { y: { display: false } } }
-        });
+        // Calc Logic
+        let currentInput = "";
+        function inputCalc(val) { currentInput += val; document.getElementById('display').innerText = currentInput; }
+        function clearCalc() { currentInput = ""; document.getElementById('display').innerText = "0"; }
+        function calculate() { try { currentInput = eval(currentInput).toString(); document.getElementById('display').innerText = currentInput; } catch { document.getElementById('display').innerText = "ERR"; } }
 
-        // Signature Logic
+        // Sig Logic
         function setupSig(id) {
-            const canvas = document.getElementById(id);
-            const sctx = canvas.getContext('2d');
-            let drawing = false;
+            const canvas = document.getElementById(id); const sctx = canvas.getContext('2d'); let drawing = false;
             canvas.addEventListener('mousedown', () => drawing = true);
             canvas.addEventListener('mouseup', () => { drawing = false; sctx.beginPath(); });
             canvas.addEventListener('mousemove', (e) => {
-                if (!drawing) return;
-                sctx.lineWidth = 2; sctx.strokeStyle = '#00ff88';
-                const rect = canvas.getBoundingClientRect();
-                sctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-                sctx.stroke();
+                if (!drawing) return; sctx.lineWidth = 2; sctx.strokeStyle = '#00ff88';
+                const rect = canvas.getBoundingClientRect(); sctx.lineTo(e.clientX - rect.left, e.clientY - rect.top); sctx.stroke();
             });
         }
         setupSig('sig-setor'); setupSig('sig-lapor');
-
-        function clearPad(id) {
-            const canvas = document.getElementById(id);
-            canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);
-        }
-
-        function sendData(type) {
-            alert('DATA ' + type + ' TERKIRIM!\nMenuju Sheet: tempat masuk nya data');
-        }
     </script>
 </body>
 </html>
