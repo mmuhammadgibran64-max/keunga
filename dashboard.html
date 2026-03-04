@@ -3,142 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | MAINFRAME v4.0</title>
+    <title>GIBRAN HUB | CUSTOM MAINFRAME</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { 
-            --neon: #00d2ff; 
-            --neon-green: #00ff88; 
-            --neon-red: #ff4444; 
-            --bg: #05070a; 
-            --card-bg: rgba(255, 255, 255, 0.03);
-        }
-
-        body, html { 
-            margin: 0; padding: 0; height: 100%; 
-            background: var(--bg); color: white; 
-            font-family: 'Rajdhani', sans-serif; 
-            overflow-x: hidden;
-        }
-
-        /* 1. LOADING SCREEN - THE DECRYPTION */
-        #loader { 
-            position: fixed; width: 100%; height: 100%; 
-            background: #000; z-index: 9999; 
-            display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; 
-        }
-        .scan-line {
-            width: 250px; height: 2px; background: var(--neon);
-            box-shadow: 0 0 15px var(--neon);
-            position: relative; overflow: hidden;
-        }
-        .scan-line::after {
-            content: ''; position: absolute; top: 0; left: -100%;
-            width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, #fff, transparent);
-            animation: scan 1.5s infinite;
-        }
+        :root { --neon: #00d2ff; --neon-green: #00ff88; --neon-red: #ff4444; --bg: #05070a; --card-bg: rgba(255, 255, 255, 0.03); }
+        body, html { margin: 0; padding: 0; background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; }
+        
+        /* Loading Screen */
+        #loader { position: fixed; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .scan-line { width: 250px; height: 2px; background: var(--neon); box-shadow: 0 0 15px var(--neon); position: relative; overflow: hidden; }
+        .scan-line::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, #fff, transparent); animation: scan 1.5s infinite; }
         @keyframes scan { 100% { left: 100%; } }
 
-        /* 2. HEADER & LAYOUT */
-        header { 
-            padding: 15px 30px; border-bottom: 2px solid var(--neon); 
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(0,0,0,0.9); sticky: top;
-        }
+        header { padding: 15px 30px; border-bottom: 2px solid var(--neon); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.9); }
         .logo { font-family: 'Orbitron'; font-size: 1.4rem; color: var(--neon); text-shadow: 0 0 10px var(--neon); }
-        
         .container { padding: 25px; display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; }
         
-        /* 3. CARDS */
-        .card { 
-            background: var(--card-bg); border: 1px solid rgba(0, 210, 255, 0.2); 
-            padding: 20px; border-radius: 15px; backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .card-h { 
-            font-family: 'Orbitron'; color: var(--neon); font-size: 0.75rem; 
-            margin-bottom: 20px; letter-spacing: 2px; display: flex; align-items: center;
-        }
-        .card-h::before { content: '●'; margin-right: 10px; color: var(--neon-green); animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0; } }
+        .card { background: var(--card-bg); border: 1px solid rgba(0, 210, 255, 0.1); padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .card-h { font-family: 'Orbitron'; color: var(--neon); font-size: 0.75rem; margin-bottom: 20px; letter-spacing: 2px; }
 
-        /* 4. FILE MANAGER COMPONENTS */
-        .upload-zone {
-            border: 1px dashed var(--neon); padding: 20px; text-align: center;
-            border-radius: 10px; margin-bottom: 20px; transition: 0.3s;
-        }
-        .upload-zone:hover { background: rgba(0, 210, 255, 0.05); }
+        /* Custom Form Style */
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 12px; margin-bottom: 5px; color: var(--neon); font-family: 'Orbitron'; }
+        input, select { width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,210,255,0.3); color: white; border-radius: 5px; box-sizing: border-box; }
+        
+        /* Signature Canvas */
+        #sig-canvas { border: 1px dashed var(--neon); background: #111; width: 100%; height: 150px; cursor: crosshair; }
 
-        .file-list { width: 100%; border-collapse: collapse; }
-        .file-list th { text-align: left; font-size: 11px; font-family: 'Orbitron'; padding: 10px; border-bottom: 1px solid var(--neon); color: var(--neon); }
-        .file-list td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
-
-        .btn {
-            background: transparent; border: 1px solid var(--neon); color: var(--neon);
-            padding: 6px 12px; cursor: pointer; font-family: 'Orbitron'; font-size: 9px;
-            transition: 0.3s; text-decoration: none; display: inline-block;
-        }
+        .btn { background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 10px 20px; cursor: pointer; font-family: 'Orbitron'; font-size: 11px; transition: 0.3s; width: 100%; margin-top: 10px; }
         .btn:hover { background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); }
-        .btn-del { border-color: var(--neon-red); color: var(--neon-red); }
-        .btn-del:hover { background: var(--neon-red); color: white; box-shadow: 0 0 15px var(--neon-red); }
+        .btn-red { border-color: var(--neon-red); color: var(--neon-red); }
 
-        iframe { width: 100%; height: 500px; border: none; border-radius: 10px; background: white; }
-
+        .file-list { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .file-list td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
 <body>
 
     <div id="loader">
-        <h2 style="font-family: 'Orbitron'; letter-spacing: 5px; font-size: 1.2rem;">INITIALIZING PROTOCOL...</h2>
+        <h2 style="font-family: 'Orbitron'; letter-spacing: 5px;">ESTABLISHING CORE...</h2>
         <div class="scan-line"></div>
-        <p id="load-text" style="color: var(--neon); font-size: 10px; margin-top: 15px; opacity: 0.7;">ACCESSING CLOUD STORAGE...</p>
     </div>
 
     <header>
-        <div class="logo">GIBRAN_MAINFRAME</div>
-        <div style="font-family: 'Orbitron'; font-size: 10px; color: var(--neon-green);">SECURE_CORE: ACTIVE</div>
+        <div class="logo">GIBRAN_HUB</div>
+        <div style="font-family: 'Orbitron'; font-size: 10px; color: var(--neon-green);">CONNECTED</div>
     </header>
 
     <div class="container">
         <div class="card">
-            <div class="card-h">LIVE DATA STREAM</div>
+            <div class="card-h">● LIVE DATA STREAM</div>
             <canvas id="liveChart"></canvas>
         </div>
 
         <div class="card">
-            <div class="card-h">DATABASE INPUT (Sheet: tempat masuk nya data)</div>
-            <iframe src="https://form.jotform.com/260617899577074"></iframe>
+            <div class="card-h">● FORM SETORAN BU TATI</div>
+            <div class="form-group">
+                <label>NAMA PENYETOR</label>
+                <input type="text" id="nama" placeholder="Masukkan nama...">
+            </div>
+            <div class="form-group">
+                <label>TANGGAL SETOR</label>
+                <input type="date" id="tgl">
+            </div>
+            <div class="form-group">
+                <label>SETOR KEPADA</label>
+                <select id="tujuan">
+                    <option value="Bu Tati">Bu Tati</option>
+                    <option value="Lainnya">Lainnya</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>FOTO BUKTI SETOR</label>
+                <input type="file" id="bukti" accept="image/*">
+            </div>
+            <div class="form-group">
+                <label>TANDA TANGAN</label>
+                <canvas id="sig-canvas"></canvas>
+                <button class="btn btn-red" style="padding: 2px; font-size: 8px;" id="clear-sig">HAPUS TANDA TANGAN</button>
+            </div>
+            <button class="btn" id="submit-btn">KIRIM DATA KE SHEET</button>
         </div>
 
         <div class="card" style="grid-column: 1 / -1;">
-            <div class="card-h">ADVANCED FILE MANAGER</div>
-            
-            <div class="upload-zone">
-                <input type="file" id="realInput" style="display: none;">
-                <button class="btn" style="font-size: 12px; padding: 10px 25px;" onclick="document.getElementById('realInput').click()">+ UPLOAD NEW DATA</button>
-            </div>
-
+            <div class="card-h">● SYSTEM FILE MANAGER</div>
             <table class="file-list">
                 <thead>
-                    <tr>
+                    <tr style="color: var(--neon); font-size: 10px; font-family: 'Orbitron'; text-align: left;">
                         <th>FILENAME</th>
-                        <th>SIZE</th>
-                        <th>TYPE</th>
-                        <th>ACTIONS</th>
+                        <th>ACTION</th>
                     </tr>
                 </thead>
                 <tbody id="fileRegistry">
                     <tr>
-                        <td>core_database_v1.enc</td>
-                        <td>4.5 MB</td>
-                        <td style="color: var(--neon-green);">ENCRYPTED</td>
-                        <td>
-                            <a href="#" class="btn" onclick="alert('Download Started...')">DOWNLOAD</a>
-                            <button class="btn btn-del" onclick="this.parentElement.parentElement.remove()">HAPUS</button>
-                        </td>
+                        <td>setoran_report_v1.log</td>
+                        <td><button class="btn" style="padding: 5px; width: auto;">DOWNLOAD</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -146,62 +106,46 @@
     </div>
 
     <script>
-        // 1. Loading Simulator (8 Detik)
-        let progress = 0;
-        const loadText = document.getElementById('load-text');
-        const interval = setInterval(() => {
-            progress += 1;
-            if(progress == 30) loadText.innerText = "BYPASSING FIREWALL...";
-            if(progress == 60) loadText.innerText = "DECRYPTING DATABASE...";
-            if(progress == 90) loadText.innerText = "ESTABLISHING SECURE LINE...";
-            
-            if(progress >= 100) {
-                clearInterval(interval);
-                document.getElementById('loader').style.display = 'none';
-                initDashboard();
-            }
-        }, 80);
+        // Loading Logic
+        setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 2000);
 
-        function initDashboard() {
-            // Chart.js
-            const ctx = document.getElementById('liveChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00'],
-                    datasets: [{
-                        label: 'Traffic',
-                        data: [5, 20, 15, 45, 30, 60],
-                        borderColor: '#00d2ff',
-                        backgroundColor: 'rgba(0, 210, 255, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: { plugins: { legend: { display: false } } }
-            });
+        // Chart Logic
+        const ctx = document.getElementById('liveChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['1','2','3','4','5'],
+                datasets: [{ data: [10, 25, 13, 30, 20], borderColor: '#00d2ff', fill: true, backgroundColor: 'rgba(0,210,255,0.1)' }]
+            },
+            options: { plugins: { legend: { display: false } } }
+        });
 
-            // File Manager Logic
-            const input = document.getElementById('realInput');
-            const registry = document.getElementById('fileRegistry');
+        // Tanda Tangan Logic (Canvas)
+        const canvas = document.getElementById('sig-canvas');
+        const sctx = canvas.getContext('2d');
+        let drawing = false;
 
-            input.onchange = function() {
-                const file = this.files[0];
-                if(file) {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${file.name}</td>
-                        <td>${(file.size / 1024 / 1024).toFixed(2)} MB</td>
-                        <td style="color: var(--neon-green);">LOCAL_SYC</td>
-                        <td>
-                            <a href="#" class="btn" onclick="alert('Downloading...')">DOWNLOAD</a>
-                            <button class="btn btn-del" onclick="this.parentElement.parentElement.remove()">HAPUS</button>
-                        </td>
-                    `;
-                    registry.appendChild(row);
-                }
-            };
+        canvas.addEventListener('mousedown', () => drawing = true);
+        canvas.addEventListener('mouseup', () => { drawing = false; sctx.beginPath(); });
+        canvas.addEventListener('mousemove', draw);
+
+        function draw(e) {
+            if (!drawing) return;
+            sctx.lineWidth = 2;
+            sctx.lineCap = 'round';
+            sctx.strokeStyle = '#00d2ff';
+            const rect = canvas.getBoundingClientRect();
+            sctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+            sctx.stroke();
         }
+
+        document.getElementById('clear-sig').onclick = () => sctx.clearRect(0,0,canvas.width,canvas.height);
+
+        // Submit Logic
+        document.getElementById('submit-btn').onclick = () => {
+            alert('DATA TERKIRIM KE: tempat masuk nya data\n\nNama: ' + document.getElementById('nama').value);
+            // Di sini nantinya bisa dihubungkan ke Google Apps Script agar masuk ke Sheet beneran.
+        };
     </script>
 </body>
 </html>
