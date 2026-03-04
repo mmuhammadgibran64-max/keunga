@@ -3,148 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | ENTERPRISE v10.1</title>
+    <title>GIBRAN MAINFRAME | COMMAND CENTER v9.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root { --neon: #00d2ff; --neon-green: #00ff88; --neon-red: #ff4444; --bg: #05070a; --card-bg: rgba(255, 255, 255, 0.03); }
-        body, html { margin: 0; padding: 0; background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; }
+        body, html { margin: 0; padding: 0; background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; overflow: hidden; height: 100vh; }
         
+        /* Loading Screen */
         #loader { position: fixed; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
         .scan-line { width: 250px; height: 2px; background: var(--neon); box-shadow: 0 0 15px var(--neon); position: relative; overflow: hidden; }
         .scan-line::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, #fff, transparent); animation: scan 1.5s infinite; }
         @keyframes scan { 100% { left: 100%; } }
 
-        header { padding: 15px 30px; border-bottom: 2px solid var(--neon); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.9); }
-        .logo { font-family: 'Orbitron'; font-size: 1.2rem; color: var(--neon); text-shadow: 0 0 10px var(--neon); }
-        
-        .container { padding: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
-        .card { background: var(--card-bg); border: 1px solid rgba(0, 210, 255, 0.1); padding: 15px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative; }
-        .card-h { font-family: 'Orbitron'; color: var(--neon); font-size: 0.65rem; margin-bottom: 12px; letter-spacing: 2px; border-left: 3px solid var(--neon); padding-left: 10px; }
+        /* Sidebar Layout */
+        .wrapper { display: flex; height: 100vh; }
+        nav { width: 250px; background: rgba(0,0,0,0.9); border-right: 2px solid var(--neon); padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .nav-btn { background: transparent; border: 1px solid rgba(0,210,255,0.3); color: var(--neon); padding: 12px; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; text-align: left; transition: 0.3s; }
+        .nav-btn:hover, .nav-btn.active { background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); border-color: white; }
 
-        input, select, textarea { width: 100%; padding: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,210,255,0.3); color: white; border-radius: 5px; box-sizing: border-box; font-size: 12px; margin-bottom: 10px; }
-        label { display: block; font-size: 9px; margin-bottom: 4px; color: var(--neon); font-family: 'Orbitron'; }
+        main { flex: 1; overflow-y: auto; padding: 25px; background: radial-gradient(circle at top, #0a111a 0%, #05070a 100%); }
         
-        .btn { background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 8px; cursor: pointer; font-family: 'Orbitron'; font-size: 9px; width: 100%; transition: 0.3s; }
-        .btn:hover { background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); }
+        /* Components */
+        .card { background: var(--card-bg); border: 1px solid rgba(0, 210, 255, 0.1); padding: 20px; border-radius: 15px; margin-bottom: 20px; backdrop-filter: blur(10px); }
+        .card-h { font-family: 'Orbitron'; color: var(--neon); font-size: 0.8rem; margin-bottom: 15px; border-left: 3px solid var(--neon); padding-left: 10px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        
+        input, select, textarea { width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,210,255,0.3); color: white; border-radius: 5px; margin-bottom: 10px; font-size: 13px; }
+        .btn-action { background: var(--neon); color: black; border: none; padding: 10px; font-family: 'Orbitron'; cursor: pointer; width: 100%; font-size: 11px; font-weight: bold; }
+        .btn-danger { background: var(--neon-red); color: white; }
 
-        #video { width: 100%; height: 150px; background: #000; border: 1px solid var(--neon); border-radius: 5px; object-fit: cover; display: none; margin-bottom: 10px; }
-        .step-loading { display: none; text-align: center; color: var(--neon-green); font-family: 'Orbitron'; font-size: 9px; padding: 10px; }
-        .hidden-step { display: none; }
+        .hidden-section { display: none; }
+        .active-section { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div id="loader">
-        <h2 style="font-family: 'Orbitron'; letter-spacing: 5px;">CLEANING CACHE & SYNCING...</h2>
+        <h2 style="font-family: 'Orbitron'; letter-spacing: 5px;">ESTABLISHING COMMAND CENTER...</h2>
         <div class="scan-line"></div>
     </div>
 
-    <header>
-        <div class="logo">GIBRAN_HUB v10.1</div>
-        <div style="font-family: 'Orbitron'; font-size: 10px; color: var(--neon-green);">DATA REFRESHED</div>
-    </header>
+    <div class="wrapper">
+        <nav>
+            <div style="font-family: 'Orbitron'; color: var(--neon); margin-bottom: 30px; font-size: 1.2rem;">GIBRAN HUB</div>
+            <button class="nav-btn active" onclick="openSection('main-hub', this)">● MAIN HUB</button>
+            <button class="nav-btn" onclick="openSection('warehouse', this)">● WAREHOUSE</button>
+            <button class="nav-btn" onclick="openSection('settings', this)">● SETTINGS (ADMIN)</button>
+            <div style="margin-top: auto; font-size: 10px; color: var(--neon-green); font-family: 'Orbitron';">WAREHOUSE NODE: ON</div>
+        </nav>
 
-    <div class="container">
-        <div class="card">
-            <div class="card-h">SETORAN & LAPORAN</div>
-            <label>NAMA</label><input type="text" placeholder="...">
-            <label>TANGGAL</label><input type="date">
-            <button class="btn" onclick="alert('Sent to: tempat masuk nya data')">KIRIM DATA</button>
-        </div>
-
-        <div class="card">
-            <div class="card-h">GUDANG BARANG</div>
-            <input type="text" placeholder="Nama Barang">
-            <input type="number" placeholder="Stok (0=Kosong)">
-            <button class="btn" style="border-color: var(--neon-green); color: var(--neon-green);">UPDATE GUDANG</button>
-        </div>
-
-        <div class="card" id="sales-section">
-            <div class="card-h">PENJUALAN & ABSENSI</div>
-            
-            <div id="step-1">
-                <label>NAMA PETUGAS</label>
-                <input type="text" id="nama-sales">
-                <button class="btn" onclick="nextStep(1)">LANJUT</button>
-            </div>
-
-            <div id="step-2" class="hidden-step">
-                <label>JAM OPERASIONAL</label>
-                <input type="time">
-                <button class="btn" onclick="nextStep(2)">VERIFIKASI</button>
-            </div>
-
-            <div id="step-3" class="hidden-step">
-                <label>ABSEN WAJAH (KAMERA REAL)</label>
-                <video id="video" autoplay></video>
-                <button class="btn" id="start-cam" onclick="startCamera()">BUKA KAMERA</button>
-                <button class="btn" id="snap-btn" style="display:none; border-color:var(--neon-green); color:var(--neon-green);" onclick="takeSnapshot()">AMBIL FOTO</button>
-            </div>
-
-            <div id="step-4" class="hidden-step">
-                <label>PENGHASILAN HARI INI</label>
-                <input type="number">
-                <div id="gaji-alert" style="display:none; border:1px solid var(--neon-green); padding:10px; margin-bottom:10px;">
-                    <label>INPUT GAJI ANDA</label>
-                    <input type="number" placeholder="Nominal Gaji...">
+        <main>
+            <div id="main-hub" class="active-section">
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-h">FORM SETORAN</div>
+                        <input type="text" placeholder="Nama Penyetor">
+                        <input type="date">
+                        <input type="file" accept="image/*">
+                        <button class="btn-action">KIRIM SETORAN</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-h">FORM LAPORAN</div>
+                        <input type="text" placeholder="Nama Pelapor">
+                        <input type="date">
+                        <input type="file" accept="image/*">
+                        <button class="btn-action">KIRIM LAPORAN</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-h">CATATAN & KALKULATOR</div>
+                        <textarea rows="3" placeholder="Notes..."></textarea>
+                        <button class="btn-action" style="background:var(--neon-green)">SIMPAN CATATAN</button>
+                    </div>
                 </div>
-                <button class="btn" onclick="alert('Terkirim ke sheet: penjualan dan gajian'); location.reload();">FINISH</button>
             </div>
 
-            <div id="step-loading" class="step-loading">PROCESSING...</div>
-        </div>
-
-        <div class="card">
-            <div class="card-h">RIWAYAT & SEARCH GAJIAN</div>
-            <input type="text" id="search-input" placeholder="Cari tanggal atau nama...">
-            <button class="btn" onclick="searchGaji()">CARI DATA</button>
-            <div id="riwayat-box" style="margin-top:15px; font-size:11px; color:rgba(255,255,255,0.4); text-align:center;">
-                <p id="no-data">-- Belum ada riwayat gajian --</p>
-                <canvas id="canvas" style="display:none;"></canvas>
+            <div id="warehouse" class="hidden-section">
+                <div class="card">
+                    <div class="card-h">GUDANG BARANG MANAGEMENT</div>
+                    <div class="grid-3">
+                        <input type="text" placeholder="Nama Barang">
+                        <input type="text" placeholder="Ukuran">
+                        <input type="number" placeholder="Stok">
+                        <input type="text" placeholder="Tipe">
+                        <input type="text" placeholder="Jenis">
+                        <button class="btn-action">SIMPAN KE GUDANG</button>
+                    </div>
+                </div>
             </div>
-        </div>
+
+            <div id="settings" class="hidden-section">
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-h">PENGATURAN PROFIL</div>
+                        <input type="text" value="GIBRAN ADMIN" readonly>
+                        <button class="btn-action">UPDATE PROFIL</button>
+                    </div>
+                    <div class="card">
+                        <div class="card-h">LIVE SUPPORT (CS)</div>
+                        <div id="cs-box" style="background: white; border-radius: 5px; height: 100px; overflow: hidden;">
+                            <script src='https://www.noupe.com/embed/019c363e1a677de79971b57751677dbb45dd.js'></script>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-h">SISTEM DATA</div>
+                        <button class="btn-action" onclick="alert('Backup tersembunyi dibuat ke cloud...')">BACKUP DATA TERSEMBUNYI</button>
+                        <button class="btn-action btn-danger" style="margin-top:10px" onclick="confirm('YAKIN HAPUS SEMUA DATA PERMANEN?')">HAPUS DATA PERMANEN</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-h">DISTRIBUSI DATA & DOWNLOAD</div>
+                    <p style="font-size: 12px; color: rgba(255,255,255,0.5);">Akses file manager publik untuk download semua data laporan.</p>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn-action" onclick="downloadAll()">DOWNLOAD DATA (FILE MANAGER)</button>
+                        <button class="btn-action" style="background: #25D366; color: white;" onclick="shareWA()">BAGIKAN KE WA</button>
+                        <button class="btn-action" style="background: #555; color: white;" onclick="shareOther()">BAGIKAN LAINNYA</button>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
     <script>
-        setTimeout(() => { 
-            document.getElementById('loader').style.display = 'none'; 
-            // Cek jadwal gajian (awal, tengah, akhir bulan)
-            const d = new Date().getDate();
-            if(d === 1 || d === 15 || d >= 28) document.getElementById('gaji-alert').style.display = 'block';
-        }, 2000);
+        // Loading
+        setTimeout(() => { document.getElementById('loader').style.display = 'none'; }, 2000);
 
-        function nextStep(n) {
-            document.getElementById('step-'+n).style.display = 'none';
-            document.getElementById('step-loading').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('step-loading').style.display = 'none';
-                document.getElementById('step-'+(n+1)).style.display = 'block';
-            }, 1500);
+        // Section Switcher
+        function openSection(id, btn) {
+            document.querySelectorAll('main > div').forEach(div => {
+                div.className = 'hidden-section';
+            });
+            document.getElementById(id).className = 'active-section';
+            
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
         }
 
-        async function startCamera() {
-            const v = document.getElementById('video');
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            v.srcObject = stream; v.style.display = 'block';
-            document.getElementById('start-cam').style.display = 'none';
-            document.getElementById('snap-btn').style.display = 'block';
+        // Beneran Download (Membuat file log otomatis)
+        function downloadAll() {
+            const content = "DATABASE GIBRAN HUB v9.0\nExport Date: " + new Date() + "\nStatus: All Clean.";
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'GibranHub_Backup.txt';
+            a.click();
         }
 
-        function takeSnapshot() {
-            alert('Wajah terverifikasi!');
-            const v = document.getElementById('video');
-            v.srcObject.getTracks().forEach(t => t.stop());
-            nextStep(3);
+        // Beneran Share WA
+        function shareWA() {
+            const url = window.location.href;
+            window.open(`https://wa.me/?text=Halo, silakan akses Data Gibran Hub di sini: ${url}`, '_blank');
         }
 
-        function searchGaji() {
-            document.getElementById('step-loading').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('step-loading').style.display = 'none';
-                alert('Data tidak ditemukan atau belum ada riwayat gajian.');
-            }, 2000);
+        // Share API (Beneran bukan simulasi)
+        async function shareOther() {
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'Gibran Hub Data',
+                        text: 'Cek laporan terbaru di Gibran Hub Mainframe.',
+                        url: window.location.href,
+                    });
+                } catch (err) { console.log('Error sharing: ' + err); }
+            } else {
+                alert('Browser lo gak dukung Web Share API, pakai WA aja!');
+            }
         }
     </script>
 </body>
 </html>
+
+
+
+
