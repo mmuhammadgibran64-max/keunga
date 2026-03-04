@@ -3,90 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | ULTIMATE COMMAND CENTER v11.8</title>
+    <title>GIBRAN HUB v13 | FULL FIREBASE</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
+
     <style>
-        :root { --neon: #00d2ff; --neon-green: #00ff88; --neon-red: #ff4444; --bg: #05070a; --card-bg: rgba(255, 255, 255, 0.05); }
+        :root { --neon: #00d2ff; --neon-green: #00ff88; --bg: #05070a; --card-bg: rgba(255, 255, 255, 0.05); }
         body, html { margin: 0; padding: 0; background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; height: 100vh; overflow: hidden; }
-        
-        /* Loading Screen */
         #loader { position: fixed; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .scan-line { width: 250px; height: 2px; background: var(--neon); box-shadow: 0 0 15px var(--neon); position: relative; overflow: hidden; }
-        .scan-line::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, #fff, transparent); animation: scan 1.5s infinite; }
-        @keyframes scan { 100% { left: 100%; } }
-
-        /* Sidebar Navigation */
         .wrapper { display: flex; height: 100vh; }
-        nav { width: 260px; background: rgba(0,0,0,0.95); border-right: 2px solid var(--neon); padding: 20px; display: flex; flex-direction: column; gap: 12px; }
-        .logo { font-family: 'Orbitron'; color: var(--neon); font-size: 1.2rem; margin-bottom: 30px; text-shadow: 0 0 10px var(--neon); letter-spacing: 2px; }
-        .nav-btn { background: transparent; border: 1px solid rgba(0,210,255,0.2); color: var(--neon); padding: 14px; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; text-align: left; transition: 0.3s; border-radius: 4px; outline: none; }
-        .nav-btn:hover, .nav-btn.active { background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); font-weight: bold; }
-
+        nav { width: 250px; background: rgba(0,0,0,0.95); border-right: 2px solid var(--neon); padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+        .logo { font-family: 'Orbitron'; color: var(--neon); font-size: 1.1rem; margin-bottom: 30px; letter-spacing: 1px; text-shadow: 0 0 10px var(--neon); }
+        .nav-btn { background: transparent; border: 1px solid rgba(0,210,255,0.2); color: var(--neon); padding: 12px; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; text-align: left; border-radius: 4px; transition: 0.3s; outline: none; }
+        .nav-btn.active { background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); font-weight: bold; }
         main { flex: 1; overflow-y: auto; padding: 25px; background: radial-gradient(circle at top, #0a111a 0%, #05070a 100%); }
-        .section { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .section { display: none; animation: fadeIn 0.4s ease; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Grid & Cards */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
-        .card { background: var(--card-bg); border: 1px solid rgba(0, 210, 255, 0.15); padding: 20px; border-radius: 15px; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .card-h { font-family: 'Orbitron'; color: var(--neon); font-size: 0.8rem; margin-bottom: 18px; border-left: 4px solid var(--neon); padding-left: 12px; letter-spacing: 1px; text-transform: uppercase; }
-
-        /* Form Elements */
-        label { display: block; font-size: 10px; margin-bottom: 5px; color: var(--neon); font-family: 'Orbitron'; }
-        input, select, textarea { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,210,255,0.3); color: white; border-radius: 6px; margin-bottom: 12px; font-size: 13px; box-sizing: border-box; outline: none; transition: 0.3s; }
-        
-        .btn-action { background: var(--neon); color: black; border: none; padding: 14px; font-family: 'Orbitron'; font-size: 11px; cursor: pointer; width: 100%; font-weight: bold; border-radius: 6px; transition: 0.3s; margin-top: 5px; }
-        .btn-action:hover { box-shadow: 0 0 20px var(--neon); transform: translateY(-2px); }
-
-        /* Special UI */
-        .calc-display { background: #000; padding: 15px; text-align: right; border: 1px solid var(--neon); color: var(--neon-green); font-family: 'Orbitron'; font-size: 1.5rem; margin-bottom: 10px; border-radius: 6px; min-height: 40px; }
-        #video { width: 100%; height: 220px; background: #000; border: 2px solid var(--neon); border-radius: 8px; object-fit: cover; display: none; margin-bottom: 15px; transform: scaleX(-1); }
-        .step-loading { display: none; text-align: center; color: var(--neon-green); font-family: 'Orbitron'; font-size: 11px; padding: 20px; letter-spacing: 2px; }
+        .card { background: var(--card-bg); border: 1px solid rgba(0, 210, 255, 0.15); padding: 20px; border-radius: 12px; backdrop-filter: blur(10px); margin-bottom: 20px; }
+        .card-h { font-family: 'Orbitron'; color: var(--neon); font-size: 0.75rem; margin-bottom: 15px; border-left: 3px solid var(--neon); padding-left: 10px; text-transform: uppercase; }
+        input, select, textarea { width: 100%; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,210,255,0.3); color: white; border-radius: 5px; margin-bottom: 10px; font-size: 13px; outline: none; box-sizing: border-box; font-family: 'Rajdhani'; }
+        .btn-action { background: var(--neon); color: black; border: none; padding: 14px; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; width: 100%; font-weight: bold; border-radius: 5px; transition: 0.3s; }
+        .btn-action:hover { box-shadow: 0 0 20px var(--neon); transform: scale(1.02); }
+        .calc-display { background: #000; padding: 15px; text-align: right; border: 1px solid var(--neon); color: var(--neon-green); font-family: 'Orbitron'; font-size: 1.5rem; margin-bottom: 10px; border-radius: 5px; min-height: 40px; }
+        .status-bar { position: fixed; bottom: 10px; right: 20px; font-size: 9px; color: var(--neon-green); font-family: 'Orbitron'; }
     </style>
 </head>
 <body>
 
-    <div id="loader">
-        <h2 style="font-family: 'Orbitron'; letter-spacing: 5px; color: var(--neon);">GIBRAN_HUB v11.8</h2>
-        <div class="scan-line"></div>
-    </div>
+    <div id="loader"><h2 style="font-family: Orbitron; color: var(--neon);">CONNECTING_TO_FIREBASE...</h2></div>
 
     <div class="wrapper">
         <nav>
-            <div class="logo">COMMAND_CTR</div>
+            <div class="logo">GIBRAN_HUB v13</div>
             <button class="nav-btn active" onclick="show('main-hub', this)">● DASHBOARD</button>
             <button class="nav-btn" onclick="show('warehouse', this)">● GUDANG BARANG</button>
             <button class="nav-btn" onclick="show('sales', this)">● PENJUALAN & ABSEN</button>
             <button class="nav-btn" onclick="show('settings', this)">● PENGATURAN</button>
-            <div style="margin-top:auto; padding: 10px; border-top: 1px solid rgba(0,210,255,0.2); font-size:9px; color:var(--neon-green); font-family:Orbitron;">SYSTEM: SECURED</div>
         </nav>
 
         <main>
             <div id="main-hub" class="section active">
-                <div class="grid">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <div class="card">
                         <div class="card-h">FORM LAPORAN & SETORAN</div>
-                        <label>KATEGORI</label>
-                        <select id="lap-kategori"><option>SETORAN BU TATI</option><option>LAPORAN HARIAN</option><option>SETORAN LAINNYA</option></select>
-                        <label>NAMA</label><input type="text" id="lap-nama" placeholder="Ketik nama...">
-                        <label>CATATAN</label><textarea id="lap-note" rows="3" placeholder="Isi detail laporan..."></textarea>
-                        <button class="btn-action" onclick="kirimData('laporan')">KIRIM KE SHEET LAPORAN</button>
+                        <select id="lap-jenis"><option>LAPORAN HARIAN</option><option>SETORAN BU TATI</option></select>
+                        <input type="text" id="lap-nama" placeholder="Input Nama Penyetor">
+                        <textarea id="lap-catatan" rows="3" placeholder="Tambahkan catatan jika ada..."></textarea>
+                        <button class="btn-action" onclick="kirimKeFirebase('laporan', {jenis: val('lap-jenis'), nama: val('lap-nama'), note: val('lap-catatan')})">KIRIM KE FIREBASE</button>
                     </div>
-
                     <div class="card">
-                        <div class="card-h">CATATAN & KALKULATOR</div>
-                        <textarea id="catatan-internal" rows="3" placeholder="Tulis pengingat..."></textarea>
-                        <button class="btn-action" style="background:var(--neon-green); color:black;" onclick="kirimData('catatan')">SIMPAN CATATAN</button>
-                        
-                        <div style="margin-top:20px; padding-top:15px; border-top:1px solid rgba(255,255,255,0.1);">
-                            <div class="calc-display" id="calc-val">0</div>
-                            <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 5px;">
-                                <button class="nav-btn" onclick="calc('7')">7</button><button class="nav-btn" onclick="calc('8')">8</button><button class="nav-btn" onclick="calc('9')">9</button><button class="nav-btn" style="color:var(--neon-red)" onclick="calc('/')">/</button>
-                                <button class="nav-btn" onclick="calc('4')">4</button><button class="nav-btn" onclick="calc('5')">5</button><button class="nav-btn" onclick="calc('6')">6</button><button class="nav-btn" style="color:var(--neon-red)" onclick="calc('*')">x</button>
-                                <button class="nav-btn" onclick="calc('1')">1</button><button class="nav-btn" onclick="calc('2')">2</button><button class="nav-btn" onclick="calc('3')">3</button><button class="nav-btn" style="color:var(--neon-red)" onclick="calc('-')">-</button>
-                                <button class="nav-btn" onclick="calc('0')">0</button><button class="nav-btn" style="color:var(--neon-red)" onclick="calc('C')">C</button><button class="nav-btn" style="color:var(--neon-green)" onclick="calc('=')">=</button><button class="nav-btn" style="color:var(--neon-red)" onclick="calc('+')">+</button>
-                            </div>
+                        <div class="card-h">CLOUD NOTES (AUTO-SAVE)</div>
+                        <textarea id="catatan-cloud" rows="5" placeholder="Ketik di sini... data otomatis sinkron ke Firebase."></textarea>
+                        <div class="calc-display" id="calc-val">0</div>
+                        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 5px;">
+                            <button class="nav-btn" onclick="calc('7')">7</button><button class="nav-btn" onclick="calc('8')">8</button><button class="nav-btn" onclick="calc('9')">9</button><button class="nav-btn" onclick="calc('/')">/</button>
+                            <button class="nav-btn" onclick="calc('C')">C</button><button class="nav-btn" onclick="calc('0')">0</button><button class="nav-btn" onclick="calc('=')">=</button><button class="nav-btn" onclick="calc('+')">+</button>
                         </div>
                     </div>
                 </div>
@@ -95,75 +69,70 @@
             <div id="warehouse" class="section">
                 <div class="card">
                     <div class="card-h">GUDANG BARANG MANAGEMENT</div>
-                    <label>NAMA BARANG</label><input type="text" id="gd-nama">
-                    <label>UKURAN</label><input type="text" id="gd-ukuran">
-                    <label>TIPE</label><input type="text" id="gd-tipe">
-                    <label>STOK</label><input type="number" id="gd-stok">
-                    <button class="btn-action" onclick="kirimData('gudang')">INPUT KE GUDANG BARANG</button>
+                    <input type="text" id="gd-nama" placeholder="Nama Barang">
+                    <input type="number" id="gd-stok" placeholder="Jumlah Stok">
+                    <button class="btn-action" onclick="kirimKeFirebase('gudang', {item: val('gd-nama'), stok: val('gd-stok')})">UPDATE STOK</button>
                 </div>
             </div>
 
             <div id="sales" class="section">
                 <div class="card">
-                    <div class="card-h">SYSTEM PENJUALAN & ABSENSI</div>
-                    <div id="s-1">
-                        <label>NAMA PENJUAL</label><input type="text" id="sl-nama" placeholder="...">
-                        <button class="btn-action" onclick="nextStep(1)">LANJUTKAN KE WAKTU</button>
-                    </div>
-                    <div id="s-2" style="display:none;">
-                        <label>JAM OPERASIONAL</label><input type="time" id="sl-jam">
-                        <button class="btn-action" onclick="nextStep(2)">VERIFIKASI WAKTU</button>
-                    </div>
-                    <div id="s-3" style="display:none;">
-                        <label>RINCIAN PENJUALAN</label><textarea id="sl-laku" rows="3" placeholder="Apa yang laku hari ini?"></textarea>
-                        <button class="btn-action" onclick="nextStep(3)">LANJUT KE ABSEN WAJAH</button>
-                    </div>
-                    <div id="s-4" style="display:none;">
-                        <label>ABSEN WAJAH (SCANNER)</label>
-                        <video id="video" autoplay></video>
-                        <button class="btn-action" id="btn-cam" onclick="startCamera()">AKTIFKAN KAMERA</button>
-                        <button class="btn-action" id="btn-snap" style="display:none; background:var(--neon-green); color:black;" onclick="takeSnapshot()">AMBIL FOTO & ABSEN</button>
-                    </div>
-                    <div id="s-5" style="display:none;">
-                        <label>PENGHASILAN HARI INI (RP)</label><input type="number" id="sl-duit">
-                        <div id="gaji-box" style="display:none; border:1px solid var(--neon-green); padding:10px; margin-bottom:15px; border-radius:8px; background: rgba(0,255,136,0.05);">
-                            <label style="color:var(--neon-green)">DANA GAJI TERDETEKSI</label>
-                            <input type="number" id="sl-gaji" placeholder="Masukkan nominal gaji...">
-                        </div>
-                        <button class="btn-action" onclick="kirimData('penjualan')">FINALISASI & KIRIM DATA</button>
-                    </div>
-                    <div id="loading-text" class="step-loading">PROCESSING_SYNC...</div>
+                    <div class="card-h">PENJUALAN & ABSENSI</div>
+                    <input type="number" id="sl-duit" placeholder="Total Penghasilan (Rp)">
+                    <button class="btn-action" style="background:var(--neon-green)" onclick="kirimKeFirebase('sales', {duit: val('sl-duit')})">SIMPAN DATA SALES</button>
                 </div>
             </div>
 
             <div id="settings" class="section">
-                <div class="grid">
-                    <div class="card" style="text-align:center">
-                        <div class="card-h">PROFIL ADMIN</div>
-                        <div style="width:100px; height:100px; background:var(--neon); border-radius:50%; margin: 20px auto; border: 3px solid white; box-shadow: 0 0 20px var(--neon); overflow:hidden;">
-                            <img src="https://ui-avatars.com/api/?name=Gibran+Admin&background=00d2ff&color=fff&size=128" style="width:100%; height:100%;">
-                        </div>
-                        <h3 style="font-family:Orbitron;">GIBRAN ADMIN</h3>
-                        <p style="font-size:11px; opacity:0.6;">SYSTEM_ID: GH-2026-V11.8</p>
-                        <button class="btn-action" style="background:#25D366; color:white; margin-top: 10px;" onclick="window.open('https://wa.me/628XXXXXXXXXX?text=Halo%20Admin%20Gibran_Hub', '_blank')">HUBUNGI DEVELOPER (WA)</button>
-                    </div>
-                    <div class="card">
-                        <div class="card-h">SYSTEM CONTROL</div>
-                        <div style="margin-bottom: 20px;">
-                            <label>DATABASE STATUS</label>
-                            <div id="sync-status" style="padding: 10px; background: rgba(0,210,255,0.05); border: 1px dashed var(--neon); border-radius: 6px; font-size: 12px; color: var(--neon-green);">● CLOUD_SYNC: CONNECTED</div>
-                        </div>
-                        <button class="btn-action" style="background:var(--neon-red); color:white;" onclick="confirm('Reboot System?') ? location.reload() : null">REBOOT SYSTEM</button>
-                        <button class="btn-action" style="margin-top:10px;" onclick="checkSync()">CEK SYNC STATUS</button>
-                    </div>
+                <div class="card" style="text-align: center;">
+                    <div class="card-h">PROFIL ADMIN</div>
+                    <button class="btn-action" onclick="location.reload()">REBOOT SYSTEM</button>
                 </div>
             </div>
         </main>
     </div>
 
-    <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxnGzFdKLUl7GnixTWhiaYftWCenhh0m_FkiSCALcEY6-jYUKivb1VZLc0KqbpA8-Eg/exec';
+    <div class="status-bar" id="sync-status">FIREBASE: CONNECTED</div>
 
+    <script>
+        // 1. GANTI DENGAN URL DATABASE LO
+        const firebaseConfig = {
+            databaseURL: "https://catatan-ac4a2-default-rtdb.firebaseio.com/"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // 2. FUNGSI KIRIM DATA (FULL FIREBASE)
+        function kirimKeFirebase(folder, dataObj) {
+            document.getElementById('loader').style.display = 'flex';
+            dataObj.waktu = new Date().toLocaleString();
+            
+            // Push data ke folder yang dipilih di Firebase
+            db.ref('gibran_hub/' + folder).push(dataObj)
+            .then(() => {
+                alert("BERHASIL: Data sudah masuk ke Kotak Firebase!");
+                location.reload();
+            })
+            .catch((e) => {
+                alert("GAGAL: Cek Rules Firebase lo!");
+                document.getElementById('loader').style.display = 'none';
+            });
+        }
+
+        // 3. AUTO-SYNC CATATAN (REAL-TIME)
+        const noteRef = db.ref('gibran_hub/catatan_live');
+        noteRef.on('value', (s) => { 
+            if(s.val()) document.getElementById('catatan-cloud').value = s.val().teks; 
+        });
+
+        document.getElementById('catatan-cloud').addEventListener('input', (e) => {
+            noteRef.set({ teks: e.target.value, updated: new Date().toLocaleTimeString() });
+            document.getElementById('sync-status').innerText = "FIREBASE: SYNCING...";
+            setTimeout(() => document.getElementById('sync-status').innerText = "FIREBASE: CONNECTED", 1000);
+        });
+
+        // 4. NAVIGASI & HELPERS
+        function val(id) { return document.getElementById(id).value; }
         function show(id, btn) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
@@ -171,70 +140,17 @@
             btn.classList.add('active');
         }
 
-        let currentInput = "";
+        // 5. KALKULATOR
+        let inputCur = "";
         function calc(v) {
-            const display = document.getElementById('calc-val');
-            if (v === 'C') { currentInput = ""; display.innerText = "0"; }
-            else if (v === '=') { try { currentInput = eval(currentInput.replace('x', '*')).toString(); display.innerText = currentInput; } catch(e) { display.innerText = "ERROR"; currentInput = ""; } }
-            else { if (currentInput === "" && isNaN(v)) return; currentInput += v; display.innerText = currentInput; }
-        }
-
-        function nextStep(n) {
-            document.getElementById('s-'+n).style.display = 'none';
-            document.getElementById('loading-text').style.display = 'block';
-            setTimeout(() => { document.getElementById('loading-text').style.display = 'none'; document.getElementById('s-'+(n+1)).style.display = 'block'; }, 1200);
-        }
-
-        async function startCamera() {
-            const v = document.getElementById('video');
-            try { const s = await navigator.mediaDevices.getUserMedia({ video: true }); v.srcObject = s; v.style.display = 'block'; document.getElementById('btn-cam').style.display = 'none'; document.getElementById('btn-snap').style.display = 'block'; }
-            catch(e) { alert("Akses Kamera Ditolak"); }
-        }
-
-        function takeSnapshot() {
-            alert("SISTEM: WAJAH TERVERIFIKASI!");
-            document.getElementById('video').srcObject.getTracks().forEach(t => t.stop());
-            document.getElementById('video').style.display = 'none';
-            nextStep(4);
-        }
-
-        function checkSync() {
-            const s = document.getElementById('sync-status');
-            s.innerText = "● SCANNING...";
-            setTimeout(() => { s.innerText = "● CLOUD_SYNC: OK (v11.8.4)"; alert("Sync OK"); }, 1500);
-        }
-
-        function kirimData(tipe) {
-            let data = { kategori: tipe };
-            if(tipe === 'laporan') {
-                data.nama = document.getElementById('lap-nama').value;
-                data.jenis = document.getElementById('lap-kategori').value;
-                data.catatan = document.getElementById('lap-note').value;
-            } else if(tipe === 'catatan') {
-                data.catatan = document.getElementById('catatan-internal').value;
-            } else if(tipe === 'gudang') {
-                data.namaBarang = document.getElementById('gd-nama').value;
-                data.ukuran = document.getElementById('gd-ukuran').value;
-                data.tipe = document.getElementById('gd-tipe').value;
-                data.stok = document.getElementById('gd-stok').value;
-            } else if(tipe === 'penjualan') {
-                data.namaSales = document.getElementById('sl-nama').value;
-                data.jam = document.getElementById('sl-jam').value;
-                data.laku = document.getElementById('sl-laku').value;
-                data.penghasilan = document.getElementById('sl-duit').value;
-                data.gaji = document.getElementById('sl-gaji').value || 0;
-            }
-
-            document.getElementById('loader').style.display = 'flex';
-            fetch(scriptURL, { method: 'POST', body: JSON.stringify(data) })
-            .then(() => { alert("DATA BERHASIL MASUK SHEET!"); location.reload(); })
-            .catch(() => { alert("GAGAL!"); document.getElementById('loader').style.display = 'none'; });
+            const d = document.getElementById('calc-val');
+            if(v==='C'){inputCur=""; d.innerText="0";}
+            else if(v==='='){try{inputCur=eval(inputCur).toString(); d.innerText=inputCur;}catch{d.innerText="ERR";}}
+            else{inputCur+=v; d.innerText=inputCur;}
         }
 
         window.onload = () => {
-            setTimeout(() => document.getElementById('loader').style.display = 'none', 2000);
-            const d = new Date().getDate();
-            if(d === 1 || d === 15 || d >= 28) document.getElementById('gaji-box').style.display = 'block';
+            setTimeout(() => document.getElementById('loader').style.display='none', 1000);
         };
     </script>
 </body>
