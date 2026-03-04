@@ -3,185 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | FINANCIAL TERMINAL</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <script src="https://tally.so/widgets/embed.js"></script>
+    <title>GIBRAN HUB | MAINFRAME DASHBOARD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root { 
             --neon-blue: #00d2ff; 
-            --bg-deep: #0a0c10;
-            --glass: rgba(17, 25, 40, 0.75);
-        }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body { 
-            background-color: var(--bg-deep);
-            /* Background gradasi halus biar tengahnya gak hitam polos */
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(0, 210, 255, 0.1) 0, transparent 50%), 
-                radial-gradient(at 100% 100%, rgba(0, 210, 255, 0.1) 0, transparent 50%);
-            color: white; 
-            font-family: 'Inter', sans-serif;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
+            --neon-green: #00ff88;
+            --bg-dark: #05070a; 
         }
 
-        /* SIDEBAR MODERN */
-        .sidebar {
-            width: 280px;
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            flex-direction: column;
-            padding: 40px 25px;
-            z-index: 10;
+        body, html { 
+            margin: 0; padding: 0; height: 100%; 
+            background: var(--bg-dark); color: white; 
+            font-family: 'Rajdhani', sans-serif; 
         }
 
-        .logo-area {
-            font-family: 'Orbitron';
-            color: var(--neon-blue);
-            font-size: 20px;
-            letter-spacing: 5px;
-            margin-bottom: 50px;
-            text-align: center;
-            text-shadow: 0 0 15px rgba(0, 210, 255, 0.5);
+        /* --- LOADING SCREEN (5-10 Detik) --- */
+        #loading-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
         }
+        .loader-circle {
+            width: 80px; height: 80px;
+            border: 4px solid rgba(0, 210, 255, 0.1);
+            border-top: 4px solid var(--neon-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        .nav-link {
-            padding: 15px 20px;
-            color: #8b949e;
-            text-decoration: none;
-            border-radius: 12px;
-            margin-bottom: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            background: rgba(0, 210, 255, 0.1);
-            color: white;
-            box-shadow: inset 0 0 10px rgba(0, 210, 255, 0.1);
-        }
-
-        /* MAIN CONTENT */
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
+        /* --- DASHBOARD MAIN --- */
+        #dashboard { display: none; padding: 25px; }
 
         header {
-            height: 70px;
-            padding: 0 40px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid var(--neon-blue);
+            padding-bottom: 15px; margin-bottom: 30px;
         }
 
-        .clock {
-            font-family: 'Orbitron';
-            color: var(--neon-blue);
-            font-size: 16px;
+        .logo-text { 
+            font-family: 'Orbitron'; font-size: 1.5rem; 
+            color: var(--neon-blue); text-shadow: 0 0 10px var(--neon-blue); 
         }
 
-        /* KOTAK TENGAH (TEMPAT TALLY) */
-        .form-container {
-            flex: 1;
-            padding: 30px;
-            display: flex;
-            justify-content: center;
-            overflow-y: auto;
+        /* GRID LAYOUT */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
         }
 
-        .tally-card {
-            width: 100%;
-            max-width: 900px;
-            background: #000000; /* Warna hitam biar nyatu sama desain Tally lo */
-            border: 1px solid rgba(0, 210, 255, 0.3);
-            border-radius: 20px;
-            position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 20px rgba(0, 210, 255, 0.1);
-            overflow: hidden;
+        .card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(0, 210, 255, 0.2);
+            border-radius: 15px; padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* Aksesori tambahan biar gak kelihatan kotak doang */
-        .tally-card::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+        .card-title {
+            font-family: 'Orbitron'; font-size: 0.8rem; margin-bottom: 20px;
+            color: var(--neon-blue); letter-spacing: 2px;
         }
 
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+        /* Jotform Container */
+        .jotform-frame {
+            width: 100%; height: 500px; border: none; border-radius: 10px;
+            background: transparent;
         }
 
         .btn-exit {
-            margin-top: auto;
-            color: #ff4d4d;
-            text-decoration: none;
-            text-align: center;
-            padding: 12px;
-            border: 1px solid rgba(255, 77, 77, 0.2);
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .btn-exit:hover {
-            background: rgba(255, 77, 77, 0.1);
-            border-color: #ff4d4d;
+            padding: 5px 15px; border: 1px solid #ff4444; color: #ff4444;
+            text-decoration: none; font-family: 'Orbitron'; font-size: 10px;
         }
     </style>
 </head>
 <body>
 
-    <aside class="sidebar">
-        <div class="logo-area">GIBRAN HUB</div>
-        <nav style="flex: 1;">
-            <a href="#" class="nav-link active"><span>●</span> DATA SETORAN</a>
-            <a href="#" class="nav-link"><span>○</span> RIWAYAT</a>
-            <a href="#" class="nav-link"><span>○</span> LAPORAN</a>
-        </nav>
-        <a href="index.html" class="btn-exit">LOGOUT SYSTEM</a>
-    </aside>
+    <div id="loading-screen">
+        <div class="loader-circle"></div>
+        <h2 style="font-family: 'Orbitron'; margin-top: 25px; letter-spacing: 3px; font-size: 1rem;">DECRYPTING ACCESS...</h2>
+        <p id="progress-text" style="color: var(--neon-blue); font-size: 0.8rem;">Syncing with "tempat masuk nya data"...</p>
+    </div>
 
-    <main class="main-content">
+    <div id="dashboard">
         <header>
-            <div style="font-size: 11px; color: #8b949e; letter-spacing: 2px;">TERMINAL ID: 064-MAX</div>
-            <div class="clock" id="jam-digital">00:00:00</div>
+            <div class="logo-text">MAINFRAME_GIBRAN</div>
+            <a href="index.html" class="btn-exit">TERMINATE SESSION</a>
         </header>
 
-        <div class="form-container">
-            <div class="tally-card">
-                <iframe 
-                    src="https://tally.so/embed/b5l8b6?hideTitle=1&transparentBackground=1" 
-                    title="Form Setoran">
-                </iframe>
+        <div class="grid">
+            <div class="card">
+                <div class="card-title">● ANALYTICS_DATA_FLOW</div>
+                <canvas id="mainChart"></canvas>
+            </div>
+
+            <div class="card">
+                <div class="card-title">● DATABASE_INPUT (JOTFORM)</div>
+                <iframe class="jotform-frame" src="https://form.jotform.com/260617899577074"></iframe>
+            </div>
+
+            <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                <div class="card-title">SERVER_STATUS</div>
+                <h1 style="color: var(--neon-green); margin: 10px 0;">ACTIVE</h1>
+                <p style="font-size: 0.9rem; opacity: 0.7;">Target Sheet:<br><span style="color: var(--neon-blue);">tempat masuk nya data</span></p>
+                <div style="margin-top: 20px; font-size: 0.7rem; border-top: 1px solid #333; width: 100%; padding-top: 15px;">
+                    ENCRYPTION: AES-256<br>
+                    Uptime: 99.9%
+                </div>
             </div>
         </div>
-    </main>
+    </div>
 
     <script>
-        function updateJam() {
-            const el = document.getElementById('jam-digital');
-            const skrg = new Date();
-            el.innerText = skrg.toLocaleTimeString();
+        // Simulasi Loading 7 Detik
+        let prog = 0;
+        const progText = document.getElementById('progress-text');
+        
+        let interval = setInterval(() => {
+            prog += 1;
+            if(prog == 40) progText.innerText = "Bypassing Firewall...";
+            if(prog == 80) progText.innerText = "Opening Secure Line...";
+            
+            if(prog >= 100) {
+                clearInterval(interval);
+                document.getElementById('loading-screen').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                initChart();
+            }
+        }, 70); // Kecepatan loading
+
+        // Inisialisasi Grafik
+        function initChart() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+                    datasets: [{
+                        label: 'Data Traffic',
+                        data: [5, 15, 10, 25, 20, 35],
+                        borderColor: '#00d2ff',
+                        backgroundColor: 'rgba(0, 210, 255, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    plugins: { legend: { display: false } },
+                    scales: { y: { display: false }, x: { grid: { color: '#222' } } }
+                }
+            });
         }
-        setInterval(updateJam, 1000);
-        updateJam();
     </script>
 </body>
 </html>
