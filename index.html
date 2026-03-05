@@ -11,7 +11,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body, html { background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; scroll-behavior: smooth; overflow-x: hidden; }
 
-        /* --- LANDING PAGE SECTION --- */
+        /* --- HERO LANDING SECTION --- */
         .hero {
             height: 100vh;
             display: flex;
@@ -59,7 +59,7 @@
             box-shadow: 0 0 40px var(--neon-green);
         }
 
-        /* --- FORM SECTION --- */
+        /* --- FORM REGISTRASI SECTION --- */
         .form-section {
             min-height: 100vh;
             padding: 80px 20px;
@@ -87,6 +87,8 @@
             margin-bottom: 30px;
             text-align: center;
             letter-spacing: 2px;
+            border-bottom: 1px solid rgba(0,210,255,0.2);
+            padding-bottom: 15px;
         }
 
         .input-group { margin-bottom: 20px; position: relative; }
@@ -101,7 +103,7 @@
 
         input:focus { border-color: var(--neon); box-shadow: 0 0 10px rgba(0,210,255,0.2); }
 
-        /* --- FITUR LIHAT PASSWORD --- */
+        /* --- FITUR SHOW/HIDE PASSWORD --- */
         .pass-container { position: relative; }
         .toggle-pass {
             position: absolute;
@@ -109,13 +111,14 @@
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             color: var(--neon);
             font-family: 'Orbitron';
             user-select: none;
-            background: rgba(0,0,0,0.5);
-            padding: 4px 8px;
+            background: rgba(0,0,0,0.6);
+            padding: 5px 10px;
             border-radius: 4px;
+            border: 1px solid rgba(0,210,255,0.3);
         }
 
         .btn-send {
@@ -133,8 +136,8 @@
 
     <section class="hero">
         <h1 class="logo-main">GIBRAN_HUB</h1>
-        <p class="tagline">Cloud Data Interface v13.5</p>
-        <a href="#register" class="btn-start">ACCESS DATABASE</a>
+        <p class="tagline">Secure Data Entry System v13.5</p>
+        <a href="#register" class="btn-start">MULAI REGISTRASI</a>
     </section>
 
     <section id="register" class="form-section">
@@ -144,7 +147,7 @@
             <form id="user-form">
                 <div class="input-group">
                     <label>NAMA LENGKAP</label>
-                    <input type="text" name="data[nama]" placeholder="Nama Lengkap User" required>
+                    <input type="text" name="data[nama]" placeholder="Input Nama" required>
                 </div>
                 
                 <div class="input-group">
@@ -154,7 +157,7 @@
                 
                 <div class="input-group">
                     <label>ALAMAT</label>
-                    <input type="text" name="data[alamat]" placeholder="Alamat Domisili" required>
+                    <input type="text" name="data[alamat]" placeholder="Alamat Lengkap" required>
                 </div>
                 
                 <div class="input-group">
@@ -167,15 +170,15 @@
                 
                 <input type="hidden" name="data[timestamp]" id="ts">
 
-                <button type="submit" class="btn-send" id="btn-submit">CONFIRM & SAVE DATA</button>
+                <button type="submit" class="btn-send" id="btn-submit">SIMPAN KE GOOGLE SHEET</button>
             </form>
             
-            <div id="msg" class="status-msg">WAITING_FOR_INPUT...</div>
+            <div id="msg" class="status-msg">SIAP MENERIMA DATA...</div>
         </div>
     </section>
 
     <script>
-        // FUNGSI LIHAT PASSWORD
+        // Fungsi Show/Hide Password
         function togglePassword() {
             const passInput = document.getElementById('passInput');
             const toggleBtn = document.querySelector('.toggle-pass');
@@ -191,45 +194,49 @@
             }
         }
 
-        // FUNGSI KIRIM KE SHEETDB
+        // Fungsi Kirim Data ke SheetDB
         const form = document.getElementById('user-form');
         const apiURL = "https://sheetdb.io/api/v1/k4t892whs0zgw";
 
         form.addEventListener("submit", e => {
             e.preventDefault();
-            document.getElementById('ts').value = new Date().toLocaleString('id-ID');
+            
+            // Generate Timestamp Lokal
+            const now = new Date();
+            document.getElementById('ts').value = now.toLocaleString('id-ID');
             
             const btn = document.getElementById('btn-submit');
             const msg = document.getElementById('msg');
             
             btn.disabled = true;
-            btn.innerText = "SYNCING...";
-            msg.innerText = "UPLOADING_DATA_TO_CLOUD...";
+            btn.innerText = "SEDANG MENGIRIM...";
+            msg.innerText = "MENGHUBUNGKAN KE SERVER DATABASE...";
 
             fetch(apiURL, {
                 method: "POST",
                 body: new FormData(document.getElementById("user-form")),
             }).then(res => {
                 if(res.ok) {
-                    msg.innerText = "DATABASE_UPDATE_SUCCESS! ✓";
-                    btn.innerText = "DONE";
+                    msg.innerText = "DATA BERHASIL DISIMPAN! ✓";
+                    btn.innerText = "BERHASIL";
                     form.reset();
-                    setTimeout(() => { window.location.href = "#"; }, 3000);
+                    // Kembali ke atas setelah 2 detik
+                    setTimeout(() => { window.location.href = "#"; }, 2000);
                 } else {
-                    throw new Error('API_ERROR');
+                    throw new Error('Gagal terhubung ke API');
                 }
             })
             .catch(err => {
-                msg.innerText = "CONNECTION_FAILED_RETRY";
+                msg.innerText = "GAGAL! PERIKSA KONEKSI INTERNET.";
                 btn.disabled = false;
-                btn.innerText = "RETRY_SUBMIT";
+                btn.innerText = "COBA LAGI";
             })
             .finally(() => {
                 setTimeout(() => { 
                     btn.disabled = false;
-                    btn.innerText = "CONFIRM & SAVE DATA";
-                    msg.innerText = "READY_FOR_NEXT_INPUT"; 
-                }, 5000);
+                    btn.innerText = "SIMPAN KE GOOGLE SHEET";
+                    msg.innerText = "SIAP MENERIMA DATA..."; 
+                }, 4000);
             });
         });
     </script>
