@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB v19.0 | DETAIL FORM SYSTEM</title>
+    <title>GIBRAN HUB v20.0 | FULL DASHBOARD</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
@@ -29,150 +29,161 @@
         .card-h { font-family: 'Orbitron'; font-size: 11px; color: var(--red); margin-bottom: 15px; letter-spacing: 2px; border-bottom: 1px solid rgba(255,0,85,0.2); padding-bottom: 8px; }
 
         label { display: block; font-size: 10px; color: var(--purple); font-family: 'Orbitron'; margin: 10px 0 5px; text-transform: uppercase; }
-        input, select { width: 100%; padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(112, 0, 255, 0.2); color: white; border-radius: 8px; font-size: 13px; outline: none; box-sizing: border-box; }
-        .btn-send { width: 100%; padding: 15px; border: none; border-radius: 8px; font-family: 'Orbitron'; font-size: 11px; font-weight: bold; cursor: pointer; margin-top: 20px; color: white; transition: 0.3s; }
+        input, select { width: 100%; padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(112, 0, 255, 0.2); color: white; border-radius: 8px; font-size: 13px; outline: none; }
+        .btn-send { width: 100%; padding: 15px; border: none; border-radius: 8px; font-family: 'Orbitron'; font-size: 11px; font-weight: bold; cursor: pointer; margin-top: 20px; color: white; }
         
-        .img-prev { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; border: 1px dashed var(--purple); margin-top: 10px; display: none; }
-        #loader { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 10000; display: none; flex-direction: column; justify-content: center; align-items: center; color: var(--red); font-family: 'Orbitron'; }
+        .img-prev { width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-top: 10px; display: none; border: 1px solid var(--purple); }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+        th { text-align: left; color: var(--purple); border-bottom: 1px solid var(--purple); padding: 8px; }
+        td { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
 <body>
 
-<div id="loader"><h2>UPLOADING_DATA...</h2></div>
-
 <div class="wrapper">
     <nav>
         <div class="logo">GIBRAN_HUB</div>
-        <button class="nav-btn active" onclick="show('mon-view', this)">● INPUT DATA</button>
-        <button class="nav-btn" onclick="show('notes-view', this)">● NOTES & CALC</button>
-        <button class="nav-btn" onclick="show('gudang-view', this)">● GUDANG BARANG</button>
-        <button class="nav-btn" style="margin-top:auto; color:var(--red);" onclick="logout()">● EXIT</button>
+        <button class="nav-btn active" onclick="show('dash-view', this)">● MONITORING DASHBOARD</button>
+        <button class="nav-btn" onclick="show('input-view', this)">● INPUT SETOR/LAPOR</button>
+        <button class="nav-btn" onclick="show('gudang-view', this)">● GUDANG & NOTES</button>
+        <button class="nav-btn" style="margin-top:auto; color:var(--red);" onclick="logout()">● LOGOUT</button>
     </nav>
 
     <main>
-        <div id="mon-view" class="section active">
+        <div id="dash-view" class="section active">
             <div class="grid">
                 <div class="card">
-                    <div class="card-h">FORM BUKTI SETORAN</div>
-                    <label>BUKTI SETOR (FOTO)</label>
-                    <input type="file" id="s-foto" accept="image/*" capture="camera" onchange="preview(this, 'p-s')">
-                    <img id="p-s" class="img-prev">
-
-                    <label>NAMA YANG SETOR</label>
-                    <input type="text" id="s-nama" placeholder="Ketik nama...">
-                    
-                    <label>TANGGAL SETOR</label>
-                    <input type="date" id="s-tgl">
-
-                    <label>SETOR KE SIAPA</label>
-                    <select id="s-ke">
-                        <option value="BU TATI">BU TATI</option>
-                        <option value="BU AMI">BU AMI</option>
-                    </select>
-
-                    <label>TANDA TANGAN (NAMA TERANG)</label>
-                    <input type="text" id="s-ttd" placeholder="Paraf nama...">
-
-                    <button class="btn-send" style="background: var(--red);" onclick="kirim('setoran', 's')">KIRIM SETORAN</button>
+                    <div class="card-h">LIVE MONITOR SETORAN</div>
+                    <canvas id="chartS" height="150"></canvas>
                 </div>
-
                 <div class="card">
-                    <div class="card-h" style="color:var(--green); border-color:var(--green);">FORM BUKTI LAPORAN</div>
-                    <label>BUKTI LAPORAN (FOTO)</label>
-                    <input type="file" id="l-foto" accept="image/*" capture="camera" onchange="preview(this, 'p-l')">
-                    <img id="p-l" class="img-prev">
-
-                    <label>NAMA YANG LAPOR</label>
-                    <input type="text" id="l-nama" placeholder="Ketik nama...">
-
-                    <label>TANGGAL LAPOR</label>
-                    <input type="date" id="l-tgl">
-
-                    <label>LAPOR KE SIAPA</label>
-                    <select id="l-ke">
-                        <option value="BU TATI">BU TATI</option>
-                        <option value="BU AMI">BU AMI</option>
-                    </select>
-
-                    <label>TANDA TANGAN (NAMA TERANG)</label>
-                    <input type="text" id="l-ttd" placeholder="Paraf nama...">
-
-                    <button class="btn-send" style="background: var(--green); color: black;" onclick="kirim('laporan', 'l')">KIRIM LAPORAN</button>
+                    <div class="card-h">LIVE MONITOR LAPORAN</div>
+                    <canvas id="chartL" height="150"></canvas>
                 </div>
             </div>
         </div>
-        
-        <div id="notes-view" class="section">... (Notes & Calc View) ...</div>
-        <div id="gudang-view" class="section">... (Gudang View) ...</div>
+
+        <div id="input-view" class="section">
+            <div class="grid">
+                <div class="card">
+                    <div class="card-h">FORM SETORAN</div>
+                    <input type="file" accept="image/*" capture="camera" onchange="preview(this, 'ps')" id="s-img">
+                    <img id="ps" class="img-prev">
+                    <label>Nama Penyetor</label><input type="text" id="s-nama">
+                    <label>Tanggal Setor</label><input type="date" id="s-tgl">
+                    <label>Setor Ke</label><select id="s-ke"><option>BU TATI</option><option>BU AMI</option></select>
+                    <label>Tanda Tangan</label><input type="text" id="s-ttd">
+                    <button class="btn-send" style="background:var(--red)" onclick="kirim('setoran','s')">KIRIM SETORAN</button>
+                </div>
+                <div class="card">
+                    <div class="card-h" style="color:var(--green); border-color:var(--green)">FORM LAPORAN</div>
+                    <input type="file" accept="image/*" capture="camera" onchange="preview(this, 'pl')" id="l-img">
+                    <img id="pl" class="img-prev">
+                    <label>Nama Pelapor</label><input type="text" id="l-nama">
+                    <label>Tanggal Lapor</label><input type="date" id="l-tgl">
+                    <label>Lapor Ke</label><select id="l-ke"><option>BU TATI</option><option>BU AMI</option></select>
+                    <label>Tanda Tangan</label><input type="text" id="l-ttd">
+                    <button class="btn-send" style="background:var(--green); color:black" onclick="kirim('laporan','l')">KIRIM LAPORAN</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="gudang-view" class="section">
+            <div class="grid">
+                <div class="card">
+                    <div class="card-h">INPUT GUDANG</div>
+                    <input type="text" id="gn" placeholder="Nama Barang">
+                    <input type="text" id="gt" placeholder="Tipe">
+                    <input type="text" id="gu" placeholder="Ukuran">
+                    <input type="number" id="gs" placeholder="Stok">
+                    <button class="btn-send" style="background:var(--purple)" onclick="saveG()">SIMPAN STOK</button>
+                </div>
+                <div class="card">
+                    <div class="card-h">CLOUD NOTES</div>
+                    <textarea id="notes" rows="10" style="width:100%; background:transparent; color:white; border:1px solid var(--purple)"></textarea>
+                </div>
+            </div>
+            <div class="card" style="margin-top:20px">
+                <div class="card-h">STOK GUDANG & SEARCH</div>
+                <input type="text" id="gcari" placeholder="Cari barang..." onkeyup="search()">
+                <table>
+                    <thead><tr><th>NAMA</th><th>TIPE</th><th>UKURAN</th><th>STOK</th></tr></thead>
+                    <tbody id="gtable"></tbody>
+                </table>
+            </div>
+        </div>
     </main>
 </div>
 
+
+
 <script>
-    // --- FIREBASE CONFIG ---
-    const configUtama = {
-        apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs",
-        authDomain: "tempat-masuk-nya-data.firebaseapp.com",
-        databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com",
-        projectId: "tempat-masuk-nya-data"
-    };
-    
-    // Inisialisasi Firebase Utama
-    firebase.initializeApp(configUtama, "utama");
-    const dbUtama = firebase.database(firebase.app("utama"));
+    // CONFIG TRIPLE DB
+    const configU = { databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com" };
+    const configG = { databaseURL: "https://gudang-barang-893cd-default-rtdb.asia-southeast1.firebasedatabase.app" };
+    const configN = { databaseURL: "https://catatankakulator-default-rtdb.firebaseio.com" };
 
-    // --- FUNGSI KIRIM DATA ---
+    firebase.initializeApp(configU, "appU");
+    firebase.initializeApp(configG, "appG");
+    firebase.initializeApp(configN, "appN");
+
+    const dbU = firebase.database(firebase.app("appU"));
+    const dbG = firebase.database(firebase.app("appG"));
+    const dbN = firebase.database(firebase.app("appN"));
+
+    // MONITORING DASHBOARD (CHART)
+    const ctxS = document.getElementById('chartS');
+    const chartS = new Chart(ctxS, { type: 'bar', data: { labels: ['Setoran'], datasets: [{ label: 'Total', data: [0], backgroundColor: '#ff0055' }] } });
+    dbU.ref('setoran').on('value', s => { chartS.data.datasets[0].data = [s.numChildren()]; chartS.update(); });
+
+    const ctxL = document.getElementById('chartL');
+    const chartL = new Chart(ctxL, { type: 'bar', data: { labels: ['Laporan'], datasets: [{ label: 'Total', data: [0], backgroundColor: '#00ff88' }] } });
+    dbU.ref('laporan').on('value', s => { chartL.data.datasets[0].data = [s.numChildren()]; chartL.update(); });
+
+    // KIRIM SETORAN/LAPORAN
     async function kirim(folder, pre) {
-        const file = document.getElementById(pre + '-foto').files[0];
-        const data = {
-            nama: val(pre + '-nama'),
-            tanggal: val(pre + '-tgl'),
-            tujuan: val(pre + '-ke'),
-            ttd: val(pre + '-ttd'),
-            waktu_system: new Date().toLocaleString()
-        };
-
-        if(!file || !data.nama || !data.tanggal) return alert("FOTO, NAMA, & TANGGAL WAJIB DIISI!");
-
-        document.getElementById('loader').style.display = 'flex';
-
+        const file = document.getElementById(pre+'-img').files[0];
         const reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onload = async function() {
-            data.bukti_foto = reader.result; // Simpan foto sebagai Base64
-            try {
-                await dbUtama.ref(folder + '/').push(data);
-                alert("DATA " + folder.toUpperCase() + " BERHASIL DIKIRIM!");
-                location.reload();
-            } catch (e) {
-                alert("Gagal: " + e.message);
-                document.getElementById('loader').style.display = 'none';
-            }
-        };
-    }
-
-    // --- UI HELPERS ---
-    function val(id) { return document.getElementById(id).value; }
-    
-    function preview(input, imgId) {
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = e => {
-                document.getElementById(imgId).src = e.target.result;
-                document.getElementById(imgId).style.display = 'block';
+        reader.onload = async () => {
+            const data = { 
+                nama: val(pre+'-nama'), tgl: val(pre+'-tgl'), 
+                ke: val(pre+'-ke'), ttd: val(pre+'-ttd'), img: reader.result 
             };
-            reader.readAsDataURL(input.files[0]);
+            await dbU.ref(folder+'/').push(data);
+            alert("SENT!"); location.reload();
         }
     }
 
-    function show(id, b) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
-        b.classList.add('active');
+    // GUDANG & NOTES
+    function saveG() {
+        const d = { nm: val('gn'), tp: val('gt'), uk: val('gu'), st: val('gs') };
+        dbG.ref('stok/').push(d).then(() => alert("SAVED!"));
     }
 
+    dbG.ref('stok/').on('value', s => {
+        const tb = document.getElementById('gtable'); tb.innerHTML = "";
+        s.forEach(c => { const v = c.val(); tb.innerHTML += `<tr><td>${v.nm}</td><td>${v.tp}</td><td>${v.uk}</td><td>${v.st}</td></tr>`; });
+    });
+
+    const nArea = document.getElementById('notes');
+    dbN.ref('notes').on('value', s => { if(s.val() && !nArea.matches(':focus')) nArea.value = s.val().txt; });
+    nArea.oninput = (e) => dbN.ref('notes').set({ txt: e.target.value });
+
+    // HELPERS
+    function val(id) { return document.getElementById(id).value; }
+    function show(id, b) { 
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); 
+        document.getElementById(id).classList.add('active'); 
+        document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active')); 
+        b.classList.add('active'); 
+    }
+    function preview(input, id) { 
+        const r = new FileReader(); 
+        r.onload = e => { document.getElementById(id).src = e.target.result; document.getElementById(id).style.display='block'; }; 
+        r.readAsDataURL(input.files[0]); 
+    }
     function logout() { localStorage.removeItem('gibran_user'); window.location.href = 'index.html'; }
 </script>
 </body>
 </html>
-
