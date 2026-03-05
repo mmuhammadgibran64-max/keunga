@@ -3,134 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | FULL SYSTEM SYNC</title>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    <title>GIBRAN HUB | AUTH SYSTEM</title>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
     <style>
-        :root { --neon: #ffca28; --bg: #05070a; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { background: #161b22; border: 2px solid var(--neon); padding: 30px; border-radius: 15px; width: 360px; box-shadow: 0 0 20px rgba(255, 202, 40, 0.2); }
-        .tabs { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 1px solid #333; }
-        .tab { padding: 10px; cursor: pointer; color: #888; font-weight: bold; }
-        .tab.active { color: var(--neon); border-bottom: 2px solid var(--neon); }
-        .form-content { display: none; }
-        .form-content.active { display: block; }
+        :root { --neon: #00d2ff; --bg: #05070a; }
+        body { background: var(--bg); color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .auth-card { background: rgba(255,255,255,0.05); border: 2px solid var(--neon); padding: 30px; border-radius: 15px; width: 320px; text-align: center; backdrop-filter: blur(10px); }
         input { width: 100%; margin-bottom: 12px; padding: 12px; background: #000; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; outline: none; }
-        input:focus { border-color: var(--neon); }
         button { width: 100%; padding: 15px; background: var(--neon); color: black; border: none; font-weight: bold; cursor: pointer; border-radius: 8px; margin-top: 10px; }
-        
-        /* Loader Animation */
-        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,7,10,0.9); z-index: 100; flex-direction: column; justify-content: center; align-items: center; }
-        .spinner { width: 40px; height: 40px; border: 4px solid #222; border-top: 4px solid var(--neon); border-radius: 50%; animation: spin 0.8s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .load-text { color: var(--neon); margin-top: 15px; font-family: monospace; font-size: 12px; }
+        .tab-btn { background: none; color: var(--neon); border: none; cursor: pointer; font-size: 12px; margin: 10px; opacity: 0.6; }
+        .tab-btn.active { opacity: 1; border-bottom: 2px solid var(--neon); }
+        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 100; flex-direction: column; justify-content: center; align-items: center; color: var(--neon); }
     </style>
 </head>
 <body>
 
-<div id="loader">
-    <div class="spinner"></div>
-    <div class="load-text" id="status-load">SYNCHRONIZING...</div>
-</div>
+<div id="loader"><h2>SYNCHRONIZING...</h2></div>
 
-<div class="card">
-    <div class="tabs">
-        <div class="tab active" id="tab-daftar" onclick="switchTab('daftar')">DAFTAR</div>
-        <div class="tab" id="tab-login" onclick="switchTab('login')">LOGIN</div>
+<div class="auth-card">
+    <h2 style="color:var(--neon)">GIBRAN_HUB</h2>
+    <div style="margin-bottom: 20px;">
+        <button class="tab-btn active" id="t-log" onclick="setMode('login')">LOGIN</button>
+        <button class="tab-btn" id="t-reg" onclick="setMode('reg')">DAFTAR</button>
     </div>
 
-    <div id="form-daftar" class="form-content active">
-        <input type="text" id="reg-nama" placeholder="Nama Lengkap">
-        <input type="text" id="reg-wa" placeholder="Nomor WA">
-        <input type="text" id="reg-alamat" placeholder="Alamat">
-        <input type="password" id="reg-pass" placeholder="Password">
-        <button onclick="prosesDaftar()">SUBMIT PENDAFTARAN</button>
+    <div id="reg-box" style="display:none">
+        <input type="text" id="r-nama" placeholder="Nama Lengkap">
+        <input type="text" id="r-wa" placeholder="Nomor WA">
+        <input type="text" id="r-alamat" placeholder="Alamat">
+        <input type="password" id="r-pass" placeholder="Password">
+        <button onclick="doReg()">DAFTAR AKUN</button>
     </div>
 
-    <div id="form-login" class="form-content">
-        <input type="text" id="log-nama" placeholder="Masukkan Nama">
-        <input type="text" id="log-wa" placeholder="Masukkan Nomor WA">
-        <button onclick="prosesLogin()">VERIFIKASI LOGIN</button>
+    <div id="log-box">
+        <input type="text" id="l-nama" placeholder="Nama">
+        <input type="text" id="l-wa" placeholder="Nomor WA">
+        <button onclick="doLog()">MASUK KE DASHBOARD</button>
     </div>
 </div>
 
 <script>
-    // CONFIG 1: PENDAFTARAN (daftar-akun-2f94c)
-    const configDaftar = {
+    const config = {
         apiKey: "AIzaSyB4ZKcy0TGDQ_i5LGXIsFH9pSSXGfifzqg",
         authDomain: "daftar-akun-2f94c.firebaseapp.com",
         databaseURL: "https://daftar-akun-2f94c-default-rtdb.firebaseio.com",
         projectId: "daftar-akun-2f94c",
         appId: "1:225880747346:web:e6565efca909fb2f4c1e8b"
     };
+    firebase.initializeApp(config);
+    const db = firebase.database();
 
-    // CONFIG 2: LOGIN (login-1f788)
-    const configLogin = {
-        apiKey: "AIzaSyC_89eDNhdOojD_w8cCYADrF6Sj5R64mro",
-        authDomain: "login-1f788.firebaseapp.com",
-        databaseURL: "https://login-1f788-default-rtdb.firebaseio.com",
-        projectId: "login-1f788",
-        appId: "1:180921561129:web:6e4d60a74a871691346c38"
-    };
-
-    // Inisialisasi Dua App Firebase Sekaligus
-    const appDaftar = firebase.initializeApp(configDaftar, "appDaftar");
-    const appLogin = firebase.initializeApp(configLogin, "appLogin");
-
-    const dbDaftar = firebase.database(appDaftar);
-    const dbLogin = firebase.database(appLogin);
-
-    function switchTab(t) {
-        document.querySelectorAll('.form-content').forEach(f => f.classList.remove('active'));
-        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-        document.getElementById('form-' + t).classList.add('active');
-        document.getElementById('tab-' + t).classList.add('active');
+    function setMode(m) {
+        document.getElementById('reg-box').style.display = m === 'reg' ? 'block' : 'none';
+        document.getElementById('log-box').style.display = m === 'login' ? 'block' : 'none';
+        document.getElementById('t-reg').classList.toggle('active', m === 'reg');
+        document.getElementById('t-log').classList.toggle('active', m === 'login');
     }
 
-    async function prosesDaftar() {
-        const payload = {
-            nama: document.getElementById('reg-nama').value,
-            wa: document.getElementById('reg-wa').value,
-            alamat: document.getElementById('reg-alamat').value,
-            password: document.getElementById('reg-pass').value,
-            timestamp: Date.now()
-        };
-
-        if(!payload.nama || !payload.wa) return alert("Isi data lengkap!");
-        
-        toggleLoader(true, "MENGIRIM KE DATABASE DAFTAR...");
-        try {
-            await dbDaftar.ref('users/' + payload.wa).set(payload);
-            toggleLoader(false);
-            alert("DAFTAR BERHASIL! Silakan pindah ke tab Login.");
-        } catch (e) { alert(e.message); toggleLoader(false); }
+    async function doReg() {
+        const d = { nama: val('r-nama'), wa: val('r-wa'), alamat: val('r-alamat'), password: val('r-pass'), time: Date.now() };
+        if(!d.nama || !d.wa) return alert("Isi Data!");
+        await db.ref('users/' + d.wa).set(d);
+        alert("Berhasil Daftar!"); setMode('login');
     }
 
-    async function prosesLogin() {
-        const nama = document.getElementById('log-nama').value;
-        const wa = document.getElementById('log_wa').value;
-        
-        if(!nama || !wa) return alert("Isi data login!");
-
-        toggleLoader(true, "VERIFIKASI DATA LOGIN...");
-        try {
-            // Simpan log login ke database login-1f788 sesuai permintaan
-            const logData = { nama: nama, wa: wa, waktu: new Date().toLocaleString() };
-            await dbLogin.ref('login_logs/' + wa).set(logData);
-            
-            setTimeout(() => {
-                toggleLoader(false);
-                alert("LOGIN BERHASIL! Selamat Datang " + nama);
-            }, 1500);
-        } catch (e) { alert(e.message); toggleLoader(false); }
+    async function doLog() {
+        const n = val('l-nama'), w = val('l-wa');
+        document.getElementById('loader').style.display = 'flex';
+        const snap = await db.ref('users/' + w).once('value');
+        const user = snap.val();
+        if(user && user.nama === n) {
+            // Simpan nama di browser supaya di dashboard bisa dipanggil
+            localStorage.setItem('gibran_user', user.nama);
+            window.location.href = "dashboard.html"; // PINDAH KE DASHBOARD
+        } else {
+            alert("Data Salah!");
+            document.getElementById('loader').style.display = 'none';
+        }
     }
-
-    function toggleLoader(show, text) {
-        const l = document.getElementById('loader');
-        const t = document.getElementById('status-load');
-        l.style.display = show ? 'flex' : 'none';
-        if(text) t.innerText = text;
-    }
+    function val(id) { return document.getElementById(id).value; }
 </script>
 </body>
 </html>
