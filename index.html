@@ -2,40 +2,114 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>GIBRAN HUB | FINAL SYNC</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIBRAN HUB | DATABASE CLOUD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <style>
-        body { background: #05070a; color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { background: #111; padding: 30px; border-radius: 15px; border: 1px solid #3ecf8e; width: 100%; max-width: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h2 { color: #3ecf8e; text-align: center; font-size: 1.2rem; margin-bottom: 20px; }
-        input { width: 100%; margin-bottom: 15px; padding: 12px; border-radius: 8px; border: 1px solid #222; background: #1a1a1a; color: white; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #3ecf8e; border: none; border-radius: 8px; color: black; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        button:hover { background: #2eb875; transform: translateY(-2px); }
-        #status { text-align: center; font-size: 12px; margin-top: 15px; color: #888; }
+        :root { --neon-green: #3ecf8e; --bg: #05070a; --card-bg: rgba(255, 255, 255, 0.05); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        
+        .card { 
+            background: var(--card-bg); border: 1px solid rgba(62, 207, 142, 0.3); 
+            padding: 40px; border-radius: 20px; width: 100%; max-width: 400px; 
+            backdrop-filter: blur(10px); box-shadow: 0 10px 50px rgba(0,0,0,0.8);
+        }
+        
+        .card-h { font-family: 'Orbitron'; color: var(--neon-green); font-size: 1.2rem; margin-bottom: 30px; text-align: center; letter-spacing: 2px; }
+        
+        .input-group { margin-bottom: 20px; text-align: left; position: relative; }
+        label { display: block; font-size: 11px; color: var(--neon-green); font-family: 'Orbitron'; margin-bottom: 8px; }
+        
+        input { 
+            width: 100%; padding: 12px; background: rgba(0,0,0,0.3); 
+            border: 1px solid rgba(62, 207, 142, 0.2); color: white; 
+            border-radius: 8px; outline: none; transition: 0.3s;
+        }
+        input:focus { border-color: var(--neon-green); box-shadow: 0 0 10px rgba(62, 207, 142, 0.2); }
+        
+        /* TOMBOL SHOW/HIDE PASSWORD */
+        .toggle-btn {
+            position: absolute; right: 10px; top: 35px;
+            background: none; border: none; color: var(--neon-green);
+            font-family: 'Orbitron'; font-size: 10px; cursor: pointer;
+            padding: 5px; opacity: 0.7; transition: 0.3s;
+        }
+        .toggle-btn:hover { opacity: 1; }
+
+        .btn-send { 
+            background: var(--neon-green); color: black; border: none; 
+            padding: 15px; font-family: 'Orbitron'; font-size: 13px; 
+            cursor: pointer; width: 100%; font-weight: bold; 
+            border-radius: 8px; margin-top: 10px; transition: 0.4s;
+        }
+        .btn-send:hover { transform: translateY(-3px); box-shadow: 0 0 20px var(--neon-green); }
+        .btn-send:disabled { background: #555; cursor: not-allowed; }
+
+        #msg { font-size: 11px; margin-top: 20px; color: #888; font-family: 'Orbitron'; text-align: center; }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <h2>DATABASE SYNC</h2>
-        <input type="text" id="nama" placeholder="Nama Lengkap">
-        <input type="text" id="wa" placeholder="Nomor WhatsApp">
-        <input type="text" id="alamat" placeholder="Alamat">
-        <input type="password" id="password" placeholder="Password">
-        <button onclick="kirimData()" id="btn-submit">KIRIM KE SUPABASE</button>
-        <p id="status">Status: Ready</p>
+        <div class="card-h">SYSTEM_SYNC</div>
+        <form id="user-form">
+            <div class="input-group">
+                <label>NAMA USER</label>
+                <input type="text" id="nama" placeholder="Ketik Nama..." required>
+            </div>
+            <div class="input-group">
+                <label>WHATSAPP</label>
+                <input type="text" id="wa" placeholder="628xxxxxxxx" required>
+            </div>
+            <div class="input-group">
+                <label>ALAMAT</label>
+                <input type="text" id="alamat" placeholder="Lokasi..." required>
+            </div>
+            <div class="input-group">
+                <label>PASSWORD</label>
+                <input type="password" id="password" placeholder="******" required>
+                <button type="button" class="toggle-btn" onclick="togglePass()" id="eye">SHOW</button>
+            </div>
+            <button type="submit" class="btn-send" id="btn-submit">KIRIM KE DATABASE</button>
+        </form>
+        <div id="msg">READY_TO_CONNECT</div>
     </div>
 
     <script>
+        // --- KONFIGURASI SUPABASE ---
         const SUPABASE_URL = "https://pjmezagwbktbqgzwwzwt.supabase.co";
         const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqbWV6YWd3Ymt0YnFnzwzwtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NzEwNDcsImV4cCI6MjA4ODI0NzA0N30.LEQ99Vi-J6zAstTzQGvczN1208a_cIfPKR-Wy3viUHk";
         
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        async function kirimData() {
-            const btn = document.getElementById('btn-submit');
-            const st = document.getElementById('status');
+        // FUNGSI SHOW/HIDE PASSWORD
+        function togglePass() {
+            const passInput = document.getElementById('password');
+            const eyeBtn = document.getElementById('eye');
+            if (passInput.type === "password") {
+                passInput.type = "text";
+                eyeBtn.innerText = "HIDE";
+            } else {
+                passInput.type = "password";
+                eyeBtn.innerText = "SHOW";
+            }
+        }
+
+        const form = document.getElementById('user-form');
+        const btn = document.getElementById('btn-submit');
+        const msg = document.getElementById('msg');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
             
+            btn.disabled = true;
+            btn.innerText = "SINKRONISASI...";
+            msg.innerText = "SEDANG MENGIRIM DATA KE CLOUD...";
+
             const dataInput = {
                 nama: document.getElementById('nama').value,
                 wa: document.getElementById('wa').value,
@@ -43,35 +117,27 @@
                 password: document.getElementById('password').value
             };
 
-            // Cek kalau ada yang kosong
-            if (!dataInput.nama || !dataInput.wa) {
-                alert("Isi dulu bro namanya!");
-                return;
-            }
-
-            btn.disabled = true;
-            st.innerText = "Status: Mengirim...";
-
-            const { data, error } = await supabaseClient
-                .from('daftar_akun') 
+            const { error } = await supabaseClient
+                .from('daftar_akun')
                 .insert([dataInput]);
 
             if (error) {
-                console.error("Detail Error:", error);
                 alert("ADUH GAGAL! Error: " + error.message);
-                st.innerText = "Status: Gagal!";
+                msg.innerText = "KONEKSI GAGAL!";
                 btn.disabled = false;
+                btn.innerText = "COBA LAGI";
             } else {
                 alert("MANTAP! Data berhasil masuk ke Supabase.");
-                st.innerText = "Status: Berhasil Terkirim!";
-                // Reset Form
-                document.getElementById('nama').value = "";
-                document.getElementById('wa').value = "";
-                document.getElementById('alamat').value = "";
-                document.getElementById('password').value = "";
-                btn.disabled = false;
+                msg.innerText = "DATA TERSIMPAN! ✓";
+                btn.innerText = "BERHASIL";
+                form.reset();
+                setTimeout(() => {
+                    btn.disabled = false;
+                    btn.innerText = "KIRIM KE DATABASE";
+                    msg.innerText = "READY_TO_CONNECT";
+                }, 3000);
             }
-        }
+        });
     </script>
 </body>
 </html>
