@@ -3,122 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | PENDAFTARAN AKUN</title>
+    <title>GIBRAN HUB | FULL SYSTEM SYNC</title>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
-    
     <style>
-        :root { --neon-gold: #ffca28; --bg-dark: #05070a; }
-        body { background: var(--bg-dark); color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .container { background: #161b22; border: 2px solid var(--neon-gold); padding: 40px; border-radius: 20px; width: 100%; max-width: 380px; box-shadow: 0 0 30px rgba(255, 202, 40, 0.1); text-align: center; }
-        h2 { color: var(--neon-gold); margin-bottom: 25px; letter-spacing: 2px; text-transform: uppercase; }
+        :root { --neon: #ffca28; --bg: #05070a; }
+        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: #161b22; border: 2px solid var(--neon); padding: 30px; border-radius: 15px; width: 360px; box-shadow: 0 0 20px rgba(255, 202, 40, 0.2); }
+        .tabs { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 1px solid #333; }
+        .tab { padding: 10px; cursor: pointer; color: #888; font-weight: bold; }
+        .tab.active { color: var(--neon); border-bottom: 2px solid var(--neon); }
+        .form-content { display: none; }
+        .form-content.active { display: block; }
+        input { width: 100%; margin-bottom: 12px; padding: 12px; background: #000; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; outline: none; }
+        input:focus { border-color: var(--neon); }
+        button { width: 100%; padding: 15px; background: var(--neon); color: black; border: none; font-weight: bold; cursor: pointer; border-radius: 8px; margin-top: 10px; }
         
-        .input-box { margin-bottom: 15px; text-align: left; }
-        label { font-size: 11px; color: var(--neon-gold); margin-left: 5px; text-transform: uppercase; }
-        input { width: 100%; padding: 12px; margin-top: 5px; background: #000; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; outline: none; }
-        input:focus { border-color: var(--neon-gold); }
-        
-        .pass-container { position: relative; }
-        .show-btn { position: absolute; right: 10px; top: 15px; background: none; border: none; color: var(--neon-gold); cursor: pointer; font-size: 10px; font-weight: bold; }
-
-        button#btn-submit { width: 100%; padding: 16px; background: var(--neon-gold); color: black; border: none; font-weight: bold; cursor: pointer; border-radius: 8px; margin-top: 20px; font-size: 14px; transition: 0.3s; }
-        button#btn-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 202, 40, 0.3); }
-        #status-msg { font-size: 10px; margin-top: 20px; color: #888; font-family: monospace; }
+        /* Loader Animation */
+        #loader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5,7,10,0.9); z-index: 100; flex-direction: column; justify-content: center; align-items: center; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #222; border-top: 4px solid var(--neon); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .load-text { color: var(--neon); margin-top: 15px; font-family: monospace; font-size: 12px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>DAFTAR AKUN</h2>
-    
-    <div class="input-box">
-        <label>Nama Lengkap</label>
-        <input type="text" id="nama" placeholder="Contoh: Gibran">
+<div id="loader">
+    <div class="spinner"></div>
+    <div class="load-text" id="status-load">SYNCHRONIZING...</div>
+</div>
+
+<div class="card">
+    <div class="tabs">
+        <div class="tab active" id="tab-daftar" onclick="switchTab('daftar')">DAFTAR</div>
+        <div class="tab" id="tab-login" onclick="switchTab('login')">LOGIN</div>
     </div>
 
-    <div class="input-box">
-        <label>Nomor WhatsApp</label>
-        <input type="text" id="wa" placeholder="628123456xxx">
+    <div id="form-daftar" class="form-content active">
+        <input type="text" id="reg-nama" placeholder="Nama Lengkap">
+        <input type="text" id="reg-wa" placeholder="Nomor WA">
+        <input type="text" id="reg-alamat" placeholder="Alamat">
+        <input type="password" id="reg-pass" placeholder="Password">
+        <button onclick="prosesDaftar()">SUBMIT PENDAFTARAN</button>
     </div>
 
-    <div class="input-box">
-        <label>Alamat</label>
-        <input type="text" id="alamat" placeholder="Alamat Domisili">
+    <div id="form-login" class="form-content">
+        <input type="text" id="log-nama" placeholder="Masukkan Nama">
+        <input type="text" id="log-wa" placeholder="Masukkan Nomor WA">
+        <button onclick="prosesLogin()">VERIFIKASI LOGIN</button>
     </div>
-
-    <div class="input-box">
-        <label>Password</label>
-        <div class="pass-container">
-            <input type="password" id="password" placeholder="******">
-            <button type="button" class="show-btn" onclick="toggleView()">SHOW</button>
-        </div>
-    </div>
-
-    <button id="btn-submit" onclick="simpanKeCloud()">SIMPAN DATA AKUN</button>
-    
-    <p id="status-msg">READY_TO_CONNECT</p>
 </div>
 
 <script>
-    // CONFIG FIREBASE KHUSUS DAFTAR AKUN LO
-    const firebaseConfig = {
+    // CONFIG 1: PENDAFTARAN (daftar-akun-2f94c)
+    const configDaftar = {
         apiKey: "AIzaSyB4ZKcy0TGDQ_i5LGXIsFH9pSSXGfifzqg",
         authDomain: "daftar-akun-2f94c.firebaseapp.com",
         databaseURL: "https://daftar-akun-2f94c-default-rtdb.firebaseio.com",
         projectId: "daftar-akun-2f94c",
-        storageBucket: "daftar-akun-2f94c.firebasestorage.app",
-        messagingSenderId: "225880747346",
         appId: "1:225880747346:web:e6565efca909fb2f4c1e8b"
     };
 
-    // Inisialisasi
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
+    // CONFIG 2: LOGIN (login-1f788)
+    const configLogin = {
+        apiKey: "AIzaSyC_89eDNhdOojD_w8cCYADrF6Sj5R64mro",
+        authDomain: "login-1f788.firebaseapp.com",
+        databaseURL: "https://login-1f788-default-rtdb.firebaseio.com",
+        projectId: "login-1f788",
+        appId: "1:180921561129:web:6e4d60a74a871691346c38"
+    };
 
-    function toggleView() {
-        const p = document.getElementById('password');
-        p.type = p.type === "password" ? "text" : "password";
+    // Inisialisasi Dua App Firebase Sekaligus
+    const appDaftar = firebase.initializeApp(configDaftar, "appDaftar");
+    const appLogin = firebase.initializeApp(configLogin, "appLogin");
+
+    const dbDaftar = firebase.database(appDaftar);
+    const dbLogin = firebase.database(appLogin);
+
+    function switchTab(t) {
+        document.querySelectorAll('.form-content').forEach(f => f.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        document.getElementById('form-' + t).classList.add('active');
+        document.getElementById('tab-' + t).classList.add('active');
     }
 
-    function simpanKeCloud() {
-        const btn = document.getElementById('btn-submit');
-        const st = document.getElementById('status-msg');
-        
+    async function prosesDaftar() {
         const payload = {
-            nama: document.getElementById('nama').value,
-            wa: document.getElementById('wa').value,
-            alamat: document.getElementById('alamat').value,
-            password: document.getElementById('password').value,
-            timestamp: new Date().getTime() // Waktu pendaftaran unik
+            nama: document.getElementById('reg-nama').value,
+            wa: document.getElementById('reg-wa').value,
+            alamat: document.getElementById('reg-alamat').value,
+            password: document.getElementById('reg-pass').value,
+            timestamp: Date.now()
         };
 
-        // Validasi simpel
-        if(!payload.nama || !payload.wa || !payload.password) {
-            alert("Harap isi Nama, WA, dan Password!");
-            return;
-        }
+        if(!payload.nama || !payload.wa) return alert("Isi data lengkap!");
+        
+        toggleLoader(true, "MENGIRIM KE DATABASE DAFTAR...");
+        try {
+            await dbDaftar.ref('users/' + payload.wa).set(payload);
+            toggleLoader(false);
+            alert("DAFTAR BERHASIL! Silakan pindah ke tab Login.");
+        } catch (e) { alert(e.message); toggleLoader(false); }
+    }
 
-        btn.disabled = true;
-        btn.innerText = "SEDANG MENYIMPAN...";
-        st.innerText = "UPLOADING_TO_REALTIME_DATABASE...";
+    async function prosesLogin() {
+        const nama = document.getElementById('log-nama').value;
+        const wa = document.getElementById('log_wa').value;
+        
+        if(!nama || !wa) return alert("Isi data login!");
 
-        // Simpan ke folder 'users' menggunakan nomor WA sebagai kunci
-        database.ref('users/' + payload.wa).set(payload)
-        .then(() => {
-            alert("MANTAP! Akun Berhasil Terdaftar.");
-            st.innerText = "SYNC_SUCCESS_✓";
-            btn.disabled = false;
-            btn.innerText = "SIMPAN DATA AKUN";
-            // Kosongkan form setelah sukses
-            document.querySelectorAll('input').forEach(i => i.value = '');
-        })
-        .catch((err) => {
-            alert("GAGAL: " + err.message);
-            st.innerText = "CONNECTION_FAILED";
-            btn.disabled = false;
-        });
+        toggleLoader(true, "VERIFIKASI DATA LOGIN...");
+        try {
+            // Simpan log login ke database login-1f788 sesuai permintaan
+            const logData = { nama: nama, wa: wa, waktu: new Date().toLocaleString() };
+            await dbLogin.ref('login_logs/' + wa).set(logData);
+            
+            setTimeout(() => {
+                toggleLoader(false);
+                alert("LOGIN BERHASIL! Selamat Datang " + nama);
+            }, 1500);
+        } catch (e) { alert(e.message); toggleLoader(false); }
+    }
+
+    function toggleLoader(show, text) {
+        const l = document.getElementById('loader');
+        const t = document.getElementById('status-load');
+        l.style.display = show ? 'flex' : 'none';
+        if(text) t.innerText = text;
     }
 </script>
-
 </body>
 </html>
