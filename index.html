@@ -2,108 +2,51 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | FIREBASE SYSTEM</title>
-    
+    <title>GIBRAN HUB | REGISTER</title>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
-    
     <style>
-        :root { --firebase-orange: #ffca28; --bg: #0d1117; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .card { background: #161b22; border: 1px solid var(--firebase-orange); padding: 30px; border-radius: 15px; width: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
-        h2 { color: var(--firebase-orange); margin-bottom: 20px; font-size: 1.2rem; letter-spacing: 2px; }
-        input { width: 100%; margin-bottom: 15px; padding: 12px; background: #000; border: 1px solid #333; color: white; border-radius: 8px; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--firebase-orange); }
-        .pass-group { position: relative; }
-        .show-btn { position: absolute; right: 10px; top: 12px; background: none; border: none; color: var(--firebase-orange); cursor: pointer; font-size: 10px; font-weight: bold; }
-        button#submit { width: 100%; padding: 15px; background: var(--firebase-orange); color: black; border: none; font-weight: bold; cursor: pointer; border-radius: 8px; transition: 0.3s; margin-top: 10px; }
-        button#submit:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 202, 40, 0.3); }
-        button#submit:disabled { background: #555; cursor: not-allowed; }
-        #status { font-size: 11px; margin-top: 15px; color: #888; }
+        body { background: #0d1117; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: #161b22; border: 1px solid #ffca28; padding: 30px; border-radius: 15px; width: 320px; text-align: center; }
+        input { width: 100%; margin-bottom: 15px; padding: 12px; background: #000; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #ffca28; color: black; border: none; font-weight: bold; cursor: pointer; border-radius: 8px; }
+        a { color: #ffca28; text-decoration: none; font-size: 12px; display: block; margin-top: 15px; }
     </style>
 </head>
 <body>
-
     <div class="card">
-        <h2>FIREBASE_DATABASE</h2>
-        <form id="reg-form">
-            <input type="text" id="nama" placeholder="Nama Lengkap" required>
-            <input type="text" id="wa" placeholder="Nomor WhatsApp (628...)" required>
-            <input type="text" id="alamat" placeholder="Alamat Domisili" required>
-            <div class="pass-group">
-                <input type="password" id="password" placeholder="Password Akun" required>
-                <button type="button" class="show-btn" onclick="togglePass()" id="eye">SHOW</button>
-            </div>
-            <button type="submit" id="submit">SIMPAN KE FIREBASE</button>
-        </form>
-        <p id="status">STATUS: READY_TO_SYNC</p>
+        <h2 style="color: #ffca28;">DAFTAR AKUN</h2>
+        <input type="text" id="nama" placeholder="Nama Lengkap">
+        <input type="text" id="wa" placeholder="Nomor WA (628...)">
+        <button onclick="daftar()">DAFTAR SEKARANG</button>
+        <a href="login.html">Sudah punya akun? Login</a>
     </div>
 
     <script>
-        // KONFIGURASI FIREBASE LO (Sudah Gue Pasangin!)
         const firebaseConfig = {
-            apiKey: "AIzaSyB4ZKcy0TGDQ_i5LGXIsFH9pSSXGfifzqg",
-            authDomain: "daftar-akun-2f94c.firebaseapp.com",
-            databaseURL: "https://daftar-akun-2f94c-default-rtdb.firebaseio.com",
-            projectId: "daftar-akun-2f94c",
-            storageBucket: "daftar-akun-2f94c.firebasestorage.app",
-            messagingSenderId: "225880747346",
-            appId: "1:225880747346:web:e6565efca909fb2f4c1e8b",
-            measurementId: "G-QMRY1MMER9"
+            apiKey: "AIzaSyC_89eDNhdOojD_w8cCYADrF6Sj5R64mro",
+            authDomain: "login-1f788.firebaseapp.com",
+            databaseURL: "https://login-1f788-default-rtdb.firebaseio.com",
+            projectId: "login-1f788",
+            storageBucket: "login-1f788.firebasestorage.app",
+            appId: "1:180921561129:web:6e4d60a74a871691346c38"
         };
-
-        // Inisialisasi Firebase
         firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        const db = firebase.database();
 
-        // Fungsi Show/Hide Password
-        function togglePass() {
-            const p = document.getElementById('password');
-            const e = document.getElementById('eye');
-            if (p.type === "password") {
-                p.type = "text"; e.innerText = "HIDE";
-            } else {
-                p.type = "password"; e.innerText = "SHOW";
-            }
-        }
+        function daftar() {
+            const nama = document.getElementById('nama').value;
+            const wa = document.getElementById('wa').value;
+            const waktu = new Date().toLocaleString();
 
-        // Proses Simpan Data
-        const form = document.getElementById('reg-form');
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('submit');
-            const st = document.getElementById('status');
+            if(!nama || !wa) return alert("Isi semua data!");
 
-            btn.disabled = true;
-            btn.innerText = "MENGIRIM...";
-            st.innerText = "Menghubungkan ke Realtime Database...";
-
-            const user_data = {
-                nama: document.getElementById('nama').value,
-                wa: document.getElementById('wa').value,
-                alamat: document.getElementById('alamat').value,
-                password: document.getElementById('password').value,
-                tanggal: new Date().toLocaleString()
-            };
-
-            // Simpan ke folder 'pendaftaran'
-            database.ref('pendaftaran/').push(user_data)
+            db.ref('users/' + wa).set({ nama, wa, waktu })
             .then(() => {
-                alert("MANTAP! Data berhasil masuk ke Firebase.");
-                st.innerText = "DATA_SYNC_SUCCESS ✓";
-                btn.disabled = false;
-                btn.innerText = "SIMPAN KE FIREBASE";
-                form.reset();
-            })
-            .catch((err) => {
-                alert("GAGAL: " + err.message);
-                st.innerText = "ERROR_CONNECTION";
-                btn.disabled = false;
-                btn.innerText = "COBA LAGI";
+                alert("Pendaftaran Berhasil!");
+                window.location.href = "login.html";
             });
-        });
+        }
     </script>
 </body>
 </html>
