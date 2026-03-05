@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB v16.0 | CLEAN SYSTEM</title>
+    <title>GIBRAN HUB v18.0 | ULTIMATE DASHBOARD</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
@@ -11,109 +11,137 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        :root { --neon: #00d2ff; --neon-green: #00ff88; --neon-red: #ff4444; --bg: #05070a; --card-bg: rgba(255, 255, 255, 0.05); }
+        :root { 
+            --neon-red: #ff0055; 
+            --neon-purple: #7000ff; 
+            --neon-green: #00ff88; 
+            --bg: #050505; 
+            --card-bg: rgba(20, 20, 20, 0.8);
+        }
+        
         body, html { margin: 0; padding: 0; background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; height: 100vh; overflow: hidden; }
+        
+        /* Layout */
         .wrapper { display: flex; height: 100vh; }
-        nav { width: 220px; background: rgba(0,0,0,0.95); border-right: 2px solid var(--neon); padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-        .logo { font-family: 'Orbitron'; color: var(--neon); font-size: 1.1rem; margin-bottom: 25px; text-shadow: 0 0 10px var(--neon); }
-        .nav-btn { background: transparent; border: 1px solid rgba(0,210,255,0.2); color: var(--neon); padding: 12px; font-family: 'Orbitron'; font-size: 9px; cursor: pointer; border-radius: 4px; transition: 0.3s; text-align: left; outline: none; }
-        .nav-btn.active { background: var(--neon); color: black; box-shadow: 0 0 15px var(--neon); font-weight: bold; }
-        main { flex: 1; overflow-y: auto; padding: 20px; background: radial-gradient(circle at top, #0a111a 0%, #05070a 100%); padding-bottom: 80px; }
-        .section { display: none; animation: fadeIn 0.4s ease; }
+        nav { width: 240px; background: rgba(0,0,0,0.9); border-right: 2px solid var(--neon-purple); padding: 25px; display: flex; flex-direction: column; gap: 12px; }
+        .logo { font-family: 'Orbitron'; color: var(--neon-red); font-size: 1.2rem; margin-bottom: 30px; text-shadow: 0 0 10px var(--neon-red); text-align: center; }
+        
+        .nav-btn { background: transparent; border: 1px solid rgba(112, 0, 255, 0.3); color: var(--neon-purple); padding: 12px; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; border-radius: 8px; transition: 0.3s; text-align: left; }
+        .nav-btn.active { background: var(--neon-purple); color: white; box-shadow: 0 0 15px var(--neon-purple); }
+        .nav-btn:hover { border-color: var(--neon-red); color: var(--neon-red); }
+
+        main { flex: 1; overflow-y: auto; padding: 25px; background: radial-gradient(circle at top right, #100a1a, #050505); padding-bottom: 100px; }
+        .section { display: none; animation: slideUp 0.4s ease; }
         .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* Grafik Area */
-        .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .chart-card { background: rgba(0,0,0,0.4); border: 1px solid rgba(0,210,255,0.2); border-radius: 12px; padding: 10px; position: relative; }
-        .chart-label { font-family: 'Orbitron'; font-size: 8px; color: var(--neon); text-align: center; }
-        .chart-val { position: absolute; top: 10px; right: 15px; font-family: 'Orbitron'; color: var(--neon-green); font-size: 14px; }
-        
-        /* Cards */
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; }
-        .card { background: var(--card-bg); border: 1px solid rgba(0, 210, 255, 0.15); padding: 15px; border-radius: 12px; backdrop-filter: blur(10px); }
-        .card-h { font-family: 'Orbitron'; color: var(--neon); font-size: 0.7rem; margin-bottom: 12px; border-left: 3px solid var(--neon); padding-left: 8px; text-transform: uppercase; }
-        
-        label { display: block; font-size: 9px; color: var(--neon); font-family: 'Orbitron'; margin-top: 8px; }
-        input, select, textarea { width: 100%; padding: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,210,255,0.3); color: white; border-radius: 5px; font-size: 13px; outline: none; box-sizing: border-box; }
-        .btn-action { background: var(--neon); color: black; border: none; padding: 12px; font-family: 'Orbitron'; font-size: 9px; cursor: pointer; width: 100%; font-weight: bold; border-radius: 5px; margin-top: 15px; }
-        
-        /* Calc Visuals */
-        .calc-display { background: #000; padding: 20px; text-align: right; border: 1px solid var(--neon); color: var(--neon-green); font-family: 'Orbitron'; font-size: 1.8rem; margin-bottom: 10px; border-radius: 5px; overflow-x: auto; }
-        img.prev { width: 100%; height: 120px; object-fit: cover; border-radius: 5px; border: 1px solid var(--neon); margin-top: 8px; display: none; }
-        #loader { position: fixed; width: 100%; height: 100%; background: #000; z-index: 9999; display: none; flex-direction: column; justify-content: center; align-items: center; color: var(--neon); font-family: 'Orbitron'; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Components */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 25px; }
+        .card { background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 20px; backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .card-h { font-family: 'Orbitron'; font-size: 11px; color: var(--neon-red); margin-bottom: 15px; letter-spacing: 2px; border-bottom: 1px solid rgba(255,0,85,0.2); padding-bottom: 8px; }
+
+        /* Form Elements */
+        label { display: block; font-size: 10px; color: var(--neon-purple); font-family: 'Orbitron'; margin: 10px 0 5px; }
+        input, select, textarea { width: 100%; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(112, 0, 255, 0.2); color: white; border-radius: 8px; font-size: 13px; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--neon-red); background: rgba(255,0,85,0.05); }
+        .btn-action { width: 100%; padding: 15px; border: none; border-radius: 8px; font-family: 'Orbitron'; font-size: 11px; font-weight: bold; cursor: pointer; margin-top: 20px; transition: 0.3s; color: white; }
+
+        /* Table Style */
+        .table-wrap { overflow-x: auto; margin-top: 15px; max-height: 350px; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        th { text-align: left; padding: 12px; border-bottom: 2px solid var(--neon-purple); color: var(--neon-purple); font-family: 'Orbitron'; font-size: 9px; }
+        td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        tr:hover { background: rgba(255,255,255,0.02); }
+
+        .calc-display { background: #000; padding: 20px; text-align: right; border: 1px solid var(--neon-purple); color: var(--neon-green); font-family: 'Orbitron'; font-size: 1.8rem; border-radius: 10px; margin-bottom: 10px; box-shadow: inset 0 0 15px rgba(0,255,136,0.1); }
+        #loader { position: fixed; inset: 0; background: #000; z-index: 10000; display: none; flex-direction: column; justify-content: center; align-items: center; color: var(--neon-red); font-family: 'Orbitron'; }
     </style>
 </head>
 <body>
 
-<div id="loader"><h2>UPLOADING_SYSTEM...</h2></div>
+<div id="loader"><h2>LINKING_SYSTEM...</h2></div>
 
 <div class="wrapper">
     <nav>
         <div class="logo">GIBRAN_HUB</div>
-        <button class="nav-btn active" onclick="show('main-view', this)">● MONITOR & DATA</button>
+        <button class="nav-btn active" onclick="show('mon-view', this)">● MONITOR CORE</button>
         <button class="nav-btn" onclick="show('notes-view', this)">● NOTES & CALC</button>
-        <button class="nav-btn" style="margin-top:auto; color:var(--neon-red);" onclick="logout()">● LOGOUT</button>
+        <button class="nav-btn" onclick="show('gudang-view', this)">● GUDANG BARANG</button>
+        <button class="nav-btn" style="margin-top:auto; color:var(--neon-red);" onclick="logout()">● DISCONNECT</button>
     </nav>
 
     <main>
-        <div id="main-view" class="section active">
-            <div class="chart-row">
-                <div class="chart-card">
-                    <div class="chart-label">TOTAL SETORAN (0-1000)</div>
-                    <div class="chart-val" id="val-setoran">0</div>
-                    <canvas id="chartSetoran" height="80"></canvas>
+        <div id="mon-view" class="section active">
+            <div class="grid">
+                <div class="card">
+                    <div class="card-h">LIVE SETORAN CHART</div>
+                    <canvas id="chartSetoran" height="120"></canvas>
                 </div>
-                <div class="chart-card">
-                    <div class="chart-label">TOTAL LAPORAN (0-1000)</div>
-                    <div class="chart-val" id="val-laporan">0</div>
-                    <canvas id="chartLaporan" height="80"></canvas>
+                <div class="card">
+                    <div class="card-h">LIVE LAPORAN CHART</div>
+                    <canvas id="chartLaporan" height="120"></canvas>
                 </div>
             </div>
-
-            <div class="grid-container">
+            <div class="grid">
                 <div class="card">
-                    <div class="card-h">FORM SETORAN</div>
-                    <label>FOTO BUKTI</label><input type="file" id="setor-foto" accept="image/*" capture="camera" onchange="preview(this, 'p-setor')">
-                    <img id="p-setor" class="prev">
-                    <label>NAMA</label><input type="text" id="setor-nama">
-                    <label>TANGGAL</label><input type="date" id="setor-tgl">
-                    <label>PENERIMA</label><select id="setor-tujuan"><option>BU TATI</option><option>BU AMI</option></select>
-                    <label>PARAF / TTD</label><input type="text" id="setor-ttd">
-                    <button class="btn-action" onclick="kirimData('setoran', 'setor')">KIRIM SETORAN</button>
+                    <div class="card-h">INPUT SETORAN</div>
+                    <input type="file" id="s-foto" accept="image/*" capture="camera">
+                    <input type="text" id="s-nama" placeholder="Nama Operator">
+                    <button class="btn-action" style="background: var(--neon-red);" onclick="upData('setoran','s')">UPLOAD SETORAN</button>
                 </div>
-
                 <div class="card">
-                    <div class="card-h" style="color:var(--neon-green); border-color:var(--neon-green);">FORM LAPORAN</div>
-                    <label>FOTO BUKTI</label><input type="file" id="lap-foto" accept="image/*" capture="camera" onchange="preview(this, 'p-lap')">
-                    <img id="p-lap" class="prev">
-                    <label>NAMA</label><input type="text" id="lap-nama">
-                    <label>TANGGAL</label><input type="date" id="lap-tgl">
-                    <label>KEPADA</label><select id="lap-tujuan"><option>BU TATI</option><option>BU AMI</option></select>
-                    <label>PARAF / TTD</label><input type="text" id="lap-ttd">
-                    <button class="btn-action" style="background:var(--neon-green)" onclick="kirimData('laporan', 'lap')">KIRIM LAPORAN</button>
+                    <div class="card-h">INPUT LAPORAN</div>
+                    <input type="file" id="l-foto" accept="image/*" capture="camera">
+                    <input type="text" id="l-nama" placeholder="Nama Operator">
+                    <button class="btn-action" style="background: var(--neon-purple);" onclick="upData('laporan','l')">UPLOAD LAPORAN</button>
                 </div>
             </div>
         </div>
 
         <div id="notes-view" class="section">
-            <div class="grid-container">
+            <div class="grid">
                 <div class="card">
                     <div class="card-h">CLOUD NOTES PRO</div>
-                    <textarea id="catatan-cloud" rows="12" placeholder="Tulis catatan harian di sini..."></textarea>
-                    <div id="save-status" style="font-size: 9px; color: var(--neon-green); margin-top: 5px;">✓ Cloud Connected</div>
+                    <textarea id="note-cloud" rows="18" placeholder="Syncing notes..."></textarea>
                 </div>
                 <div class="card">
-                    <div class="card-h" style="color:var(--neon-red); border-color:var(--neon-red);">CALCULATOR</div>
-                    <div class="calc-display" id="calc-val">0</div>
+                    <div class="card-h">NEON CALCULATOR</div>
+                    <div class="calc-display" id="c-res">0</div>
                     <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
-                        <button class="nav-btn" onclick="calc('C')" style="color:var(--neon-red)">AC</button>
-                        <button class="nav-btn" onclick="calc('(')">(</button><button class="nav-btn" onclick="calc(')')">)</button><button class="nav-btn" onclick="calc('/')">/</button>
-                        <button class="nav-btn" onclick="calc('7')">7</button><button class="nav-btn" onclick="calc('8')">8</button><button class="nav-btn" onclick="calc('9')">9</button><button class="nav-btn" onclick="calc('*')">×</button>
-                        <button class="nav-btn" onclick="calc('4')">4</button><button class="nav-btn" onclick="calc('5')">5</button><button class="nav-btn" onclick="calc('6')">6</button><button class="nav-btn" onclick="calc('-')">-</button>
-                        <button class="nav-btn" onclick="calc('1')">1</button><button class="nav-btn" onclick="calc('2')">2</button><button class="nav-btn" onclick="calc('3')">3</button><button class="nav-btn" onclick="calc('+')">+</button>
-                        <button class="nav-btn" onclick="calc('0')" style="grid-column: span 2;">0</button><button class="nav-btn" onclick="calc('.')">.</button>
-                        <button class="nav-btn" onclick="calc('=')" style="background:var(--neon); color:black;">=</button>
+                        <button class="nav-btn" onclick="c('7')">7</button><button class="nav-btn" onclick="c('8')">8</button><button class="nav-btn" onclick="c('9')">9</button><button class="nav-btn" onclick="c('/')">/</button>
+                        <button class="nav-btn" onclick="c('4')">4</button><button class="nav-btn" onclick="c('5')">5</button><button class="nav-btn" onclick="c('6')">6</button><button class="nav-btn" onclick="c('*')">×</button>
+                        <button class="nav-btn" onclick="c('1')">1</button><button class="nav-btn" onclick="c('2')">2</button><button class="nav-btn" onclick="c('3')">3</button><button class="nav-btn" onclick="c('-')">-</button>
+                        <button class="nav-btn" onclick="c('CLR')" style="color:var(--neon-red)">C</button><button class="nav-btn" onclick="c('0')">0</button><button class="nav-btn" onclick="c('=')">=</button><button class="nav-btn" onclick="c('+')">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="gudang-view" class="section">
+            <div class="grid">
+                <div class="card">
+                    <div class="card-h">REGISTRASI BARANG</div>
+                    <input type="text" id="g-nm" placeholder="Nama Barang">
+                    <input type="text" id="g-tp" placeholder="Tipe Barang">
+                    <input type="text" id="g-uk" placeholder="Ukuran (S/M/L/XL)">
+                    <input type="text" id="g-pr" placeholder="Merk Produk">
+                    <div style="display:flex; gap:10px;">
+                        <div style="flex:1"><label>TGL MASUK</label><input type="date" id="g-tm"></div>
+                        <div style="flex:1"><label>TGL KELUAR</label><input type="date" id="g-tk"></div>
+                    </div>
+                    <input type="number" id="g-st" placeholder="Jumlah Stok">
+                    <button class="btn-action" style="background: linear-gradient(90deg, var(--neon-red), var(--neon-purple));" onclick="saveGudang()">SYNC TO GUDANG</button>
+                </div>
+                <div class="card" style="grid-column: span 2;">
+                    <div class="card-h">INVENTORY LIST & SEARCH</div>
+                    <input type="text" id="g-search" placeholder="Cari berdasarkan nama..." onkeyup="search()">
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr><th>ITEM</th><th>TYPE</th><th>SIZE</th><th>BRAND</th><th>IN</th><th>OUT</th><th>STOCK</th></tr>
+                            </thead>
+                            <tbody id="g-table"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -121,88 +149,103 @@
     </main>
 </div>
 
+
+
 <script>
-    // --- DUAL FIREBASE CONFIG ---
-    // 1. Database Setoran & Laporan
-    const configData = {
-        apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs",
-        authDomain: "tempat-masuk-nya-data.firebaseapp.com",
-        databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com",
-        projectId: "tempat-masuk-nya-data"
-    };
-    // 2. Database Notes & Kalkulator
-    const configCalc = {
-        apiKey: "AIzaSyA0vYShOztLSReidRzDnjUHPqNEtIMb5L0",
-        authDomain: "catatankakulator.firebaseapp.com",
-        databaseURL: "https://catatankakulator-default-rtdb.firebaseio.com",
-        projectId: "catatankakulator"
+    // --- FIREBASE CONFIG (TRIPLE CONNECTION) ---
+    const confS = { databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com" };
+    const confN = { databaseURL: "https://catatankakulator-default-rtdb.firebaseio.com" };
+    const confG = {
+        apiKey: "AIzaSyDLlsp7eBXRtWXDdnww8TcBrD7iFyfVj-k",
+        authDomain: "gudang-barang-893cd.firebaseapp.com",
+        databaseURL: "https://gudang-barang-893cd-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "gudang-barang-893cd"
     };
 
-    firebase.initializeApp(configData, "appData");
-    firebase.initializeApp(configCalc, "appCalc");
-    const dbData = firebase.database(firebase.app("appData"));
-    const dbCalc = firebase.database(firebase.app("appCalc"));
+    firebase.initializeApp(confS, "appS");
+    firebase.initializeApp(confN, "appN");
+    firebase.initializeApp(confG, "appG");
 
-    // --- CHART LOGIC (MERAYAP KE 1000) ---
-    function initChart(id, color) {
-        return new Chart(document.getElementById(id), {
-            type: 'line',
-            data: { labels: Array(10).fill(''), datasets: [{ data: [0], borderColor: color, fill: true, backgroundColor: color+'11', tension: 0.4, borderWidth: 2, pointRadius: 0 }]},
-            options: { responsive: true, scales: { y: { display: false, max: 1000 }, x: { display: false } }, plugins: { legend: { display: false } } }
-        });
-    }
-    const cSetoran = initChart('chartSetoran', '#00ff88');
-    const cLaporan = initChart('chartLaporan', '#00d2ff');
+    const dbS = firebase.database(firebase.app("appS"));
+    const dbN = firebase.database(firebase.app("appN"));
+    const dbG = firebase.database(firebase.app("appG"));
 
-    function animateChart(chart, valId, target) {
-        let cur = 0; const limit = target > 1000 ? 1000 : target;
-        const step = () => { if(cur < limit) { cur += 5; document.getElementById(valId).innerText = cur; chart.data.datasets[0].data.push(cur); if(chart.data.datasets[0].data.length > 15) chart.data.datasets[0].data.shift(); chart.update(); requestAnimationFrame(step); } };
-        step();
-    }
-    dbData.ref('setoran').on('value', s => animateChart(cSetoran, 'val-setoran', s.numChildren()));
-    dbData.ref('laporan').on('value', s => animateChart(cLaporan, 'val-laporan', s.numChildren()));
+    // --- CHART DASHBOARD ---
+    const initC = (id, label, color) => new Chart(document.getElementById(id), {
+        type: 'line',
+        data: { labels: ['','','','',''], datasets: [{ label, data: [0,0,0,0,0], borderColor: color, tension: 0.4, fill: true, backgroundColor: color+'11' }]},
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+    });
+    const cS = initC('chartSetoran', 'SETORAN', '#ff0055');
+    const cL = initC('chartLaporan', 'LAPORAN', '#7000ff');
 
-    // --- UPLOAD DATA (dbData) ---
-    async function kirimData(folder, prefix) {
-        const file = document.getElementById(prefix + '-foto').files[0];
-        const payload = { nama: val(prefix + '-nama'), tanggal: val(prefix + '-tgl'), tujuan: val(prefix + '-tujuan'), ttd: val(prefix + '-ttd'), waktu: new Date().toLocaleString() };
-        if(!payload.nama || !file) return alert("PENGISIAN BELUM LENGKAP!");
-        document.getElementById('loader').style.display = 'flex';
+    dbS.ref('setoran').on('value', s => { cS.data.datasets[0].data.push(s.numChildren()); cS.data.datasets[0].data.shift(); cS.update(); });
+    dbS.ref('laporan').on('value', s => { cL.data.datasets[0].data.push(s.numChildren()); cL.data.datasets[0].data.shift(); cL.update(); });
+
+    // --- UPLOAD DATA (SETORAN/LAPORAN) ---
+    async function upData(path, pre) {
+        const file = document.getElementById(pre+'-foto').files[0];
+        const nama = document.getElementById(pre+'-nama').value;
+        if(!file || !nama) return alert("DATA TIDAK LENGKAP!");
+        document.getElementById('loader').style.display='flex';
         const reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onload = async function() {
-            payload.gambar = reader.result;
-            await dbData.ref(folder + '/').push(payload);
-            alert("DATA TERKIRIM!");
+        reader.onload = async () => {
+            await dbS.ref(path+'/').push({ nama, img: reader.result, time: new Date().toLocaleString() });
+            alert("SUCCESS UPLOAD!");
             location.reload();
+        }
+    }
+
+    // --- GUDANG LOGIC ---
+    function saveGudang() {
+        const d = {
+            nm: val('g-nm'), tp: val('g-tp'), uk: val('g-uk'), pr: val('g-pr'),
+            tm: val('g-tm'), tk: val('g-tk'), st: val('g-st')
         };
+        if(!d.nm) return alert("ISI NAMA BARANG!");
+        dbG.ref('inventory/').push(d).then(() => { alert("SAVED!"); clearG(); });
     }
 
-    // --- NOTES (dbCalc) ---
-    let noteTimer;
-    const noteArea = document.getElementById('catatan-cloud');
-    dbCalc.ref('app_notes').on('value', s => { if(s.val() && !noteArea.matches(':focus')) noteArea.value = s.val().teks; });
-    noteArea.oninput = (e) => {
-        document.getElementById('save-status').innerText = "Saving...";
-        clearTimeout(noteTimer);
-        noteTimer = setTimeout(() => {
-            dbCalc.ref('app_notes').set({ teks: e.target.value }).then(() => { document.getElementById('save-status').innerText = "✓ Saved to Cloud"; });
-        }, 1000);
-    };
+    dbG.ref('inventory/').on('value', s => {
+        const t = document.getElementById('g-table'); t.innerHTML = "";
+        s.forEach(c => {
+            const v = c.val();
+            t.innerHTML += `<tr><td>${v.nm}</td><td>${v.tp}</td><td>${v.uk}</td><td>${v.pr}</td><td>${v.tm}</td><td>${v.tk}</td><td style="color:var(--neon-green)">${v.st}</td></tr>`;
+        });
+    });
 
-    // --- KALKULATOR ---
-    let curIn = "";
-    function calc(v) {
-        const d = document.getElementById('calc-val');
-        if(v==='C'){ curIn=""; d.innerText="0"; }
-        else if(v==='='){ try { let res = eval(curIn); d.innerText = Number.isInteger(res) ? res : res.toFixed(2); curIn = d.innerText; } catch { d.innerText="ERR"; curIn=""; } }
-        else { curIn += v; d.innerText = curIn; }
+    function search() {
+        let f = val('g-search').toUpperCase();
+        let r = document.getElementById('g-table').getElementsByTagName('tr');
+        for(let i=0; i<r.length; i++) {
+            let td = r[i].getElementsByTagName('td')[0];
+            if(td) r[i].style.display = (td.innerText.toUpperCase().indexOf(f) > -1) ? "" : "none";
+        }
     }
 
-    // --- HELPERS ---
+    // --- NOTES & CALC ---
+    const nArea = document.getElementById('note-cloud');
+    dbN.ref('notes').on('value', s => { if(s.val() && !nArea.matches(':focus')) nArea.value = s.val().txt; });
+    nArea.oninput = (e) => dbN.ref('notes').set({ txt: e.target.value });
+
+    let cur = "";
+    function c(v) {
+        const r = document.getElementById('c-res');
+        if(v==='CLR'){ cur=""; r.innerText="0"; }
+        else if(v==='='){ try{ r.innerText = eval(cur); cur = r.innerText; } catch { r.innerText="ERR"; } }
+        else { cur += v; r.innerText = cur; }
+    }
+
+    // --- UTILS ---
     function val(id) { return document.getElementById(id).value; }
-    function show(id, btn) { document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
-    function preview(input, imgId) { const [file] = input.files; if (file) { document.getElementById(imgId).src = URL.createObjectURL(file); document.getElementById(imgId).style.display = 'block'; } }
+    function clearG() { ['g-nm','g-tp','g-uk','g-pr','g-tm','g-tk','g-st'].forEach(i => document.getElementById(i).value = ""); }
+    function show(id, b) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.querySelectorAll('.nav-btn').forEach(n => n.classList.remove('active'));
+        b.classList.add('active');
+    }
     function logout() { localStorage.removeItem('gibran_user'); window.location.href = 'index.html'; }
 </script>
 </body>
