@@ -3,42 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB v26.1 | ULTIMATE DASHBOARD</title>
+    <title>GIBRAN HUB v26.2 | ULTIMATE SYSTEM</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 
     <style>
         :root { --red: #ff0055; --purple: #7000ff; --cyan: #00d4ff; --bg: #050505; --card: rgba(15, 15, 15, 0.95); }
         body, html { margin: 0; padding: 0; background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; height: 100vh; overflow: hidden; }
         
-        /* Layout */
         .wrapper { display: flex; height: 100vh; }
         nav { width: 260px; background: #000; border-right: 2px solid var(--cyan); padding: 25px; display: flex; flex-direction: column; gap: 10px; z-index: 10; }
-        main { flex: 1; overflow-y: auto; padding: 30px; background: radial-gradient(circle at top right, #0a111a, #050505); }
+        main { flex: 1; overflow-y: auto; padding: 30px; background: radial-gradient(circle at top right, #0a111a, #050505); padding-bottom: 100px; }
 
-        /* Sidebar Nav */
         .logo { font-family: 'Orbitron'; color: var(--cyan); font-size: 1.4rem; margin-bottom: 40px; text-shadow: 0 0 10px var(--cyan); text-align: center; }
-        .nav-btn { background: transparent; border: 1px solid rgba(0, 212, 255, 0.2); color: #888; padding: 14px; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; border-radius: 12px; text-align: left; transition: 0.3s; }
-        .nav-btn:hover, .nav-btn.active { background: var(--cyan); color: black; box-shadow: 0 0 20px var(--cyan); border-color: var(--cyan); }
+        .nav-btn { background: transparent; border: 1px solid rgba(0, 212, 255, 0.2); color: #888; padding: 14px; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; border-radius: 12px; text-align: left; transition: 0.3s; outline: none; }
+        .nav-btn.active, .nav-btn:hover { background: var(--cyan); color: black; box-shadow: 0 0 20px var(--cyan); border-color: var(--cyan); }
 
-        /* Components */
         .section { display: none; animation: fadeIn 0.4s ease; }
         .section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .card { background: var(--card); border: 1px solid rgba(0, 212, 255, 0.1); border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.7); }
-        .card-h { font-family: 'Orbitron'; font-size: 12px; color: var(--cyan); margin-bottom: 20px; border-bottom: 1px solid rgba(0,212,255,0.2); padding-bottom: 10px; }
+        .card { background: var(--card); border: 1px solid rgba(0, 212, 255, 0.1); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.7); }
+        .card-h { font-family: 'Orbitron'; font-size: 11px; color: var(--cyan); margin-bottom: 15px; border-bottom: 1px solid rgba(0,212,255,0.2); padding-bottom: 8px; letter-spacing: 1px; }
 
-        input, select, textarea { width: 100%; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 212, 255, 0.2); color: white; border-radius: 10px; margin-bottom: 15px; outline: none; }
-        .btn-main { width: 100%; padding: 15px; border: none; border-radius: 10px; font-family: 'Orbitron'; font-size: 11px; font-weight: bold; cursor: pointer; background: var(--cyan); color: black; transition: 0.3s; }
+        /* Flex Layout untuk Laporan & Setoran */
+        .flex-row { display: flex; gap: 20px; flex-wrap: wrap; }
+        .flex-col { flex: 1; min-width: 300px; }
+
+        label { display: block; font-size: 9px; color: var(--cyan); font-family: 'Orbitron'; margin-bottom: 5px; }
+        input, select, textarea { width: 100%; padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 212, 255, 0.2); color: white; border-radius: 8px; margin-bottom: 12px; outline: none; font-size: 13px; box-sizing: border-box; }
+        .btn-main { width: 100%; padding: 14px; border: none; border-radius: 8px; font-family: 'Orbitron'; font-size: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-laporan { background: var(--red); color: white; }
+        .btn-setoran { background: var(--cyan); color: black; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { text-align: left; color: var(--cyan); border-bottom: 2px solid var(--cyan); padding: 12px; font-family: 'Orbitron'; font-size: 10px; }
-        td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+        th { text-align: left; color: var(--cyan); border-bottom: 2px solid var(--cyan); padding: 10px; font-family: 'Orbitron'; font-size: 9px; }
+        td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+        /* Print Mode */
+        @media print {
+            nav, .btn-main, .action-area { display: none !important; }
+            main { background: white; color: black; }
+            .card { border: none; box-shadow: none; color: black; }
+        }
     </style>
 </head>
 <body>
@@ -47,83 +58,110 @@
     <nav>
         <div class="logo">GIBRAN_HUB</div>
         <button class="nav-btn active" onclick="show('mon-view', this)">MONITORING</button>
-        <button class="nav-btn" onclick="show('setoran-view', this)">INPUT SETORAN</button>
-        <button class="nav-btn" onclick="show('laporan-view', this)">INPUT LAPORAN</button>
+        <button class="nav-btn" onclick="show('input-view', this)">INPUT DATA</button>
         <button class="nav-btn" onclick="show('gudang-view', this)">GUDANG & STOK</button>
         <button class="nav-btn" onclick="show('notes-view', this)">CLOUD NOTES</button>
-        <button class="nav-btn" onclick="show('setting-view', this)">⚙️ PENGATURAN</button>
-        <button class="nav-btn" style="margin-top:auto; color:var(--red);" onclick="logout()">LOGOUT SYSTEM</button>
+        <button class="nav-btn" style="margin-top:auto; color:var(--red);" onclick="logout()">LOGOUT</button>
     </nav>
 
     <main>
         <div id="mon-view" class="section active">
             <div class="card">
-                <div class="card-h">LIVE STATUS OPERATOR</div>
-                <h2 id="user-display">---</h2>
-                <p style="color:#00ff88">System Status: Active & Secured</p>
+                <div class="card-h">OPERATOR STATUS</div>
+                <h2 id="user-display" style="color: var(--cyan);">---</h2>
+                <p style="color: #00ff88; font-size: 12px;">Security: Enabled</p>
             </div>
             <div class="card">
-                <div class="card-h">DATA MONITORING TERPADU</div>
-                <div id="data-list">Loading database...</div>
-            </div>
-        </div>
-
-        <div id="setoran-view" class="section">
-            <div class="card">
-                <div class="card-h">KHUSUS INPUT SETORAN</div>
-                <label>Jumlah Setoran</label><input type="number" id="s-jumlah">
-                <label>Tujuan</label><select id="s-tujuan"><option>Kasir Utama</option><option>Bank Central</option></select>
-                <button class="btn-main" onclick="simpanSetoran()">KIRIM SETORAN</button>
+                <div class="card-h">MONITORING DATA MASUK</div>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead><tr><th>TIPE</th><th>NAMA</th><th>TGL</th><th>TUJUAN</th><th>AKSI</th></tr></thead>
+                        <tbody id="tbody-monitor"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <div id="laporan-view" class="section">
-            <div class="card">
-                <div class="card-h">LAPORAN KEGIATAN UMUM</div>
-                <label>Judul Laporan</label><input type="text" id="l-judul">
-                <label>Isi Laporan</label><textarea id="l-isi" rows="5"></textarea>
-                <button class="btn-main" onclick="simpanLaporan()">SIMPAN LAPORAN</button>
+        <div id="input-view" class="section">
+            <div class="flex-row">
+                <div class="flex-col">
+                    <div class="card">
+                        <div class="card-h">KHUSUS INPUT LAPORAN</div>
+                        <label>Nama yang Lapor</label><input type="text" id="l-nama">
+                        <label>Tanggal Lapor</label><input type="date" id="l-tgl">
+                        <label>Bukti Laporan</label><input type="file" id="l-bukti">
+                        <label>Tanda Tangan</label><input type="text" id="l-ttd">
+                        <label>Kirim Ke Siapa?</label>
+                        <select id="l-tujuan"><option>BU TATI</option><option>BU AMI</option></select>
+                        <button class="btn-main btn-laporan" onclick="sendLaporan()">KIRIM LAPORAN</button>
+                    </div>
+                </div>
+                <div class="flex-col">
+                    <div class="card" style="border-color: var(--cyan);">
+                        <div class="card-h">KHUSUS INPUT SETORAN</div>
+                        <label>Nama yang Setor</label><input type="text" id="s-nama">
+                        <label>Tanggal Setor</label><input type="date" id="s-tgl">
+                        <label>Bukti Setor</label><input type="file" id="s-bukti">
+                        <label>Tanda Tangan</label><input type="text" id="s-ttd">
+                        <label>Setor Ke Siapa?</label>
+                        <select id="s-tujuan"><option>BU TATI</option><option>BU AMI</option></select>
+                        <button class="btn-main btn-setoran" onclick="sendSetoran()">KIRIM SETORAN</button>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div id="gudang-view" class="section">
             <div class="card">
                 <div class="card-h">INPUT STOK BARANG</div>
-                <input type="text" id="g-nama" placeholder="Nama Barang">
-                <input type="number" id="g-stok" placeholder="Jumlah">
-                <button class="btn-main" onclick="simpanGudang()">TAMBAH STOK</button>
+                <div class="flex-row">
+                    <div class="flex-col"><input type="text" id="g-nama" placeholder="Nama Barang"></div>
+                    <div class="flex-col"><input type="text" id="g-tipe" placeholder="Tipe"></div>
+                    <div class="flex-col"><input type="text" id="g-ukuran" placeholder="Ukuran"></div>
+                    <div class="flex-col"><input type="number" id="g-stok" placeholder="Stok"></div>
+                </div>
+                <button class="btn-main" style="background:var(--purple); color:white;" onclick="sendGudang()">SIMPAN GUDANG</button>
+            </div>
+            <div class="card">
+                <div class="card-h">DAFTAR STOK GUDANG</div>
+                <div style="overflow-x:auto;">
+                    <table id="table-gudang">
+                        <thead><tr><th>NAMA</th><th>TIPE</th><th>UKURAN</th><th>STOK</th><th>AKSI</th></tr></thead>
+                        <tbody id="tbody-gudang"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
         <div id="notes-view" class="section">
             <div class="card">
                 <div class="card-h">CLOUD NOTES (AUTO-SYNC)</div>
-                <textarea id="cloud-note" style="height: 350px; background: rgba(0,0,0,0.3);" placeholder="Ketik catatan di sini..."></textarea>
-            </div>
-        </div>
-
-        <div id="setting-view" class="section">
-            <div class="card">
-                <div class="card-h">PENGATURAN SISTEM</div>
-                <p>ID Database: <span id="db-id">Gudang-893cd</span></p>
-                <button class="btn-main" style="background:#444" onclick="location.reload()">REFRESH SYSTEM</button>
-                <p style="margin-top:20px; font-size:12px; color:gray;">Versi Dashboard: v26.1 (Stabil)</p>
+                <textarea id="cloud-note" style="height: 400px; background: rgba(0,0,0,0.5);" placeholder="Tulis catatan di sini..."></textarea>
             </div>
         </div>
     </main>
 </div>
 
 <script>
-    // --- FIREBASE CONFIG FIX (No Mismatched Braces) ---
-    const config = {
-        databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com"
-    };
-    firebase.initializeApp(config);
-    const db = firebase.database();
+    // --- FIREBASE CONFIGS ---
+    const confData = { databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com" };
+    const confGudang = { databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
+    const confNotes = { databaseURL: "https://catatankakulator-default-rtdb.firebaseio.com" };
+
+    const appData = firebase.initializeApp(confData, "DATA");
+    const appGudang = firebase.initializeApp(confGudang, "GUDANG");
+    const appNotes = firebase.initializeApp(confNotes, "NOTES");
+
+    const dbData = firebase.database(appData);
+    const dbGudang = firebase.database(appGudang);
+    const dbNotes = firebase.database(appNotes);
 
     // -- Session --
-    const user = localStorage.getItem('user_gibran') || "User";
-    document.getElementById('user-display').innerText = user;
+    window.onload = () => {
+        const u = localStorage.getItem('user_gibran');
+        if(!u) window.location.href='index.html';
+        document.getElementById('user-display').innerText = u;
+    };
 
     // -- Navigasi --
     function show(id, btn) {
@@ -133,17 +171,46 @@
         btn.classList.add('active');
     }
 
-    // -- CRUD Simpel --
-    function simpanSetoran() {
-        const val = document.getElementById('s-jumlah').value;
-        if(val) { db.ref('setoran').push({ user, jumlah: val, tgl: new Date().toLocaleString() }); alert("Setoran Terkirim!"); }
+    // -- Logic Laporan & Setoran --
+    function sendLaporan() {
+        const d = { tipe: "LAPORAN", nm: val('l-nama'), tgl: val('l-tgl'), ttd: val('l-ttd'), tujuan: val('l-tujuan') };
+        if(d.nm) dbData.ref('transaksi').push(d).then(() => alert("Laporan Terkirim!"));
     }
+    function sendSetoran() {
+        const d = { tipe: "SETORAN", nm: val('s-nama'), tgl: val('s-tgl'), ttd: val('s-ttd'), tujuan: val('s-tujuan') };
+        if(d.nm) dbData.ref('transaksi').push(d).then(() => alert("Setoran Terkirim!"));
+    }
+    dbData.ref('transaksi').on('value', s => {
+        const tb = document.getElementById('tbody-monitor'); tb.innerHTML = "";
+        s.forEach(c => {
+            const v = c.val();
+            tb.innerHTML += `<tr><td>${v.tipe}</td><td>${v.nm}</td><td>${v.tgl}</td><td>${v.tujuan}</td>
+            <td><button onclick="window.print()" style="padding:4px; font-size:9px; cursor:pointer;">PRINT</button></td></tr>`;
+        });
+    });
 
-    // -- Notes Sync --
+    // -- Logic Gudang --
+    function sendGudang() {
+        const d = { nm: val('g-nama'), tp: val('g-tipe'), uk: val('g-ukuran'), st: val('g-stok') };
+        if(d.nm) dbGudang.ref('stok').push(d).then(() => alert("Gudang Updated!"));
+    }
+    dbGudang.ref('stok').on('value', s => {
+        const tb = document.getElementById('tbody-gudang'); tb.innerHTML = "";
+        s.forEach(c => {
+            const v = c.val(); const k = c.key;
+            tb.innerHTML += `<tr><td>${v.nm}</td><td>${v.tp}</td><td>${v.uk}</td><td>${v.st}</td>
+            <td><button onclick="delG('${k}')" style="background:red; color:white; border:none; cursor:pointer;">HAPUS</button></td></tr>`;
+        });
+    });
+    function delG(k) { if(confirm("Hapus?")) dbGudang.ref('stok/'+k).remove(); }
+
+    // -- Logic Notes --
     const noteArea = document.getElementById('cloud-note');
-    db.ref('notes').on('value', s => { if(!noteArea.matches(':focus')) noteArea.value = s.val()?.text || ""; });
-    noteArea.oninput = (e) => db.ref('notes').set({ text: e.target.value });
+    dbNotes.ref('data').on('value', s => { if(!noteArea.matches(':focus')) noteArea.value = s.val()?.text || ""; });
+    noteArea.oninput = (e) => dbNotes.ref('data').set({ text: e.target.value });
 
+    // -- Utils --
+    function val(id) { return document.getElementById(id).value; }
     function logout() { localStorage.clear(); window.location.href='index.html'; }
 </script>
 </body>
