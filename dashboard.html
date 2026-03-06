@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB v26.7 | DIGITAL WALLET</title>
+    <title>GIBRAN HUB v26.9 | TOTAL SYSTEM</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root { --red: #ff0055; --purple: #7000ff; --cyan: #00d4ff; --gold: #ffcc00; --bg: #050505; --card: rgba(15, 15, 15, 0.98); }
@@ -26,24 +26,11 @@
         .card-h { font-family: 'Orbitron'; font-size: 11px; color: var(--cyan); margin-bottom: 15px; border-bottom: 1px solid rgba(0,212,255,0.2); padding-bottom: 8px; }
         input, select { width: 100%; padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 212, 255, 0.2); color: white; border-radius: 8px; margin-bottom: 10px; }
         .btn-main { width: 100%; padding: 12px; border: none; border-radius: 8px; font-family: 'Orbitron'; font-size: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 5px; }
-        
-        /* WALLET STYLE */
-        .wallet-card { background: linear-gradient(135deg, #1a1a1a, #004d40); border: 2px solid var(--cyan); border-radius: 20px; padding: 25px; position: relative; overflow: hidden; box-shadow: 0 0 20px rgba(0, 212, 255, 0.3); }
-        .wallet-balance { font-family: 'Orbitron'; font-size: 32px; color: var(--cyan); margin: 10px 0; text-shadow: 0 0 10px var(--cyan); }
-        .wallet-chip { width: 40px; height: 30px; background: var(--gold); border-radius: 5px; margin-bottom: 10px; }
-        
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        th { text-align: left; color: var(--cyan); border-bottom: 2px solid var(--cyan); padding: 10px; font-family: 'Orbitron'; font-size: 9px; }
-        td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .act-btn { padding: 5px 8px; border-radius: 5px; border: none; font-size: 8px; cursor: pointer; font-family: 'Orbitron'; margin-right: 5px; }
-
-        @media print {
-            nav, .btn-main, .act-btn, input, label, .card-h { display: none !important; }
-            body { background: white; color: black; }
-            .wrapper { display: block; }
-            .wallet-card { border: 2px solid black; color: black; background: white; }
-            table { color: black; border: 1px solid black; }
-        }
+        .flex-row { display: flex; gap: 15px; flex-wrap: wrap; }
+        .flex-col { flex: 1; min-width: 250px; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        th { text-align: left; color: var(--cyan); border-bottom: 2px solid var(--cyan); padding: 8px; font-family: 'Orbitron'; font-size: 9px; }
+        td { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
 <body>
@@ -61,134 +48,148 @@
 
     <main>
         <div id="mon-view" class="section active">
-            <div id="rekap-area" class="card"><div class="card-h">TOTAL REKAP</div><p id="total-info">Loading rekap...</p></div>
-            <div class="card"><div class="card-h">MONITORING TRANSAKSI</div><div style="overflow-x:auto;"><table><thead><tr><th>TIPE</th><th>NAMA</th><th>TGL</th><th>TUJUAN</th></tr></thead><tbody id="tbody-monitor"></tbody></table></div></div>
+            <div class="card">
+                <div class="card-h">TOTAL REKAP DATA (GRAFIK)</div>
+                <canvas id="rekapChart" style="max-height: 250px;"></canvas>
+            </div>
+            <div class="card">
+                <div class="card-h">MONITORING TRANSAKSI</div>
+                <div style="overflow-x:auto;"><table><thead><tr><th>TIPE</th><th>NAMA</th><th>TGL</th><th>TUJUAN</th></tr></thead><tbody id="tbody-monitor"></tbody></table></div>
+            </div>
         </div>
 
         <div id="input-view" class="section">
-            <div style="display: flex; gap:20px; margin-bottom:20px;">
-                <div class="card" style="flex:1;"><div class="card-h">INPUT LAPORAN</div><input type="text" id="l-nama" placeholder="Nama"><button class="btn-main" style="background:var(--red); color:white" onclick="sendLaporan()">KIRIM</button></div>
-                <div class="card" style="flex:1;"><div class="card-h">INPUT SETORAN</div><input type="text" id="s-nama" placeholder="Nama"><button class="btn-main" style="background:var(--cyan); color:black" onclick="sendSetoran()">KIRIM</button></div>
+            <div class="flex-row">
+                <div class="flex-col card"><div class="card-h">LAPORAN</div><input type="text" id="l-nama" placeholder="Nama"><input type="date" id="l-tgl"><button class="btn-main" style="background:var(--red); color:white" onclick="sendLaporan()">KIRIM</button></div>
+                <div class="flex-col card"><div class="card-h">SETORAN</div><input type="text" id="s-nama" placeholder="Nama"><input type="date" id="s-tgl"><button class="btn-main" style="background:var(--cyan); color:black" onclick="sendSetoran()">KIRIM</button></div>
             </div>
-
-            <div class="card">
+            <div class="card" style="border: 1px solid var(--gold);">
                 <div class="card-h">DOMPET DIGITAL - SISA SALDO</div>
-                <div class="wallet-card" id="wallet-display">
-                    <div class="wallet-chip"></div>
-                    <div style="font-size:10px; font-family:'Orbitron';">SISA SALDO ANDA</div>
-                    <div class="wallet-balance" id="saldo-akhir">Rp 0</div>
-                    <div style="font-size:12px; letter-spacing:2px;" id="wallet-user">**** **** **** 0000</div>
+                <h2 id="saldo-akhir" style="color:var(--gold); font-family:'Orbitron';">Rp 0</h2>
+                <div class="flex-row">
+                    <input type="number" id="w-masuk" placeholder="Pemasukan" class="flex-col">
+                    <input type="number" id="w-keluar" placeholder="Sisa Saldo" class="flex-col">
                 </div>
-                
-                <div style="margin-top:20px; display:flex; gap:10px;">
-                    <div style="flex:1;"><label style="font-size:10px;">Pemasukan Saldo</label><input type="number" id="w-masuk" placeholder="Rp 0"></div>
-                    <div style="flex:1;"><label style="font-size:10px;">Pengeluaran Saldo</label><input type="number" id="w-keluar" placeholder="Rp 0"></div>
-                </div>
-                <button class="btn-main" style="background:var(--gold); color:black;" onclick="updateWallet()">UPDATE SALDO & SIMPAN RIWAYAT</button>
+                <button class="btn-main" style="background:var(--gold); color:black" onclick="updateWallet()">SIMPAN SALDO</button>
+                <button class="btn-main" style="background:#00ff88; color:black; width:150px;" onclick="window.print()">🖨️ PRINT SALDO</button>
             </div>
+        </div>
 
+        <div id="gudang-view" class="section">
             <div class="card">
-                <div class="card-h">RIWAYAT DOMPET DIGITAL</div>
-                <button class="btn-main" style="background:#00ff88; color:black; width:150px; margin-bottom:15px;" onclick="window.print()">🖨️ PRINT LAPORAN</button>
+                <div class="card-h">GUDANG SYSTEM - INPUT BARANG</div>
+                <div class="flex-row">
+                    <input type="text" id="g-nama" placeholder="Nama Barang" class="flex-col">
+                    <input type="text" id="g-jenis" placeholder="Jenis Barang" class="flex-col">
+                    <input type="number" id="g-jumlah" placeholder="Jumlah Barang" class="flex-col">
+                    <input type="number" id="g-stok" placeholder="Stok Barang" class="flex-col">
+                </div>
+                <button class="btn-main" style="background:var(--purple); color:white" onclick="sendGudang()">SIMPAN GUDANG</button>
+            </div>
+            <div class="card">
+                <div class="card-h">DAFTAR STOK GUDANG</div>
                 <div style="overflow-x:auto;">
                     <table>
-                        <thead><tr><th>TANGGAL</th><th>MASUK</th><th>KELUAR</th><th>AKSI</th></tr></thead>
-                        <tbody id="tbody-wallet"></tbody>
+                        <thead><tr><th>NAMA</th><th>JENIS</th><th>JUMLAH</th><th>STOK</th><th>AKSI</th></tr></thead>
+                        <tbody id="tbody-gudang"></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <div id="gudang-view" class="section"> <div class="card"><div class="card-h">GUDANG SYSTEM</div><p>Aktif...</p></div> </div>
-        <div id="notes-view" class="section"> <div class="card"><div class="card-h">CLOUD NOTES</div><textarea id="cloud-note" style="height:200px"></textarea></div> </div>
-        <div id="setting-view" class="section"> <div class="card"><div class="card-h">PENGATURAN</div><p>Aktif...</p></div> </div>
+        <div id="notes-view" class="section">
+            <div class="card"><div class="card-h">CLOUD NOTES</div><textarea id="cloud-note" style="height:300px; width:100%; background:transparent; color:white; border:1px solid #333;"></textarea></div>
+        </div>
+
+        <div id="setting-view" class="section">
+            <div class="card">
+                <div class="card-h">PENGATURAN PROFIL</div>
+                <input type="text" id="p-nama" placeholder="Nama Admin">
+                <input type="text" id="p-wa" placeholder="Nomor WA">
+                <button class="btn-main" style="background:var(--cyan); color:black" onclick="saveProfile()">UPDATE PROFIL</button>
+            </div>
+        </div>
     </main>
 </div>
 
-
-
 <script>
-    // --- FIREBASE CONFIGS ---
+    // --- SEMUA CONFIG FIREBASE ---
     const confData = { databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com" };
+    const confGudang = { databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
     const confWallet = { databaseURL: "https://sisa-saldo-default-rtdb.firebaseio.com" };
 
     const appData = firebase.initializeApp(confData, "DATA");
+    const appGudang = firebase.initializeApp(confGudang, "GUDANG");
     const appWallet = firebase.initializeApp(confWallet, "WALLET");
 
     const dbData = firebase.database(appData);
+    const dbGudang = firebase.database(appGudang);
     const dbWallet = firebase.database(appWallet);
 
-    // --- FITUR DOMPET DIGITAL (WALLET) ---
-    function updateWallet() {
-        const masuk = parseInt(document.getElementById('w-masuk').value) || 0;
-        const keluar = parseInt(document.getElementById('w-keluar').value) || 0;
-        const tgl = new Date().toLocaleString();
-
-        if (masuk === 0 && keluar === 0) {
-            alert("Isi dulu pemasukan atau pengeluaran!");
-            return;
-        }
-
-        const data = { tgl, masuk, keluar };
-        dbWallet.ref('riwayat_saldo').push(data).then(() => {
-            alert("Saldo Diperbarui!");
-            document.getElementById('w-masuk').value = "";
-            document.getElementById('w-keluar').value = "";
+    // --- GRAFIK CHART.JS ---
+    let myChart;
+    function initChart(l, s) {
+        const ctx = document.getElementById('rekapChart').getContext('2d');
+        if(myChart) myChart.destroy();
+        myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['LAPORAN', 'SETORAN'],
+                datasets: [{
+                    label: 'Total Data Masuk',
+                    data: [l, s],
+                    backgroundColor: ['#ff0055', '#00d4ff']
+                }]
+            },
+            options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
         });
     }
 
-    // Load Saldo & Riwayat
-    dbWallet.ref('riwayat_saldo').on('value', snapshot => {
-        const tbody = document.getElementById('tbody-wallet');
-        tbody.innerHTML = "";
-        let totalSaldo = 0;
-
-        snapshot.forEach(child => {
-            const v = child.val();
-            const k = child.key;
-            totalSaldo += (v.masuk - v.keluar);
-
-            tbody.innerHTML += `
-                <tr>
-                    <td>${v.tgl}</td>
-                    <td style="color:#00ff88">+Rp ${v.masuk.toLocaleString()}</td>
-                    <td style="color:#ff0055">-Rp ${v.keluar.toLocaleString()}</td>
-                    <td>
-                        <button class="act-btn" style="background:red; color:white;" onclick="delW('${k}')">HAPUS</button>
-                        <button class="act-btn" style="background:var(--cyan); color:black;" onclick="dlW('${v.tgl}',${v.masuk},${v.keluar})">DL</button>
-                    </td>
-                </tr>
-            `;
+    // --- GUDANG SYSTEM LOGIC ---
+    function sendGudang() {
+        const d = { nm: val('g-nama'), jn: val('g-jenis'), jml: val('g-jumlah'), st: val('g-stok') };
+        if(d.nm) dbGudang.ref('stok').push(d).then(() => alert("Stok Disimpan!"));
+    }
+    dbGudang.ref('stok').on('value', s => {
+        const tb = document.getElementById('tbody-gudang'); tb.innerHTML = "";
+        s.forEach(c => {
+            const v = c.val(); const k = c.key;
+            tb.innerHTML += `<tr><td>${v.nm}</td><td>${v.jn}</td><td>${v.jml}</td><td>${v.st}</td>
+            <td><button onclick="dbGudang.ref('stok/${k}').remove()" style="background:red; border:none; color:white; padding:4px; font-size:9px; cursor:pointer;">HAPUS</button></td></tr>`;
         });
-
-        document.getElementById('saldo-akhir').innerText = "Rp " + totalSaldo.toLocaleString();
     });
 
-    function delW(k) { if(confirm("Hapus riwayat ini?")) dbWallet.ref('riwayat_saldo/'+k).remove(); }
-
-    function dlW(tgl, m, k) {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.text("BUKTI TRANSAKSI DOMPET DIGITAL", 10, 10);
-        doc.text(`Tanggal: ${tgl}`, 10, 20);
-        doc.text(`Pemasukan: Rp ${m}`, 10, 30);
-        doc.text(`Pengeluaran: Rp ${k}`, 10, 40);
-        doc.save(`transaksi_${tgl}.pdf`);
+    // --- SISA SALDO / WALLET LOGIC ---
+    function updateWallet() {
+        const m = parseInt(val('w-masuk')) || 0;
+        const s = parseInt(val('w-keluar')) || 0;
+        dbWallet.ref('saldo').push({ masuk: m, sisa: s, tgl: new Date().toLocaleString() });
     }
+    dbWallet.ref('saldo').on('value', s => {
+        let total = 0;
+        s.forEach(c => { total += (c.val().masuk - c.val().sisa); });
+        document.getElementById('saldo-akhir').innerText = "Rp " + total.toLocaleString();
+    });
 
-    // --- FUNGSI NAVIGASI & UTILS (TIDAK BERUBAH) ---
+    // --- MONITORING & REKAP ---
+    dbData.ref('transaksi').on('value', snapshot => {
+        const tb = document.getElementById('tbody-monitor'); tb.innerHTML = "";
+        let L=0, S=0;
+        snapshot.forEach(c => {
+            const v = c.val(); if(v.tipe === "LAPORAN") L++; else S++;
+            tb.innerHTML += `<tr><td>${v.tipe}</td><td>${v.nama}</td><td>${v.tanggal}</td><td>${v.tujuan}</td></tr>`;
+        });
+        initChart(L, S);
+    });
+
+    // --- UTILS ---
     function show(id, btn) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
-    function logout() { localStorage.clear(); window.location.href='index.html'; }
-
-    // --- FUNGSI DATA SEBELUMNYA (ANTI HAPUS) ---
-    function sendLaporan() { /* Kode laporan lo yang lama */ }
-    function sendSetoran() { /* Kode setoran lo yang lama */ }
-    dbData.ref('transaksi').on('value', s => { /* Update monitoring lo */ });
+    function val(id) { return document.getElementById(id).value; }
 </script>
 </body>
 </html>
