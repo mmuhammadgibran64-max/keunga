@@ -50,25 +50,18 @@
         <button class="nav-btn active" onclick="show('mon-view', this)">MONITORING & REKAP</button>
         <button class="nav-btn" onclick="show('input-view', this)">LAPORAN & SETORAN</button>
         <button class="nav-btn" onclick="show('gudang-view', this)">GUDANG SYSTEM</button>
-        <button class="nav-btn" onclick="show('setting-view', this)">PENGATURAN</button>
+        <button class="nav-btn" onclick="show('setting-view', this)">DOMPET & PENGATURAN</button>
     </nav>
 
     <main>
         <div id="mon-view" class="section active">
             <div class="card"><div class="card-h">LIVE DATA REKAP</div><canvas id="rekapChart" style="max-height: 200px;"></canvas></div>
             <div class="card">
-                <div class="card-h">TRANSAKSI LAPORAN & SETORAN TERBARU</div>
+                <div class="card-h">TRANSAKSI TERBARU</div>
                 <div style="overflow-x:auto;">
                     <table>
                         <thead>
-                            <tr>
-                                <th>TIPE</th>
-                                <th>NAMA</th>
-                                <th>TGL</th>
-                                <th>BUKTI</th>
-                                <th>TUJUAN</th>
-                                <th>AKSI</th>
-                            </tr>
+                            <tr><th>TIPE</th><th>NAMA</th><th>TGL</th><th>BUKTI</th><th>TUJUAN</th><th>AKSI</th></tr>
                         </thead>
                         <tbody id="tbody-monitor"></tbody>
                     </table>
@@ -82,58 +75,21 @@
                     <div class="card-h">INPUT LAPORAN</div>
                     <label>NAMA PELAPOR</label><input type="text" id="l-nama">
                     <label>TANGGAL LAPOR</label><input type="date" id="l-tgl">
-                    <label>BUKTI LAPORAN (IMAGE)</label><input type="file" id="l-bukti" accept="image/*">
-                    <label>TANDA TANGAN</label><input type="text" id="l-ttd" placeholder="Ketik Nama TTD">
+                    <label>BUKTI LAPORAN</label><input type="file" id="l-bukti" accept="image/*">
+                    <label>TANDA TANGAN</label><input type="text" id="l-ttd">
                     <label>KIRIM KE SIAPA?</label>
                     <select id="l-tujuan"><option value="BU TATI">BU TATI</option><option value="BU AMI">BU AMI</option></select>
                     <button class="btn-main" style="background:var(--red); color:white" onclick="simpan('LAPORAN','l-')">KIRIM LAPORAN</button>
                 </div>
-
                 <div class="flex-col card">
                     <div class="card-h">INPUT SETORAN</div>
                     <label>NAMA PENYETOR</label><input type="text" id="s-nama">
                     <label>TANGGAL SETOR</label><input type="date" id="s-tgl">
-                    <label>BUKTI SETOR (IMAGE)</label><input type="file" id="s-bukti" accept="image/*">
-                    <label>TANDA TANGAN</label><input type="text" id="s-ttd" placeholder="Ketik Nama TTD">
+                    <label>BUKTI SETOR</label><input type="file" id="s-bukti" accept="image/*">
+                    <label>TANDA TANGAN</label><input type="text" id="s-ttd">
                     <label>SETOR KE SIAPA?</label>
                     <select id="s-tujuan"><option value="BU TATI">BU TATI</option><option value="BU AMI">BU AMI</option></select>
                     <button class="btn-main" style="background:var(--cyan); color:black" onclick="simpan('SETORAN','s-')">KIRIM SETORAN</button>
-                </div>
-            </div>
-
-            <div class="card" style="border: 2px solid var(--gold);">
-                <div class="card-h">DOMPET DIGITAL - SISA SALDO</div>
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <span style="font-size: 12px; color: var(--gold); font-family: 'Orbitron';">SALDO AKHIR SAAT INI</span>
-                    <h1 id="saldo-akhir" style="color:var(--gold); font-family:'Orbitron'; margin: 5px 0; font-size: 40px;">Rp 0</h1>
-                </div>
-                <div class="flex-row">
-                    <div class="flex-col">
-                        <label style="font-size: 10px; color: var(--cyan);">UANG MASUK (Rp)</label>
-                        <input type="number" id="w-masuk" placeholder="0">
-                    </div>
-                    <div class="flex-col">
-                        <label style="font-size: 10px; color: var(--red);">UANG KELUAR / SISA (Rp)</label>
-                        <input type="number" id="w-keluar" placeholder="0">
-                    </div>
-                </div>
-                <button class="btn-main" style="background:var(--gold); color:black; margin-top: 10px;" onclick="updateW()">SIMPAN & UPDATE SALDO</button>
-
-                <div style="margin-top: 30px;">
-                    <div class="card-h">RIWAYAT TRANSAKSI & DOWNLOAD PDF</div>
-                    <div style="overflow-x:auto;">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>TANGGAL & JAM</th>
-                                    <th>MASUK</th>
-                                    <th>KELUAR</th>
-                                    <th>AKSI</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbody-wallet"></tbody>
-                        </table>
-                    </div>
                 </div>
             </div>
         </div>
@@ -159,11 +115,49 @@
                 </div>
             </div>
         </div>
+
+        <div id="setting-view" class="section">
+            <div class="card" style="border: 2px solid var(--gold);">
+                <div class="card-h">DOMPET DIGITAL - MANAJEMEN SALDO</div>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <span style="font-size: 12px; color: var(--gold); font-family: 'Orbitron';">SALDO AKHIR SAAT INI</span>
+                    <h1 id="saldo-akhir" style="color:var(--gold); font-family:'Orbitron'; margin: 5px 0; font-size: 40px;">Rp 0</h1>
+                </div>
+                <div class="flex-row">
+                    <div class="flex-col">
+                        <label style="font-size: 10px; color: var(--cyan);">UANG MASUK (Rp)</label>
+                        <input type="number" id="w-masuk" placeholder="0">
+                    </div>
+                    <div class="flex-col">
+                        <label style="font-size: 10px; color: var(--red);">UANG KELUAR / SISA (Rp)</label>
+                        <input type="number" id="w-keluar" placeholder="0">
+                    </div>
+                </div>
+                <button class="btn-main" style="background:var(--gold); color:black; margin-top: 10px;" onclick="updateW()">SIMPAN & UPDATE SALDO</button>
+
+                <div style="margin-top: 30px;">
+                    <div class="card-h">RIWAYAT TRANSAKSI & DOWNLOAD PDF</div>
+                    <div style="overflow-x:auto;">
+                        <table>
+                            <thead>
+                                <tr><th>TANGGAL & JAM</th><th>MASUK</th><th>KELUAR</th><th>AKSI</th></tr>
+                            </thead>
+                            <tbody id="tbody-wallet"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-h">SISTEM INFO</div>
+                <p style="font-size: 12px; color: #888;">Versi App: 28.0 (Latest Update)<br>Database: Firebase Connected (Gibran Hub Data)</p>
+            </div>
+        </div>
     </main>
 </div>
 
 <script>
-    // --- FIREBASE CONFIG BARU ---
+    // --- FIREBASE CONFIG ---
     const firebaseConfig = {
         apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs",
         authDomain: "tempat-masuk-nya-data.firebaseapp.com",
@@ -203,11 +197,11 @@
             const reader = new FileReader();
             reader.onload = (e) => {
                 d.img = e.target.result;
-                dbD.ref('transaksi').push(d).then(() => alert(tipe + " Berhasil!"));
+                dbD.ref('transaksi').push(d).then(() => { alert(tipe + " Berhasil!"); });
             };
             reader.readAsDataURL(fileInput.files[0]);
         } else {
-            dbD.ref('transaksi').push(d).then(() => alert(tipe + " Berhasil!"));
+            dbD.ref('transaksi').push(d).then(() => { alert(tipe + " Berhasil!"); });
         }
     }
 
@@ -226,7 +220,7 @@
         renderChart(L, S);
     });
 
-    // --- LOGIC DOMPET (SISA SALDO) ---
+    // --- LOGIC DOMPET (PENGATURAN) ---
     function dlPDF(tgl, m, k) {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
@@ -234,14 +228,18 @@
         doc.text("------------------------------------------", 10, 25);
         doc.text(`Waktu: ${tgl}`, 10, 35);
         doc.text(`Masuk: Rp ${m.toLocaleString()}`, 10, 45);
-        doc.text(`Sisa : Rp ${k.toLocaleString()}`, 10, 55);
+        doc.text(`Keluar/Sisa : Rp ${k.toLocaleString()}`, 10, 55);
         doc.save(`Struk_${tgl.replace(/[/, :]/g, '_')}.pdf`);
     }
 
     function updateW() {
         const m = parseInt(document.getElementById('w-masuk').value) || 0;
         const k = parseInt(document.getElementById('w-keluar').value) || 0;
-        dbW.ref('riwayat').push({ tgl: new Date().toLocaleString('id-ID'), m: m, k: k });
+        if(m === 0 && k === 0) return alert("Isi data!");
+        dbW.ref('riwayat').push({ tgl: new Date().toLocaleString('id-ID'), m: m, k: k }).then(() => {
+            document.getElementById('w-masuk').value = "";
+            document.getElementById('w-keluar').value = "";
+        });
     }
 
     dbW.ref('riwayat').on('value', s => {
@@ -252,7 +250,7 @@
             tb.innerHTML += `<tr>
                 <td>${r.tgl}</td><td style="color:#00ff88">Rp ${r.m.toLocaleString()}</td><td style="color:#ff0055">Rp ${r.k.toLocaleString()}</td>
                 <td>
-                    <button class="act-btn" style="background:red" onclick="dbW.ref('riwayat/${c.key}').remove()">HAPUS</button>
+                    <button class="act-btn" style="background:red" onclick="if(confirm('Hapus?')) dbW.ref('riwayat/${c.key}').remove()">HAPUS</button>
                     <button class="act-btn" style="background:var(--cyan); color:black" onclick="dlPDF('${r.tgl}',${r.m},${r.k})">PDF</button>
                 </td>
             </tr>`;
