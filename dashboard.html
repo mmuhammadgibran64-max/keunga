@@ -32,21 +32,21 @@
         .flex-col { flex: 1; min-width: 250px; }
 
         label { font-size: 11px; color: #888; margin-bottom: 4px; display: block; font-family: 'Orbitron'; }
-        input, select { width: 100%; padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 212, 255, 0.2); color: white; border-radius: 6px; margin-bottom: 10px; }
+        input, select { width: 100%; padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 212, 255, 0.2); color: white; border-radius: 6px; margin-bottom: 10px; font-family: 'Rajdhani'; }
         .btn-main { width: 100%; padding: 12px; border: none; border-radius: 6px; font-family: 'Orbitron'; font-size: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         
         table { width: 100%; border-collapse: collapse; font-size: 12px; }
         th { text-align: left; color: var(--cyan); border-bottom: 2px solid var(--cyan); padding: 8px; font-family: 'Orbitron'; font-size: 8px; }
         td { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .act-btn { padding: 6px 10px; border-radius: 4px; border: none; cursor: pointer; font-size: 9px; font-family: 'Orbitron'; color: white; margin-right: 5px; }
-        img.table-img { width: 40px; height: 40px; object-fit: cover; border-radius: 4px; cursor: pointer; }
+        img.table-img { width: 45px; height: 45px; object-fit: cover; border-radius: 4px; cursor: pointer; border: 1px solid var(--cyan); }
     </style>
 </head>
 <body>
 
 <div class="wrapper">
     <nav>
-        <div style="font-family:'Orbitron'; color:var(--cyan); text-align:center; margin-bottom:20px; font-size:18px;">GIBRAN HUB</div>
+        <div style="font-family:'Orbitron'; color:var(--cyan); text-align:center; margin-bottom:20px; font-size:18px; letter-spacing: 2px;">GIBRAN HUB</div>
         <button class="nav-btn active" onclick="show('mon-view', this)">MONITORING & REKAP</button>
         <button class="nav-btn" onclick="show('input-view', this)">LAPORAN & SETORAN</button>
         <button class="nav-btn" onclick="show('gudang-view', this)">GUDANG SYSTEM</button>
@@ -57,7 +57,7 @@
         <div id="mon-view" class="section active">
             <div class="card"><div class="card-h">LIVE DATA REKAP</div><canvas id="rekapChart" style="max-height: 200px;"></canvas></div>
             <div class="card">
-                <div class="card-h">TRANSAKSI TERBARU</div>
+                <div class="card-h">RIWAYAT TRANSAKSI TERBARU</div>
                 <div style="overflow-x:auto;">
                     <table>
                         <thead>
@@ -73,20 +73,20 @@
             <div class="flex-row">
                 <div class="flex-col card">
                     <div class="card-h">INPUT LAPORAN</div>
-                    <label>NAMA PELAPOR</label><input type="text" id="l-nama">
+                    <label>NAMA PELAPOR</label><input type="text" id="l-nama" placeholder="Nama Anda">
                     <label>TANGGAL LAPOR</label><input type="date" id="l-tgl">
-                    <label>BUKTI LAPORAN</label><input type="file" id="l-bukti" accept="image/*">
-                    <label>TANDA TANGAN</label><input type="text" id="l-ttd">
-                    <label>KIRIM KE SIAPA?</label>
+                    <label>BUKTI LAPORAN (IMAGE)</label><input type="file" id="l-bukti" accept="image/*">
+                    <label>TANDA TANGAN</label><input type="text" id="l-ttd" placeholder="Ketik Nama TTD">
+                    <label>LAPOR KE SIAPA?</label>
                     <select id="l-tujuan"><option value="BU TATI">BU TATI</option><option value="BU AMI">BU AMI</option></select>
                     <button class="btn-main" style="background:var(--red); color:white" onclick="simpan('LAPORAN','l-')">KIRIM LAPORAN</button>
                 </div>
                 <div class="flex-col card">
                     <div class="card-h">INPUT SETORAN</div>
-                    <label>NAMA PENYETOR</label><input type="text" id="s-nama">
+                    <label>NAMA PENYETOR</label><input type="text" id="s-nama" placeholder="Nama Anda">
                     <label>TANGGAL SETOR</label><input type="date" id="s-tgl">
-                    <label>BUKTI SETOR</label><input type="file" id="s-bukti" accept="image/*">
-                    <label>TANDA TANGAN</label><input type="text" id="s-ttd">
+                    <label>BUKTI SETOR (IMAGE)</label><input type="file" id="s-bukti" accept="image/*">
+                    <label>TANDA TANGAN</label><input type="text" id="s-ttd" placeholder="Ketik Nama TTD">
                     <label>SETOR KE SIAPA?</label>
                     <select id="s-tujuan"><option value="BU TATI">BU TATI</option><option value="BU AMI">BU AMI</option></select>
                     <button class="btn-main" style="background:var(--cyan); color:black" onclick="simpan('SETORAN','s-')">KIRIM SETORAN</button>
@@ -147,17 +147,13 @@
                     </div>
                 </div>
             </div>
-
-            <div class="card">
-                <div class="card-h">SISTEM INFO</div>
-                <p style="font-size: 12px; color: #888;">Versi App: 28.0 (Latest Update)<br>Database: Firebase Connected (Gibran Hub Data)</p>
-            </div>
+            <div class="card"><div class="card-h">SISTEM INFO</div><p style="font-size:12px;color:#666">Version 28.0 | Secured Firebase Connection</p></div>
         </div>
     </main>
 </div>
 
 <script>
-    // --- FIREBASE CONFIG ---
+    // --- FIREBASE CONFIG UTAMA (LAPORAN & SETORAN) ---
     const firebaseConfig = {
         apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs",
         authDomain: "tempat-masuk-nya-data.firebaseapp.com",
@@ -165,14 +161,23 @@
         projectId: "tempat-masuk-nya-data",
         storageBucket: "tempat-masuk-nya-data.firebasestorage.app",
         messagingSenderId: "918742049565",
-        appId: "1:918742049565:web:4490b03c04f5bf75e3f7f4",
-        measurementId: "G-C0EBFBVVVJ"
+        appId: "1:918742049565:web:4490b03c04f5bf75e3f7f4"
+    };
+
+    // --- FIREBASE CONFIG BARU (DOMPET DIGITAL) ---
+    const cWallet = {
+        apiKey: "AIzaSyCdNwDr9lUsUE2iv43vW6q89VZMXPix8us",
+        authDomain: "sisa-saldo.firebaseapp.com",
+        databaseURL: "https://sisa-saldo-default-rtdb.firebaseio.com",
+        projectId: "sisa-saldo",
+        storageBucket: "sisa-saldo.firebasestorage.app",
+        appId: "1:152603234485:web:1f82e28d57b2a5f2d8aefc"
     };
 
     const cGudang = { databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
-    const cWallet = { databaseURL: "https://sisa-saldo-default-rtdb.firebaseio.com" };
 
-    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
+    // Initialize Apps
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const appG = firebase.apps.find(a => a.name === "G") || firebase.initializeApp(cGudang, "G");
     const appW = firebase.apps.find(a => a.name === "W") || firebase.initializeApp(cWallet, "W");
 
@@ -180,7 +185,7 @@
     const dbG = firebase.database(appG);    
     const dbW = firebase.database(appW);    
 
-    // --- LOGIC LAPORAN & SETORAN ---
+    // --- FUNGSI SIMPAN LAPORAN/SETORAN ---
     function simpan(tipe, pre) {
         const fileInput = document.getElementById(pre+'bukti');
         const d = {
@@ -191,17 +196,17 @@
             tujuan: document.getElementById(pre+'tujuan').value,
             waktu: new Date().toLocaleString('id-ID')
         };
-        if(!d.nama || !d.tgl) return alert("Nama & Tanggal Wajib!");
+        if(!d.nama || !d.tgl) return alert("Lengkapi data!");
 
         if(fileInput.files[0]) {
             const reader = new FileReader();
             reader.onload = (e) => {
                 d.img = e.target.result;
-                dbD.ref('transaksi').push(d).then(() => { alert(tipe + " Berhasil!"); });
+                dbD.ref('transaksi').push(d).then(() => alert(tipe + " Terkirim!"));
             };
             reader.readAsDataURL(fileInput.files[0]);
         } else {
-            dbD.ref('transaksi').push(d).then(() => { alert(tipe + " Berhasil!"); });
+            dbD.ref('transaksi').push(d).then(() => alert(tipe + " Terkirim!"));
         }
     }
 
@@ -214,28 +219,17 @@
                 <td>${r.tipe}</td><td>${r.nama}</td><td>${r.tgl}</td>
                 <td>${r.img ? `<img src="${r.img}" class="table-img" onclick="window.open(this.src)">` : '-'}</td>
                 <td>${r.tujuan}</td>
-                <td><button class="act-btn" style="background:red" onclick="dbD.ref('transaksi/${c.key}').remove()">HAPUS</button></td>
+                <td><button class="act-btn" style="background:red" onclick="if(confirm('Hapus?')) dbD.ref('transaksi/${c.key}').remove()">HAPUS</button></td>
             </tr>`;
         });
         renderChart(L, S);
     });
 
-    // --- LOGIC DOMPET (PENGATURAN) ---
-    function dlPDF(tgl, m, k) {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.text("STRUK DOMPET DIGITAL - GIBRAN HUB", 10, 20);
-        doc.text("------------------------------------------", 10, 25);
-        doc.text(`Waktu: ${tgl}`, 10, 35);
-        doc.text(`Masuk: Rp ${m.toLocaleString()}`, 10, 45);
-        doc.text(`Keluar/Sisa : Rp ${k.toLocaleString()}`, 10, 55);
-        doc.save(`Struk_${tgl.replace(/[/, :]/g, '_')}.pdf`);
-    }
-
+    // --- FUNGSI DOMPET DIGITAL (PENGATURAN) ---
     function updateW() {
         const m = parseInt(document.getElementById('w-masuk').value) || 0;
         const k = parseInt(document.getElementById('w-keluar').value) || 0;
-        if(m === 0 && k === 0) return alert("Isi data!");
+        if(m === 0 && k === 0) return alert("Isi angka!");
         dbW.ref('riwayat').push({ tgl: new Date().toLocaleString('id-ID'), m: m, k: k }).then(() => {
             document.getElementById('w-masuk').value = "";
             document.getElementById('w-keluar').value = "";
@@ -258,7 +252,19 @@
         document.getElementById('saldo-akhir').innerText = "Rp " + tot.toLocaleString();
     });
 
-    // --- LOGIC GUDANG ---
+    function dlPDF(tgl, m, k) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.setFontSize(18); doc.text("STRUK DOMPET DIGITAL", 10, 20);
+        doc.setFontSize(12); doc.text("----------------------------------", 10, 25);
+        doc.text("Waktu  : " + tgl, 10, 35);
+        doc.text("Masuk  : Rp " + m.toLocaleString(), 10, 45);
+        doc.text("Keluar : Rp " + k.toLocaleString(), 10, 55);
+        doc.text("Sisa   : Rp " + (m-k).toLocaleString(), 10, 65);
+        doc.save(`Struk_${tgl.replace(/[/, :]/g, '_')}.pdf`);
+    }
+
+    // --- FUNGSI GUDANG ---
     function sendG() {
         dbG.ref('stok').push({ nm:v('g-nama'), jn:v('g-jenis'), jml:v('g-jumlah'), st:v('g-stok') });
     }
@@ -276,7 +282,7 @@
     function renderChart(l, s) {
         const ctx = document.getElementById('rekapChart').getContext('2d');
         if(chart) chart.destroy();
-        chart = new Chart(ctx, { type:'bar', data:{ labels:['LAPORAN','SETORAN'], datasets:[{ label:'Total Data', data:[l, s], backgroundColor:['#ff0055','#00d4ff'] }] }, options:{plugins:{legend:{display:false}}} });
+        chart = new Chart(ctx, { type:'bar', data:{ labels:['LAPORAN','SETORAN'], datasets:[{ label:'Data', data:[l, s], backgroundColor:['#ff0055','#00d4ff'] }] }, options:{plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true, grid:{color:'rgba(255,255,255,0.05)'}}}} });
     }
     function show(id, btn) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
