@@ -3,23 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB v28.0</title>
-    
+    <title>GIBRAN HUB v28.0 | MASTER SYSTEM</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-    <style>
-        /* CSS lo di sini... */
-    </style>
-</head>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        :root { --red: #ff0055; --cyan: #00d4ff; --gold: #ffcc00; --bg: #050505; --card: rgba(20, 20, 20, 0.95); }
+        :root { --red: #ff0055; --cyan: #00d4ff; --gold: #ffcc00; --bg: #050505; --card: rgba(20, 20, 20, 0.98); --purple: #bc13fe; }
         body, html { margin: 0; padding: 0; background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; height: 100vh; overflow: hidden; }
         .wrapper { display: flex; height: 100vh; }
         nav { width: 240px; background: #000; border-right: 2px solid var(--cyan); padding: 20px; display: flex; flex-direction: column; gap: 10px; }
@@ -29,108 +22,148 @@
         .nav-btn.active, .nav-btn:hover { background: var(--cyan); color: black; box-shadow: 0 0 15px var(--cyan); }
         
         .section { display: none; }
-        .section.active { display: block; animation: fadeIn 0.4s ease; }
+        .section.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .card { background: var(--card); border: 1px solid rgba(0, 212, 255, 0.1); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-        .card-h { font-family: 'Orbitron'; font-size: 11px; color: var(--cyan); margin-bottom: 15px; border-bottom: 1px solid rgba(0,212,255,0.2); padding-bottom: 8px; }
+        .card { background: var(--card); border: 1px solid rgba(0, 212, 255, 0.1); border-radius: 12px; padding: 18px; margin-bottom: 20px; }
+        .card-h { font-family: 'Orbitron'; font-size: 11px; color: var(--cyan); margin-bottom: 12px; border-bottom: 1px solid rgba(0,212,255,0.2); padding-bottom: 6px; }
 
         .flex-row { display: flex; gap: 15px; flex-wrap: wrap; }
         .flex-col { flex: 1; min-width: 250px; }
 
-        input, select { width: 100%; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 212, 255, 0.2); color: white; border-radius: 8px; margin-bottom: 10px; font-family: 'Rajdhani'; }
-        .btn-main { width: 100%; padding: 14px; border: none; border-radius: 8px; font-family: 'Orbitron'; font-size: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        label { font-size: 11px; color: #888; margin-bottom: 4px; display: block; font-family: 'Orbitron'; }
+        input, select { width: 100%; padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 212, 255, 0.2); color: white; border-radius: 6px; margin-bottom: 10px; }
+        .btn-main { width: 100%; padding: 12px; border: none; border-radius: 6px; font-family: 'Orbitron'; font-size: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; }
         
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        th { text-align: left; color: var(--cyan); border-bottom: 2px solid var(--cyan); padding: 10px; font-family: 'Orbitron'; font-size: 9px; }
-        td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        
-        .act-btn { padding: 5px 10px; border-radius: 4px; border: none; cursor: pointer; font-size: 9px; font-family: 'Orbitron'; color: white; margin-right: 5px; }
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        th { text-align: left; color: var(--cyan); border-bottom: 2px solid var(--cyan); padding: 8px; font-family: 'Orbitron'; font-size: 8px; }
+        td { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .act-btn { padding: 6px 10px; border-radius: 4px; border: none; cursor: pointer; font-size: 9px; font-family: 'Orbitron'; color: white; margin-right: 5px; }
+        img.table-img { width: 40px; height: 40px; object-fit: cover; border-radius: 4px; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="wrapper">
     <nav>
-        <div style="font-family:'Orbitron'; color:var(--cyan); text-align:center; margin-bottom:30px; font-size:18px;">GIBRAN HUB</div>
+        <div style="font-family:'Orbitron'; color:var(--cyan); text-align:center; margin-bottom:20px; font-size:18px;">GIBRAN HUB</div>
         <button class="nav-btn active" onclick="show('mon-view', this)">MONITORING & REKAP</button>
-        <button class="nav-btn" onclick="show('input-view', this)">INPUT & DOMPET</button>
+        <button class="nav-btn" onclick="show('input-view', this)">LAPORAN & SETORAN</button>
         <button class="nav-btn" onclick="show('gudang-view', this)">GUDANG SYSTEM</button>
-        <button class="nav-btn" onclick="show('setting-view', this)">PENGATURAN & CS</button>
-        <button class="nav-btn" style="margin-top:auto; color:var(--red);" onclick="logout()">LOGOUT</button>
+        <button class="nav-btn" onclick="show('setting-view', this)">PENGATURAN</button>
     </nav>
 
     <main>
         <div id="mon-view" class="section active">
-            <div class="card"><div class="card-h">DATA GRAFIK MASUK</div><canvas id="rekapChart" style="max-height: 200px;"></canvas></div>
-            <div class="card"><div class="card-h">MONITORING TRANSAKSI</div><div style="overflow-x:auto;"><table><thead><tr><th>TIPE</th><th>NAMA</th><th>TGL</th><th>TUJUAN</th></tr></thead><tbody id="tbody-monitor"></tbody></table></div></div>
+            <div class="card"><div class="card-h">LIVE DATA REKAP</div><canvas id="rekapChart" style="max-height: 200px;"></canvas></div>
+            <div class="card">
+                <div class="card-h">TRANSAKSI LAPORAN & SETORAN TERBARU</div>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>TIPE</th>
+                                <th>NAMA</th>
+                                <th>TGL</th>
+                                <th>BUKTI</th>
+                                <th>TUJUAN</th>
+                                <th>AKSI</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-monitor"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
         <div id="input-view" class="section">
             <div class="flex-row">
-                <div class="flex-col card"><div class="card-h">INPUT LAPORAN</div><input type="text" id="l-nama" placeholder="Nama"><input type="date" id="l-tgl"><button class="btn-main" style="background:var(--red); color:white" onclick="simpan('LAPORAN','l-')">KIRIM LAPORAN</button></div>
-                <div class="flex-col card"><div class="card-h">INPUT SETORAN</div><input type="text" id="s-nama" placeholder="Nama"><input type="date" id="s-tgl"><button class="btn-main" style="background:var(--cyan); color:black" onclick="simpan('SETORAN','s-')">KIRIM SETORAN</button></div>
+                <div class="flex-col card">
+                    <div class="card-h">INPUT LAPORAN</div>
+                    <label>NAMA PELAPOR</label><input type="text" id="l-nama">
+                    <label>TANGGAL LAPOR</label><input type="date" id="l-tgl">
+                    <label>BUKTI LAPORAN (IMAGE)</label><input type="file" id="l-bukti" accept="image/*">
+                    <label>TANDA TANGAN</label><input type="text" id="l-ttd" placeholder="Ketik Nama TTD">
+                    <label>KIRIM KE SIAPA?</label>
+                    <select id="l-tujuan"><option value="BU TATI">BU TATI</option><option value="BU AMI">BU AMI</option></select>
+                    <button class="btn-main" style="background:var(--red); color:white" onclick="simpan('LAPORAN','l-')">KIRIM LAPORAN</button>
+                </div>
+
+                <div class="flex-col card">
+                    <div class="card-h">INPUT SETORAN</div>
+                    <label>NAMA PENYETOR</label><input type="text" id="s-nama">
+                    <label>TANGGAL SETOR</label><input type="date" id="s-tgl">
+                    <label>BUKTI SETOR (IMAGE)</label><input type="file" id="s-bukti" accept="image/*">
+                    <label>TANDA TANGAN</label><input type="text" id="s-ttd" placeholder="Ketik Nama TTD">
+                    <label>SETOR KE SIAPA?</label>
+                    <select id="s-tujuan"><option value="BU TATI">BU TATI</option><option value="BU AMI">BU AMI</option></select>
+                    <button class="btn-main" style="background:var(--cyan); color:black" onclick="simpan('SETORAN','s-')">KIRIM SETORAN</button>
+                </div>
             </div>
 
-          <div class="card" style="border: 2px solid var(--gold);">
-    <div class="card-h">DOMPET DIGITAL - SISA SALDO</div>
-    <div style="text-align: center; margin-bottom: 20px;">
-        <span style="font-size: 12px; color: var(--gold); font-family: 'Orbitron';">SALDO AKHIR SAAT INI</span>
-        <h1 id="saldo-akhir" style="color:var(--gold); font-family:'Orbitron'; margin: 5px 0; font-size: 40px;">Rp 0</h1>
-    </div>
-    
-    <div class="flex-row">
-        <div class="flex-col">
-            <label style="font-size: 10px; color: var(--cyan);">UANG MASUK (Rp)</label>
-            <input type="number" id="w-masuk" placeholder="0">
-        </div>
-        <div class="flex-col">
-            <label style="font-size: 10px; color: var(--red);">UANG KELUAR / SISA (Rp)</label>
-            <input type="number" id="w-keluar" placeholder="0">
-        </div>
-    </div>
-    <button class="btn-main" style="background:var(--gold); color:black; margin-top: 10px;" onclick="updateW()">SIMPAN & UPDATE SALDO</button>
+            <div class="card" style="border: 2px solid var(--gold);">
+                <div class="card-h">DOMPET DIGITAL - SISA SALDO</div>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <span style="font-size: 12px; color: var(--gold); font-family: 'Orbitron';">SALDO AKHIR SAAT INI</span>
+                    <h1 id="saldo-akhir" style="color:var(--gold); font-family:'Orbitron'; margin: 5px 0; font-size: 40px;">Rp 0</h1>
+                </div>
+                <div class="flex-row">
+                    <div class="flex-col">
+                        <label style="font-size: 10px; color: var(--cyan);">UANG MASUK (Rp)</label>
+                        <input type="number" id="w-masuk" placeholder="0">
+                    </div>
+                    <div class="flex-col">
+                        <label style="font-size: 10px; color: var(--red);">UANG KELUAR / SISA (Rp)</label>
+                        <input type="number" id="w-keluar" placeholder="0">
+                    </div>
+                </div>
+                <button class="btn-main" style="background:var(--gold); color:black; margin-top: 10px;" onclick="updateW()">SIMPAN & UPDATE SALDO</button>
 
-    <div style="margin-top: 30px;">
-        <div class="card-h">RIWAYAT TRANSAKSI & DOWNLOAD LAPORAN</div>
-        <div style="overflow-x:auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th>TANGGAL & JAM</th>
-                        <th>MASUK</th>
-                        <th>KELUAR</th>
-                        <th>AKSI</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody-wallet"></tbody>
-            </table>
+                <div style="margin-top: 30px;">
+                    <div class="card-h">RIWAYAT TRANSAKSI & DOWNLOAD PDF</div>
+                    <div style="overflow-x:auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>TANGGAL & JAM</th>
+                                    <th>MASUK</th>
+                                    <th>KELUAR</th>
+                                    <th>AKSI</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-wallet"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
 
         <div id="gudang-view" class="section">
             <div class="card">
-                <div class="card-h">INPUT BARANG GUDANG</div>
+                <div class="card-h">GUDANG - INPUT BARANG</div>
                 <div class="flex-row">
                     <input type="text" id="g-nama" placeholder="Nama Barang" class="flex-col">
                     <input type="text" id="g-jenis" placeholder="Jenis" class="flex-col">
                     <input type="number" id="g-jumlah" placeholder="Jumlah" class="flex-col">
                     <input type="number" id="g-stok" placeholder="Stok" class="flex-col">
                 </div>
-                <button class="btn-main" style="background:var(--purple); color:white" onclick="sendG()">SIMPAN BARANG</button>
+                <button class="btn-main" style="background:var(--purple); color:white" onclick="sendG()">SIMPAN KE GUDANG</button>
             </div>
-            <div class="card"><div class="card-h">DAFTAR STOK</div><div style="overflow-x:auto;"><table><thead><tr><th>NAMA</th><th>JENIS</th><th>JML</th><th>STOK</th><th>AKSI</th></tr></thead><tbody id="tbody-gudang"></tbody></table></div></div>
-        </div>
-
-        <div id="setting-view" class="section">
-            <div class="card"><div class="card-h">PENGATURAN PROFIL</div><input type="text" id="p-nama" placeholder="Nama Admin"><button class="btn-main" style="background:var(--cyan); color:black">SAVE SETTING</button></div>
+            <div class="card">
+                <div class="card-h">DAFTAR GUDANG</div>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead><tr><th>NAMA</th><th>JENIS</th><th>JML</th><th>STOK</th><th>AKSI</th></tr></thead>
+                        <tbody id="tbody-gudang"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </main>
 </div>
 
 <script>
-// --- FIREBASE CONFIG BARU ---
+    // --- FIREBASE CONFIG BARU ---
     const firebaseConfig = {
         apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs",
         authDomain: "tempat-masuk-nya-data.firebaseapp.com",
@@ -142,75 +175,89 @@
         measurementId: "G-C0EBFBVVVJ"
     };
 
-    // Konfigurasi Database Terpisah
     const cGudang = { databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
     const cWallet = { databaseURL: "https://sisa-saldo-default-rtdb.firebaseio.com" };
 
-    // Inisialisasi (Cukup Sekali Saja per App)
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig); 
-    }
-    
-    // Inisialisasi App Tambahan
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
     const appG = firebase.apps.find(a => a.name === "G") || firebase.initializeApp(cGudang, "G");
     const appW = firebase.apps.find(a => a.name === "W") || firebase.initializeApp(cWallet, "W");
 
-    // Definisikan Database (HANYA SEKALI SAJA)
-    const dbD = firebase.database();       // Untuk Laporan & Setoran (Default)
-    const dbG = firebase.database(appG);    // Untuk Gudang
-    const dbW = firebase.database(appW);    // Untuk Dompet/Wallet
-   // --- LOGIC DOMPET (SISA SALDO) - VERSI FIX ANTI EROR ---
+    const dbD = firebase.database();       
+    const dbG = firebase.database(appG);    
+    const dbW = firebase.database(appW);    
+
+    // --- LOGIC LAPORAN & SETORAN ---
+    function simpan(tipe, pre) {
+        const fileInput = document.getElementById(pre+'bukti');
+        const d = {
+            tipe: tipe,
+            nama: document.getElementById(pre+'nama').value,
+            tgl: document.getElementById(pre+'tgl').value,
+            ttd: document.getElementById(pre+'ttd').value,
+            tujuan: document.getElementById(pre+'tujuan').value,
+            waktu: new Date().toLocaleString('id-ID')
+        };
+        if(!d.nama || !d.tgl) return alert("Nama & Tanggal Wajib!");
+
+        if(fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                d.img = e.target.result;
+                dbD.ref('transaksi').push(d).then(() => alert(tipe + " Berhasil!"));
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        } else {
+            dbD.ref('transaksi').push(d).then(() => alert(tipe + " Berhasil!"));
+        }
+    }
+
+    dbD.ref('transaksi').on('value', s => {
+        const tb = document.getElementById('tbody-monitor'); tb.innerHTML = "";
+        let L=0, S=0;
+        s.forEach(c => {
+            const r = c.val(); r.tipe === "LAPORAN" ? L++ : S++;
+            tb.innerHTML += `<tr>
+                <td>${r.tipe}</td><td>${r.nama}</td><td>${r.tgl}</td>
+                <td>${r.img ? `<img src="${r.img}" class="table-img" onclick="window.open(this.src)">` : '-'}</td>
+                <td>${r.tujuan}</td>
+                <td><button class="act-btn" style="background:red" onclick="dbD.ref('transaksi/${c.key}').remove()">HAPUS</button></td>
+            </tr>`;
+        });
+        renderChart(L, S);
+    });
+
+    // --- LOGIC DOMPET (SISA SALDO) ---
     function dlPDF(tgl, m, k) {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        doc.setFont("helvetica", "bold");
         doc.text("STRUK DOMPET DIGITAL - GIBRAN HUB", 10, 20);
-        doc.setFont("helvetica", "normal");
         doc.text("------------------------------------------", 10, 25);
-        doc.text(`Waktu Transaksi : ${tgl}`, 10, 35);
-        doc.text(`Uang Masuk      : Rp ${m.toLocaleString()}`, 10, 45);
-        doc.text(`Uang Keluar     : Rp ${k.toLocaleString()}`, 10, 55);
-        doc.text(`Sisa Per Item   : Rp ${(m-k).toLocaleString()}`, 10, 65);
+        doc.text(`Waktu: ${tgl}`, 10, 35);
+        doc.text(`Masuk: Rp ${m.toLocaleString()}`, 10, 45);
+        doc.text(`Sisa : Rp ${k.toLocaleString()}`, 10, 55);
         doc.save(`Struk_${tgl.replace(/[/, :]/g, '_')}.pdf`);
     }
 
     function updateW() {
-        const masuk = parseInt(document.getElementById('w-masuk').value) || 0;
-        const keluar = parseInt(document.getElementById('w-keluar').value) || 0;
-        if(masuk === 0 && keluar === 0) return alert("Isi angka dulu!");
-
-        dbW.ref('riwayat').push({
-            tgl: new Date().toLocaleString('id-ID'),
-            m: masuk,
-            k: keluar
-        }).then(() => {
-            document.getElementById('w-masuk').value = "";
-            document.getElementById('w-keluar').value = "";
-        });
+        const m = parseInt(document.getElementById('w-masuk').value) || 0;
+        const k = parseInt(document.getElementById('w-keluar').value) || 0;
+        dbW.ref('riwayat').push({ tgl: new Date().toLocaleString('id-ID'), m: m, k: k });
     }
 
     dbW.ref('riwayat').on('value', s => {
-        const tb = document.getElementById('tbody-wallet'); 
-        if(!tb) return;
-        tb.innerHTML = "";
-        let total = 0;
+        const tb = document.getElementById('tbody-wallet'); tb.innerHTML = "";
+        let tot = 0;
         s.forEach(c => {
-            const r = c.val(); 
-            const key = c.key;
-            // Kita pakai r.m dan r.k supaya singkron dengan fungsi updateW di atas
-            total += (r.m - r.k);
-            tb.innerHTML += `
-                <tr>
-                    <td>${r.tgl}</td>
-                    <td style="color:#00ff88">+ Rp ${r.m.toLocaleString()}</td>
-                    <td style="color:#ff0055">- Rp ${r.k.toLocaleString()}</td>
-                    <td>
-                        <button class="act-btn" style="background:red" onclick="if(confirm('Hapus data ini?')) dbW.ref('riwayat/${key}').remove()">HAPUS</button>
-                        <button class="act-btn" style="background:var(--cyan); color:black" onclick="dlPDF('${r.tgl}', ${r.m}, ${r.k})">PDF</button>
-                    </td>
-                </tr>`;
+            const r = c.val(); tot += (r.m - r.k);
+            tb.innerHTML += `<tr>
+                <td>${r.tgl}</td><td style="color:#00ff88">Rp ${r.m.toLocaleString()}</td><td style="color:#ff0055">Rp ${r.k.toLocaleString()}</td>
+                <td>
+                    <button class="act-btn" style="background:red" onclick="dbW.ref('riwayat/${c.key}').remove()">HAPUS</button>
+                    <button class="act-btn" style="background:var(--cyan); color:black" onclick="dlPDF('${r.tgl}',${r.m},${r.k})">PDF</button>
+                </td>
+            </tr>`;
         });
-        document.getElementById('saldo-akhir').innerText = "Rp " + total.toLocaleString();
+        document.getElementById('saldo-akhir').innerText = "Rp " + tot.toLocaleString();
     });
 
     // --- LOGIC GUDANG ---
@@ -221,31 +268,18 @@
         const tb = document.getElementById('tbody-gudang'); tb.innerHTML = "";
         s.forEach(c => {
             const r = c.val();
-            tb.innerHTML += `<tr><td>${r.nm}</td><td>${r.jn}</td><td>${r.jml}</td><td>${r.st}</td><td><button class="act-btn" style="background:red" onclick="dbG.ref('stok/${c.key}').remove()">HAPUS</button></td></tr>`;
+            tb.innerHTML += `<tr><td>${r.nm}</td><td>${r.jn}</td><td>${r.jml}</td><td>${r.st}</td>
+            <td><button class="act-btn" style="background:red" onclick="dbG.ref('stok/${c.key}').remove()">X</button></td></tr>`;
         });
     });
 
-    // --- LOGIC TRANSAKSI & CHART ---
-    function simpan(t, p) {
-        dbD.ref('transaksi').push({ tipe:t, nama:v(p+'nama'), tgl:v(p+'tgl') });
-    }
-    dbD.ref('transaksi').on('value', s => {
-        const tb = document.getElementById('tbody-monitor'); tb.innerHTML = "";
-        let L=0, S=0;
-        s.forEach(c => {
-            const r = c.val(); r.tipe === "LAPORAN" ? L++ : S++;
-            tb.innerHTML += `<tr><td>${r.tipe}</td><td>${r.nama}</td><td>${r.tgl}</td><td>UNIT</td></tr>`;
-        });
-        renderChart(L, S);
-    });
-
+    // --- UTILS ---
     let chart;
     function renderChart(l, s) {
         const ctx = document.getElementById('rekapChart').getContext('2d');
         if(chart) chart.destroy();
-        chart = new Chart(ctx, { type:'bar', data:{ labels:['LAPORAN','SETORAN'], datasets:[{ data:[l, s], backgroundColor:['#ff0055','#00d4ff'] }] } });
+        chart = new Chart(ctx, { type:'bar', data:{ labels:['LAPORAN','SETORAN'], datasets:[{ label:'Total Data', data:[l, s], backgroundColor:['#ff0055','#00d4ff'] }] }, options:{plugins:{legend:{display:false}}} });
     }
-
     function show(id, btn) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
@@ -256,5 +290,3 @@
 </script>
 </body>
 </html>
-
-
