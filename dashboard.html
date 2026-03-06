@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB v26.5 | ULTIMATE SYSTEM</title>
+    <title>GIBRAN HUB v26.6 | ULTIMATE REPAIR</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
     <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
 
     <style>
@@ -18,32 +17,26 @@
         .wrapper { display: flex; height: 100vh; }
         nav { width: 260px; background: #000; border-right: 2px solid var(--cyan); padding: 25px; display: flex; flex-direction: column; gap: 8px; z-index: 10; }
         main { flex: 1; overflow-y: auto; padding: 30px; background: radial-gradient(circle at top right, #0a111a, #050505); padding-bottom: 100px; }
-
         .nav-btn { background: transparent; border: 1px solid rgba(0, 212, 255, 0.1); color: #888; padding: 12px; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; border-radius: 10px; text-align: left; transition: 0.3s; }
         .nav-btn.active, .nav-btn:hover { background: var(--cyan); color: black; box-shadow: 0 0 15px var(--cyan); }
-
         .section { display: none; }
         .section.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
         .card { background: var(--card); border: 1px solid rgba(0, 212, 255, 0.1); border-radius: 15px; padding: 20px; margin-bottom: 20px; }
         .card-h { font-family: 'Orbitron'; font-size: 11px; color: var(--cyan); margin-bottom: 15px; border-bottom: 1px solid rgba(0,212,255,0.2); padding-bottom: 8px; }
-
         .flex-row { display: flex; gap: 20px; flex-wrap: wrap; }
         .flex-col { flex: 1; min-width: 300px; }
-
         input, select, textarea { width: 100%; padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 212, 255, 0.2); color: white; border-radius: 8px; margin-bottom: 10px; outline: none; }
         .btn-main { width: 100%; padding: 12px; border: none; border-radius: 8px; font-family: 'Orbitron'; font-size: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 5px; }
-
-        /* REKAP STYLE */
         .rekap-box { background: linear-gradient(45deg, #1a1a1a, #000); border: 1px solid var(--cyan); padding: 15px; border-radius: 10px; text-align: center; }
         .rekap-val { font-size: 24px; font-family: 'Orbitron'; color: var(--cyan); }
-
-        /* CS ONLINE STYLE */
-        #video-container { width: 100%; height: 200px; background: #000; border-radius: 10px; margin-top: 10px; display: none; overflow: hidden; }
-        video { width: 100%; height: 100%; object-fit: cover; }
         
-        .profile-img-preview { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--cyan); object-fit: cover; margin-bottom: 10px; }
+        /* CS & VIDEO STYLE */
+        #cs-container { display: flex; flex-direction: column; gap: 10px; }
+        #video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        video { width: 100%; background: #000; border-radius: 10px; border: 1px solid var(--cyan); }
+        #public-chat { height: 150px; overflow-y: auto; background: rgba(0,0,0,0.5); padding: 10px; font-size: 13px; border-radius: 8px; border: 1px solid #333; }
+        .profile-img-preview { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--cyan); margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -55,7 +48,6 @@
         <button class="nav-btn" onclick="show('input-view', this)">INPUT DATA</button>
         <button class="nav-btn" onclick="show('gudang-view', this)">GUDANG & STOK</button>
         <button class="nav-btn" onclick="show('notes-view', this)">CLOUD NOTES</button>
-        <button class="nav-btn" onclick="show('cs-view', this)">📞 CS ONLINE (LIVE)</button>
         <button class="nav-btn" onclick="show('setting-view', this)">⚙️ PENGATURAN</button>
         <button class="nav-btn" style="margin-top:auto; color:var(--red);" onclick="logout()">LOGOUT</button>
     </nav>
@@ -63,175 +55,162 @@
     <main>
         <div id="mon-view" class="section active">
             <div class="flex-row">
-                <div class="flex-col rekap-box">
-                    <div style="font-size:10px; font-family:'Orbitron'">TOTAL SETORAN</div>
-                    <div class="rekap-val" id="total-setoran">0</div>
-                </div>
-                <div class="flex-col rekap-box">
-                    <div style="font-size:10px; font-family:'Orbitron'">TOTAL LAPORAN</div>
-                    <div class="rekap-val" id="total-laporan">0</div>
-                </div>
+                <div class="flex-col rekap-box"><div>TOTAL SETORAN</div><div class="rekap-val" id="total-setoran">0</div></div>
+                <div class="flex-col rekap-box"><div>TOTAL LAPORAN</div><div class="rekap-val" id="total-laporan">0</div></div>
             </div>
             <div class="card" style="margin-top:20px;">
                 <div class="card-h">LIVE TRANSACTION MONITOR</div>
-                <div style="overflow-x:auto;">
-                    <table>
-                        <thead><tr><th>TIPE</th><th>NAMA</th><th>TGL</th><th>TUJUAN</th></tr></thead>
-                        <tbody id="tbody-monitor"></tbody>
-                    </table>
-                </div>
+                <div style="overflow-x:auto;"><table><thead><tr><th>TIPE</th><th>NAMA</th><th>TGL</th><th>TUJUAN</th></tr></thead><tbody id="tbody-monitor"></tbody></table></div>
             </div>
         </div>
 
         <div id="input-view" class="section">
             <div class="flex-row">
-                <div class="flex-col card">
-                    <div class="card-h">KHUSUS INPUT LAPORAN</div>
-                    <input type="text" id="l-nama" placeholder="Nama Pelapor">
-                    <input type="date" id="l-tgl">
-                    <input type="text" id="l-ttd" placeholder="Tanda Tangan">
-                    <select id="l-tujuan"><option>BU TATI</option><option>BU AMI</option></select>
-                    <button class="btn-main" style="background:var(--red); color:white" onclick="sendLaporan('l-')">KIRIM LAPORAN</button>
-                </div>
-                <div class="flex-col card">
-                    <div class="card-h">KHUSUS INPUT SETORAN</div>
-                    <input type="text" id="s-nama" placeholder="Nama Penyetor">
-                    <input type="date" id="s-tgl">
-                    <input type="text" id="s-ttd" placeholder="Tanda Tangan">
-                    <select id="s-tujuan"><option>BU TATI</option><option>BU AMI</option></select>
-                    <button class="btn-main" style="background:var(--cyan); color:black" onclick="sendSetoran('s-')">KIRIM SETORAN</button>
-                </div>
+                <div class="flex-col card"><div class="card-h">INPUT LAPORAN</div><input type="text" id="l-nama" placeholder="Nama"><input type="date" id="l-tgl"><select id="l-tujuan"><option>BU TATI</option><option>BU AMI</option></select><button class="btn-main" style="background:var(--red); color:white" onclick="sendLaporan('l-')">KIRIM</button></div>
+                <div class="flex-col card"><div class="card-h">INPUT SETORAN</div><input type="text" id="s-nama" placeholder="Nama"><input type="date" id="s-tgl"><select id="s-tujuan"><option>BU TATI</option><option>BU AMI</option></select><button class="btn-main" style="background:var(--cyan); color:black" onclick="sendSetoran('s-')">KIRIM</button></div>
             </div>
         </div>
 
-        <div id="cs-view" class="section">
+        <div id="gudang-view" class="section">
             <div class="card">
-                <div class="card-h">CUSTOMER SERVICE CENTER</div>
-                <div id="video-container">
-                    <video id="remoteVideo" autoplay playsinline></video>
-                    <video id="localVideo" autoplay playsinline muted style="width:80px; position:absolute; bottom:10px; right:10px; border:1px solid var(--cyan)"></video>
+                <div class="card-h">GUDANG SYSTEM - INPUT BARANG</div>
+                <div class="flex-row">
+                    <div class="flex-col"><input type="text" id="g-nama" placeholder="Nama Barang"></div>
+                    <div class="flex-col"><input type="text" id="g-tipe" placeholder="Tipe"></div>
+                    <div class="flex-col"><input type="number" id="g-jumlah" placeholder="Jumlah/Ukuran"></div>
+                    <div class="flex-col"><input type="number" id="g-stok" placeholder="Stok"></div>
                 </div>
-                <div style="display:flex; gap:10px; margin-top:15px;">
-                    <button class="btn-main" style="background:#00ff88; color:black" onclick="startCall(true)">📹 VIDEO CALL</button>
-                    <button class="btn-main" style="background:var(--cyan); color:black" onclick="startCall(false)">📞 TELEPON</button>
-                    <button class="btn-main" style="background:var(--red); color:white" onclick="endCall()">❌ END</button>
-                </div>
-                <div id="chat-box" style="height:200px; background:rgba(0,0,0,0.5); margin-top:15px; overflow-y:auto; padding:10px; border-radius:10px; border:1px solid #333"></div>
-                <input type="text" id="cs-msg" placeholder="Ketik pesan..." style="margin-top:10px;">
-                <button class="btn-main" style="background:var(--purple); color:white" onclick="sendChat()">KIRIM CHAT</button>
+                <button class="btn-main" style="background:var(--purple); color:white" onclick="sendGudang()">SIMPAN STOK GUDANG</button>
             </div>
+            <div class="card">
+                <div class="card-h">DAFTAR STOK GUDANG</div>
+                <div style="overflow-x:auto;"><table><thead><tr><th>NAMA</th><th>TIPE</th><th>JML</th><th>STOK</th><th>AKSI</th></tr></thead><tbody id="tbody-gudang"></tbody></table></div>
+            </div>
+        </div>
+
+        <div id="notes-view" class="section">
+            <div class="card"><div class="card-h">CLOUD NOTES</div><textarea id="cloud-note" style="height:300px"></textarea></div>
         </div>
 
         <div id="setting-view" class="section">
-            <div class="card">
-                <div class="card-h">PROFIL PENGGUNA</div>
-                <center>
-                    <img id="p-img-view" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="profile-img-preview">
-                </center>
-                <label>Nama Profile</label><input type="text" id="p-nama">
-                <label>Nomor WA</label><input type="text" id="p-wa">
-                <label>Update Foto Profile (URL)</label><input type="text" id="p-url" placeholder="Paste link foto di sini...">
-                <button class="btn-main" style="background:var(--cyan); color:black" onclick="saveProfile()">SIMPAN PROFIL</button>
+            <div class="flex-row">
+                <div class="flex-col card">
+                    <div class="card-h">PROFIL & DATA WA</div>
+                    <center><img id="p-img-view" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="profile-img-preview"></center>
+                    <input type="text" id="p-nama" placeholder="Nama Profile"><input type="text" id="p-wa" placeholder="Nomor WA"><input type="text" id="p-url" placeholder="URL Foto Profile">
+                    <button class="btn-main" style="background:var(--cyan); color:black" onclick="saveProfile()">SIMPAN PROFIL</button>
+                </div>
+                
+                <div class="flex-col card">
+                    <div class="card-h">CUSTOMER SERVICE PUBLIC (VIDEO/VOICE/CHAT)</div>
+                    <div id="cs-container">
+                        <div id="video-grid">
+                            <video id="localVideo" autoplay playsinline muted></video>
+                            <video id="remoteVideo" autoplay playsinline></video>
+                        </div>
+                        <div style="display:flex; gap:5px;">
+                            <button class="btn-main" style="background:#00ff88; color:black; font-size:8px;" onclick="startPublicCall(true)">📹 VIDEO PUBLIC</button>
+                            <button class="btn-main" style="background:var(--cyan); color:black; font-size:8px;" onclick="startPublicCall(false)">📞 TELEPON PUBLIC</button>
+                        </div>
+                        <div id="public-chat"></div>
+                        <div style="display:flex; gap:5px;">
+                            <input type="text" id="pub-msg" placeholder="Pesan publik..." style="margin-bottom:0;">
+                            <button class="btn-main" style="background:var(--purple); color:white; width:80px; margin-top:0;" onclick="sendPublicChat()">KIRIM</button>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div class="card">
-                <div class="card-h">ADMIN: KHUSUS INPUT LAPORAN (PENGATURAN)</div>
-                <input type="text" id="set-l-nama" placeholder="Nama Pelapor">
-                <input type="date" id="set-l-tgl">
-                <input type="text" id="set-l-ttd" placeholder="Tanda Tangan">
-                <select id="set-l-tujuan"><option>BU TATI</option><option>BU AMI</option></select>
-                <button class="btn-main" style="background:var(--red); color:white" onclick="sendLaporan('set-l-')">KIRIM DARI PENGATURAN</button>
+                <div class="card-h">ADMIN INPUT (LAPORAN & SETORAN)</div>
+                <div class="flex-row">
+                    <div class="flex-col"><input type="text" id="set-l-nama" placeholder="Nama Lapor"><button class="btn-main" style="background:var(--red); color:white" onclick="sendLaporan('set-l-')">LAPOR</button></div>
+                    <div class="flex-col"><input type="text" id="set-s-nama" placeholder="Nama Setor"><button class="btn-main" style="background:var(--cyan); color:black" onclick="sendSetoran('set-s-')">SETOR</button></div>
+                </div>
             </div>
-        </div>
-        
-        <div id="gudang-view" class="section">
-             <div class="card"><div class="card-h">GUDANG SYSTEM</div><p>Sistem Aktif...</p></div>
-        </div>
-        <div id="notes-view" class="section">
-            <div class="card"><div class="card-h">CLOUD NOTES</div><textarea id="cloud-note" style="height:300px"></textarea></div>
         </div>
     </main>
 </div>
 
-
-
 <script>
-    // --- FIREBASE MULTI-CONFIG ---
+    // --- FIREBASE CONFIGS ---
     const confData = { databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com" };
+    const confGudang = { databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
     const confProf = { databaseURL: "https://nama--profile-default-rtdb.firebaseio.com" };
 
     const appData = firebase.initializeApp(confData, "DATA");
+    const appGudang = firebase.initializeApp(confGudang, "GUDANG");
     const appProf = firebase.initializeApp(confProf, "PROFILE");
 
     const dbData = firebase.database(appData);
+    const dbGudang = firebase.database(appGudang);
     const dbProf = firebase.database(appProf);
 
-    // --- CS & CALL SYSTEM (PEERJS) ---
+    // --- PEERJS FOR PUBLIC CALL ---
     const peer = new Peer();
-    let currentCall;
-
-    function startCall(video) {
-        document.getElementById('video-container').style.display = 'block';
-        navigator.mediaDevices.getUserMedia({ video: video, audio: true }).then(stream => {
+    peer.on('open', id => console.log('My Peer ID: ' + id));
+    peer.on('call', call => {
+        navigator.mediaDevices.getUserMedia({video:true, audio:true}).then(stream => {
             document.getElementById('localVideo').srcObject = stream;
-            // Di sini lo butuh ID Peer tujuan (admin), untuk demo gue pakai ID sendiri
-            const call = peer.call('admin-gibran-hub', stream);
-            call.on('stream', remoteStream => {
-                document.getElementById('remoteVideo').srcObject = remoteStream;
-            });
-            currentCall = call;
+            call.answer(stream);
+            call.on('stream', remoteStream => { document.getElementById('remoteVideo').srcObject = remoteStream; });
+        });
+    });
+
+    function startPublicCall(video) {
+        const targetId = prompt("Masukkan Peer ID Tujuan (Atau ID Admin):");
+        if(!targetId) return;
+        navigator.mediaDevices.getUserMedia({video: video, audio: true}).then(stream => {
+            document.getElementById('localVideo').srcObject = stream;
+            const call = peer.call(targetId, stream);
+            call.on('stream', remStream => { document.getElementById('remoteVideo').srcObject = remStream; });
         });
     }
 
-    function endCall() {
-        if(currentCall) currentCall.close();
-        document.getElementById('video-container').style.display = 'none';
-    }
-
-    // --- PROFIL SYSTEM ---
-    function saveProfile() {
-        const d = { nama: val('p-nama'), wa: val('p-wa'), img: val('p-url') };
-        dbProf.ref('user_profile').set(d).then(() => alert("Profil Diperbarui!"));
-    }
-    dbProf.ref('user_profile').on('value', s => {
-        const v = s.val();
-        if(v) {
-            document.getElementById('p-img-view').src = v.img || "";
-            document.getElementById('p-nama').value = v.nama || "";
-            document.getElementById('p-wa').value = v.wa || "";
+    // --- PUBLIC CHAT ---
+    function sendPublicChat() {
+        const msg = document.getElementById('pub-msg').value;
+        if(msg) {
+            dbProf.ref('public_chat').push({ user: localStorage.getItem('user_gibran'), text: msg, time: new Date().toLocaleTimeString() });
+            document.getElementById('pub-msg').value = "";
         }
+    }
+    dbProf.ref('public_chat').limitToLast(10).on('value', s => {
+        const div = document.getElementById('public-chat'); div.innerHTML = "";
+        s.forEach(c => { const v = c.val(); div.innerHTML += `<div><b>${v.user}:</b> ${v.text} <small>${v.time}</small></div>`; });
+        div.scrollTop = div.scrollHeight;
     });
 
-    // --- TRANSAKSI & REKAP ---
-    function sendLaporan(pre) {
-        const d = { tipe: "LAPORAN", nm: val(pre+'nama'), tgl: val(pre+'tgl'), ttd: val(pre+'ttd'), tujuan: val(pre+'tujuan') };
-        dbData.ref('transaksi').push(d).then(() => alert("Laporan Terkirim!"));
+    // --- GUDANG SYSTEM ---
+    function sendGudang() {
+        const d = { nm: val('g-nama'), tp: val('g-tipe'), uk: val('g-jumlah'), st: val('g-stok') };
+        if(d.nm) dbGudang.ref('stok').push(d).then(() => alert("Stok Disimpan!"));
     }
-    function sendSetoran(pre) {
-        const d = { tipe: "SETORAN", nm: val(pre+'nama'), tgl: val(pre+'tgl'), ttd: val(pre+'ttd'), tujuan: val(pre+'tujuan') };
-        dbData.ref('transaksi').push(d).then(() => alert("Setoran Terkirim!"));
-    }
+    dbGudang.ref('stok').on('value', s => {
+        const tb = document.getElementById('tbody-gudang'); tb.innerHTML = "";
+        s.forEach(c => {
+            const v = c.val(); const k = c.key;
+            tb.innerHTML += `<tr><td>${v.nm}</td><td>${v.tp}</td><td>${v.uk}</td><td>${v.st}</td><td><button onclick="delG('${k}')" style="background:red; color:white; border:none; cursor:pointer; font-size:9px; padding:3px 6px; border-radius:4px;">HAPUS</button></td></tr>`;
+        });
+    });
+    function delG(k) { if(confirm("Hapus?")) dbGudang.ref('stok/'+k).remove(); }
 
+    // --- LAINNYA (TRANSAKSI, PROFIL, DLL) ---
+    function sendLaporan(pre) { const d = { tipe:"LAPORAN", nm:val(pre+'nama'), tgl:val(pre+'tgl')||new Date().toLocaleDateString(), tujuan:val(pre+'tujuan')||"UMUM" }; dbData.ref('transaksi').push(d); }
+    function sendSetoran(pre) { const d = { tipe:"SETORAN", nm:val(pre+'nama'), tgl:val(pre+'tgl')||new Date().toLocaleDateString(), tujuan:val(pre+'tujuan')||"UMUM" }; dbData.ref('transaksi').push(d); }
+    
     dbData.ref('transaksi').on('value', s => {
         const tb = document.getElementById('tbody-monitor'); tb.innerHTML = "";
-        let cL = 0, cS = 0;
-        s.forEach(c => {
-            const v = c.val();
-            if(v.tipe === "LAPORAN") cL++; else cS++;
-            tb.innerHTML += `<tr><td>${v.tipe}</td><td>${v.nm}</td><td>${v.tgl}</td><td>${v.tujuan}</td></tr>`;
-        });
-        document.getElementById('total-laporan').innerText = cL;
-        document.getElementById('total-setoran').innerText = cS;
+        let L=0, S=0;
+        s.forEach(c => { const v=c.val(); if(v.tipe==="LAPORAN") L++; else S++; tb.innerHTML += `<tr><td>${v.tipe}</td><td>${v.nm}</td><td>${v.tgl}</td><td>${v.tujuan}</td></tr>`; });
+        document.getElementById('total-laporan').innerText = L; document.getElementById('total-setoran').innerText = S;
     });
 
-    // --- UTILS ---
-    function val(id) { return document.getElementById(id).value; }
-    function show(id, btn) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-    }
+    function saveProfile() { dbProf.ref('user_profile').set({ nama:val('p-nama'), wa:val('p-wa'), img:val('p-url') }).then(()=>alert("Profil Update!")); }
+    dbProf.ref('user_profile').on('value', s => { const v=s.val(); if(v){ document.getElementById('p-img-view').src=v.img; document.getElementById('p-nama').value=v.nama; document.getElementById('p-wa').value=v.wa; }});
+
+    function show(id, btn) { document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+    function val(id) { const el=document.getElementById(id); return el ? el.value : ""; }
     function logout() { localStorage.clear(); window.location.href='index.html'; }
 </script>
 </body>
