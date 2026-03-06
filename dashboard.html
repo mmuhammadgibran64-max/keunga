@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB v27.0 | ALL-IN-ONE SYSTEM</title>
+    <title>GIBRAN HUB v27.1 | FULL FINANCE SYSTEM</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
 
@@ -32,8 +33,7 @@
         table { width: 100%; border-collapse: collapse; font-size: 12px; }
         th { text-align: left; color: var(--cyan); border-bottom: 2px solid var(--cyan); padding: 8px; font-family: 'Orbitron'; font-size: 8px; }
         td { padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        #video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-        video { width: 100%; background: #000; border-radius: 8px; border: 1px solid var(--cyan); }
+        .act-btn { padding: 4px 8px; border-radius: 4px; border: none; cursor: pointer; font-size: 9px; font-family: 'Orbitron'; margin-right: 5px; color: white; }
     </style>
 </head>
 <body>
@@ -51,151 +51,111 @@
 
     <main>
         <div id="mon-view" class="section active">
-            <div class="card">
-                <div class="card-h">TOTAL REKAP DATA (LIVE CHART)</div>
-                <canvas id="rekapChart" style="max-height: 200px;"></canvas>
-            </div>
-            <div class="card">
-                <div class="card-h">MONITORING TRANSAKSI TERBARU</div>
-                <div style="overflow-x:auto;"><table><thead><tr><th>TIPE</th><th>NAMA</th><th>TGL</th><th>TUJUAN</th><th>TTD</th></tr></thead><tbody id="tbody-monitor"></tbody></table></div>
-            </div>
+            <div class="card"><div class="card-h">LIVE DATA CHART</div><canvas id="rekapChart" style="max-height: 200px;"></canvas></div>
+            <div class="card"><div class="card-h">MONITORING TRANSAKSI</div><div style="overflow-x:auto;"><table><thead><tr><th>TIPE</th><th>NAMA</th><th>TGL</th><th>TUJUAN</th></tr></thead><tbody id="tbody-monitor"></tbody></table></div></div>
         </div>
 
         <div id="input-view" class="section">
             <div class="flex-row">
-                <div class="flex-col card">
-                    <div class="card-h">INPUT LAPORAN</div>
-                    <input type="text" id="l-nama" placeholder="Nama yang Lapor">
-                    <input type="date" id="l-tgl">
-                    <input type="file" id="l-bukti" accept="image/*">
-                    <input type="text" id="l-ttd" placeholder="Tanda Tangan">
-                    <select id="l-tujuan"><option>BU TATI</option><option>BU AMI</option></select>
-                    <button class="btn-main" style="background:var(--red); color:white" onclick="simpanData('LAPORAN', 'l-')">KIRIM LAPORAN</button>
-                </div>
-                <div class="flex-col card">
-                    <div class="card-h">INPUT SETORAN</div>
-                    <input type="text" id="s-nama" placeholder="Nama yang Setor">
-                    <input type="date" id="s-tgl">
-                    <input type="file" id="s-bukti" accept="image/*">
-                    <input type="text" id="s-ttd" placeholder="Tanda Tangan">
-                    <select id="s-tujuan"><option>BU TATI</option><option>BU AMI</option></select>
-                    <button class="btn-main" style="background:var(--cyan); color:black" onclick="simpanData('SETORAN', 's-')">KIRIM SETORAN</button>
-                </div>
+                <div class="flex-col card"><div class="card-h">LAPORAN</div><input type="text" id="l-nama" placeholder="Nama"><input type="date" id="l-tgl"><button class="btn-main" style="background:var(--red); color:white" onclick="simpanData('LAPORAN', 'l-')">KIRIM</button></div>
+                <div class="flex-col card"><div class="card-h">SETORAN</div><input type="text" id="s-nama" placeholder="Nama"><input type="date" id="s-tgl"><button class="btn-main" style="background:var(--cyan); color:black" onclick="simpanData('SETORAN', 's-')">KIRIM</button></div>
             </div>
+
             <div class="card" style="border: 1px solid var(--gold);">
                 <div class="card-h">DOMPET DIGITAL - SISA SALDO</div>
-                <h2 id="saldo-akhir" style="color:var(--gold); font-family:'Orbitron'; margin:10px 0;">Rp 0</h2>
+                <h2 id="saldo-akhir" style="color:var(--gold); font-family:'Orbitron';">Rp 0</h2>
                 <div class="flex-row">
-                    <input type="number" id="w-masuk" placeholder="Isi Pemasukan" class="flex-col">
-                    <input type="number" id="w-keluar" placeholder="Isi Sisa Saldo" class="flex-col">
+                    <input type="number" id="w-masuk" placeholder="Pemasukan" class="flex-col">
+                    <input type="number" id="w-keluar" placeholder="Pengeluaran/Sisa" class="flex-col">
                 </div>
                 <button class="btn-main" style="background:var(--gold); color:black" onclick="updateWallet()">UPDATE SALDO</button>
-                <button class="btn-main" style="background:#00ff88; color:black; width:150px;" onclick="window.print()">🖨️ PRINT SALDO</button>
+                
+                <div style="margin-top:20px;">
+                    <div class="card-h">RIWAYAT TRANSAKSI SALDO (HAPUS & DOWNLOAD)</div>
+                    <div style="overflow-x:auto;">
+                        <table>
+                            <thead><tr><th>TANGGAL</th><th>MASUK</th><th>KELUAR</th><th>AKSI</th></tr></thead>
+                            <tbody id="tbody-wallet"></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div id="gudang-view" class="section">
             <div class="card">
-                <div class="card-h">GUDANG SYSTEM - INPUT BARANG</div>
+                <div class="card-h">GUDANG - INPUT BARANG</div>
                 <div class="flex-row">
                     <input type="text" id="g-nama" placeholder="Nama Barang" class="flex-col">
-                    <input type="text" id="g-jenis" placeholder="Jenis Barang" class="flex-col">
+                    <input type="text" id="g-jenis" placeholder="Jenis" class="flex-col">
                     <input type="number" id="g-jumlah" placeholder="Jumlah" class="flex-col">
                     <input type="number" id="g-stok" placeholder="Stok" class="flex-col">
                 </div>
-                <button class="btn-main" style="background:var(--purple); color:white" onclick="sendGudang()">SIMPAN KE GUDANG</button>
+                <button class="btn-main" style="background:var(--purple); color:white" onclick="sendGudang()">SIMPAN GUDANG</button>
             </div>
-            <div class="card">
-                <div class="card-h">DAFTAR STOK GUDANG</div>
-                <div style="overflow-x:auto;">
-                    <table>
-                        <thead><tr><th>NAMA</th><th>JENIS</th><th>JML</th><th>STOK</th><th>AKSI</th></tr></thead>
-                        <tbody id="tbody-gudang"></tbody>
-                    </table>
-                </div>
-            </div>
+            <div class="card"><div class="card-h">STOK GUDANG</div><div style="overflow-x:auto;"><table><thead><tr><th>NAMA</th><th>JENIS</th><th>JML</th><th>STOK</th><th>AKSI</th></tr></thead><tbody id="tbody-gudang"></tbody></table></div></div>
         </div>
 
-        <div id="notes-view" class="section">
-            <div class="card"><div class="card-h">CLOUD NOTES</div><textarea id="cloud-note" style="height:350px;"></textarea></div>
-        </div>
-
-        <div id="setting-view" class="section">
-            <div class="flex-row">
-                <div class="flex-col card">
-                    <div class="card-h">PROFIL ADMIN</div>
-                    <input type="text" id="p-nama" placeholder="Nama Profile">
-                    <input type="text" id="p-wa" placeholder="Nomor WA">
-                    <button class="btn-main" style="background:var(--cyan); color:black" onclick="saveProfile()">SIMPAN PROFIL</button>
-                </div>
-                <div class="flex-col card">
-                    <div class="card-h">CS PUBLIC (VIDEO & CHAT)</div>
-                    <div id="video-grid"><video id="localVideo" autoplay muted></video><video id="remoteVideo" autoplay></video></div>
-                    <div id="public-chat" style="height:100px; overflow-y:auto; background:rgba(0,0,0,0.3); padding:5px; margin-top:10px; font-size:11px;"></div>
-                    <input type="text" id="pub-msg" placeholder="Pesan..." style="margin-top:5px;">
-                    <button class="btn-main" style="background:var(--purple); color:white" onclick="sendPublicChat()">KIRIM CHAT</button>
-                    <button class="btn-main" style="background:#00ff88; color:black" onclick="startCall()">📹 VIDEO CALL</button>
-                </div>
-            </div>
-        </div>
+        <div id="notes-view" class="section"> <div class="card"><div class="card-h">CLOUD NOTES</div><textarea id="cloud-note" style="height:350px;"></textarea></div> </div>
+        <div id="setting-view" class="section"> <div class="card"><div class="card-h">PENGATURAN</div><p>Fitur CS & Profil Aktif...</p></div> </div>
     </main>
 </div>
 
 <script>
-    // --- SEMUA FIREBASE CONFIG ---
+    // --- FIREBASE CONFIGS ---
     const confData = { databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com" };
     const confGudang = { databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
     const confWallet = { databaseURL: "https://sisa-saldo-default-rtdb.firebaseio.com" };
-    const confProf = { databaseURL: "https://nama--profile-default-rtdb.firebaseio.com" };
 
     const appData = firebase.initializeApp(confData, "DATA");
     const appGudang = firebase.initializeApp(confGudang, "GUDANG");
     const appWallet = firebase.initializeApp(confWallet, "WALLET");
-    const appProf = firebase.initializeApp(confProf, "PROFILE");
 
     const dbData = firebase.database(appData);
     const dbGudang = firebase.database(appGudang);
     const dbWallet = firebase.database(appWallet);
-    const dbProf = firebase.database(appProf);
 
-    // --- CHART LOGIC ---
-    let myChart;
-    function updateChart(l, s) {
-        const ctx = document.getElementById('rekapChart').getContext('2d');
-        if(myChart) myChart.destroy();
-        myChart = new Chart(ctx, {
-            type: 'bar',
-            data: { labels: ['LAPORAN', 'SETORAN'], datasets: [{ data: [l, s], backgroundColor: ['#ff0055', '#00d4ff'] }] },
-            options: { plugins: { legend: { display: false } } }
-        });
-    }
-
-    // --- TRANSAKSI (LAPORAN/SETORAN) ---
-    function simpanData(tipe, pre) {
-        const d = { tipe, nama: val(pre+'nama'), tanggal: val(pre+'tgl'), ttd: val(pre+'ttd'), tujuan: val(pre+'tujuan') };
-        if(d.nama) dbData.ref('transaksi').push(d).then(() => alert(tipe + " Terkirim!"));
-    }
-    dbData.ref('transaksi').on('value', s => {
-        const tb = document.getElementById('tbody-monitor'); tb.innerHTML = "";
-        let L=0, S=0;
-        s.forEach(c => {
-            const v = c.val(); v.tipe === "LAPORAN" ? L++ : S++;
-            tb.innerHTML += `<tr><td>${v.tipe}</td><td>${v.nama}</td><td>${v.tanggal}</td><td>${v.tujuan}</td><td>${v.ttd}</td></tr>`;
-        });
-        updateChart(L, S);
-    });
-
-    // --- WALLET ---
+    // --- FUNGSI WALLET (SISA SALDO) DENGAN HAPUS & DOWNLOAD ---
     function updateWallet() {
-        const m = parseInt(val('w-masuk')) || 0, s = parseInt(val('w-keluar')) || 0;
-        dbWallet.ref('riwayat').push({ masuk: m, sisa: s, tgl: new Date().toLocaleString() });
+        const m = parseInt(val('w-masuk')) || 0, k = parseInt(val('w-keluar')) || 0;
+        if(m === 0 && k === 0) return alert("Isi data dulu!");
+        dbWallet.ref('riwayat').push({ tgl: new Date().toLocaleString(), masuk: m, keluar: k }).then(() => {
+            document.getElementById('w-masuk').value = ""; document.getElementById('w-keluar').value = "";
+        });
     }
+
     dbWallet.ref('riwayat').on('value', s => {
-        let total = 0; s.forEach(c => { total += (c.val().masuk - c.val().sisa); });
+        const tb = document.getElementById('tbody-wallet'); tb.innerHTML = "";
+        let total = 0;
+        s.forEach(c => {
+            const v = c.val(), k = c.key;
+            total += (v.masuk - v.keluar);
+            tb.innerHTML += `<tr>
+                <td>${v.tgl}</td>
+                <td style="color:#00ff88">Rp ${v.masuk.toLocaleString()}</td>
+                <td style="color:#ff0055">Rp ${v.keluar.toLocaleString()}</td>
+                <td>
+                    <button class="act-btn" style="background:red;" onclick="delW('${k}')">HAPUS</button>
+                    <button class="act-btn" style="background:var(--cyan); color:black;" onclick="dlW('${v.tgl}',${v.masuk},${v.keluar})">DL</button>
+                </td>
+            </tr>`;
+        });
         document.getElementById('saldo-akhir').innerText = "Rp " + total.toLocaleString();
     });
 
-    // --- GUDANG ---
+    function delW(id) { if(confirm("Hapus data saldo ini?")) dbWallet.ref('riwayat/'+id).remove(); }
+    
+    function dlW(tgl, m, k) {
+        const { jsPDF } = window.jspdf; const doc = new jsPDF();
+        doc.setFontSize(18); doc.text("STRUK DOMPET DIGITAL", 10, 20);
+        doc.setFontSize(12); doc.text(`Tanggal: ${tgl}`, 10, 40);
+        doc.text(`Pemasukan: Rp ${m.toLocaleString()}`, 10, 50);
+        doc.text(`Pengeluaran: Rp ${k.toLocaleString()}`, 10, 60);
+        doc.text(`Status: BERHASIL`, 10, 70);
+        doc.save(`Saldo_${tgl}.pdf`);
+    }
+
+    // --- FUNGSI GUDANG ---
     function sendGudang() {
         const d = { nm: val('g-nama'), jn: val('g-jenis'), jml: val('g-jumlah'), st: val('g-stok') };
         if(d.nm) dbGudang.ref('stok').push(d);
@@ -205,31 +165,20 @@
         s.forEach(c => {
             const v = c.val();
             tb.innerHTML += `<tr><td>${v.nm}</td><td>${v.jn}</td><td>${v.jml}</td><td>${v.st}</td>
-            <td><button onclick="dbGudang.ref('stok/${c.key}').remove()" style="background:red; color:white; border:none; cursor:pointer; padding:3px 6px; border-radius:4px;">HAPUS</button></td></tr>`;
+            <td><button class="act-btn" style="background:red;" onclick="dbGudang.ref('stok/${c.key}').remove()">HAPUS</button></td></tr>`;
         });
     });
 
-    // --- CS & PROFILE ---
-    const peer = new Peer();
-    function startCall() {
-        const target = prompt("ID Peer Tujuan:");
-        navigator.mediaDevices.getUserMedia({video:true, audio:true}).then(stream => {
-            document.getElementById('localVideo').srcObject = stream;
-            const call = peer.call(target, stream);
-            call.on('stream', rs => { document.getElementById('remoteVideo').srcObject = rs; });
-        });
+    // --- FUNGSI TRANSAKSI & LAINNYA ---
+    function simpanData(tipe, pre) {
+        const d = { tipe, nama: val(pre+'nama'), tanggal: val(pre+'tgl') };
+        if(d.nama) dbData.ref('transaksi').push(d);
     }
-    function sendPublicChat() {
-        dbProf.ref('chat').push({ user: val('p-nama') || 'Anon', msg: val('pub-msg') });
-        document.getElementById('pub-msg').value = "";
-    }
-    dbProf.ref('chat').limitToLast(10).on('value', s => {
-        const d = document.getElementById('public-chat'); d.innerHTML = "";
-        s.forEach(c => { d.innerHTML += `<div><b>${c.val().user}:</b> ${c.val().msg}</div>`; });
-        d.scrollTop = d.scrollHeight;
+    dbData.ref('transaksi').on('value', s => {
+        const tb = document.getElementById('tbody-monitor'); tb.innerHTML = "";
+        s.forEach(c => { const v = c.val(); tb.innerHTML += `<tr><td>${v.tipe}</td><td>${v.nama}</td><td>${v.tanggal}</td><td>UNIT</td></tr>`; });
     });
 
-    // --- SYSTEM ---
     function show(id, btn) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
@@ -237,7 +186,7 @@
         btn.classList.add('active');
     }
     function val(id) { return document.getElementById(id).value; }
-    function logout() { localStorage.clear(); window.location.href='index.html'; }
+    function logout() { window.location.href='index.html'; }
 </script>
 </body>
 </html>
