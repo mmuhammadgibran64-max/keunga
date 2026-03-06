@@ -130,17 +130,35 @@
 </div>
 
 <script>
-    // CONFIGS (ANTI HILANG)
-    const cData = { databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com" };
+// --- FIREBASE CONFIG BARU ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs",
+        authDomain: "tempat-masuk-nya-data.firebaseapp.com",
+        databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com",
+        projectId: "tempat-masuk-nya-data",
+        storageBucket: "tempat-masuk-nya-data.firebasestorage.app",
+        messagingSenderId: "918742049565",
+        appId: "1:918742049565:web:4490b03c04f5bf75e3f7f4",
+        measurementId: "G-C0EBFBVVVJ"
+    };
+
+    // Konfigurasi Database Terpisah
     const cGudang = { databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
     const cWallet = { databaseURL: "https://sisa-saldo-default-rtdb.firebaseio.com" };
 
-    const appD = firebase.initializeApp(cData, "D");
-    const appG = firebase.initializeApp(cGudang, "G");
-    const appW = firebase.initializeApp(cWallet, "W");
+    // Inisialisasi (Cukup Sekali Saja per App)
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig); 
+    }
+    
+    // Inisialisasi App Tambahan
+    const appG = firebase.apps.find(a => a.name === "G") || firebase.initializeApp(cGudang, "G");
+    const appW = firebase.apps.find(a => a.name === "W") || firebase.initializeApp(cWallet, "W");
 
-    const dbD = firebase.database(appD); const dbG = firebase.database(appG); const dbW = firebase.database(appW);
-
+    // Definisikan Database (HANYA SEKALI SAJA)
+    const dbD = firebase.database();       // Untuk Laporan & Setoran (Default)
+    const dbG = firebase.database(appG);    // Untuk Gudang
+    const dbW = firebase.database(appW);    // Untuk Dompet/Wallet
    // --- LOGIC DOMPET (SISA SALDO) - VERSI FIX ANTI EROR ---
     function dlPDF(tgl, m, k) {
         const { jsPDF } = window.jspdf;
@@ -238,4 +256,5 @@
 </script>
 </body>
 </html>
+
 
