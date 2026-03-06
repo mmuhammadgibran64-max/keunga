@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB v26.2 | ULTIMATE SYSTEM</title>
+    <title>GIBRAN HUB v26.3 | GUDANG SYSTEM</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -20,35 +20,39 @@
         main { flex: 1; overflow-y: auto; padding: 30px; background: radial-gradient(circle at top right, #0a111a, #050505); padding-bottom: 100px; }
 
         .logo { font-family: 'Orbitron'; color: var(--cyan); font-size: 1.4rem; margin-bottom: 40px; text-shadow: 0 0 10px var(--cyan); text-align: center; }
-        .nav-btn { background: transparent; border: 1px solid rgba(0, 212, 255, 0.2); color: #888; padding: 14px; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; border-radius: 12px; text-align: left; transition: 0.3s; outline: none; }
+        .nav-btn { background: transparent; border: 1px solid rgba(0, 212, 255, 0.2); color: #888; padding: 14px; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; border-radius: 12px; transition: 0.3s; }
         .nav-btn.active, .nav-btn:hover { background: var(--cyan); color: black; box-shadow: 0 0 20px var(--cyan); border-color: var(--cyan); }
 
-        .section { display: none; animation: fadeIn 0.4s ease; }
-        .section.active { display: block; }
+        .section { display: none; }
+        .section.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .card { background: var(--card); border: 1px solid rgba(0, 212, 255, 0.1); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.7); }
-        .card-h { font-family: 'Orbitron'; font-size: 11px; color: var(--cyan); margin-bottom: 15px; border-bottom: 1px solid rgba(0,212,255,0.2); padding-bottom: 8px; letter-spacing: 1px; }
+        .card-h { font-family: 'Orbitron'; font-size: 11px; color: var(--cyan); margin-bottom: 15px; border-bottom: 1px solid rgba(0,212,255,0.2); padding-bottom: 8px; }
 
-        /* Flex Layout untuk Laporan & Setoran */
-        .flex-row { display: flex; gap: 20px; flex-wrap: wrap; }
-        .flex-col { flex: 1; min-width: 300px; }
-
+        .flex-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px; }
         label { display: block; font-size: 9px; color: var(--cyan); font-family: 'Orbitron'; margin-bottom: 5px; }
-        input, select, textarea { width: 100%; padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 212, 255, 0.2); color: white; border-radius: 8px; margin-bottom: 12px; outline: none; font-size: 13px; box-sizing: border-box; }
-        .btn-main { width: 100%; padding: 14px; border: none; border-radius: 8px; font-family: 'Orbitron'; font-size: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-laporan { background: var(--red); color: white; }
-        .btn-setoran { background: var(--cyan); color: black; }
+        input, select, textarea { width: 100%; padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 212, 255, 0.2); color: white; border-radius: 8px; outline: none; font-size: 13px; box-sizing: border-box; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-        th { text-align: left; color: var(--cyan); border-bottom: 2px solid var(--cyan); padding: 10px; font-family: 'Orbitron'; font-size: 9px; }
-        td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .btn-main { padding: 14px; border: none; border-radius: 8px; font-family: 'Orbitron'; font-size: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; width: 100%; }
+        .btn-purple { background: var(--purple); color: white; }
+        .btn-green { background: #00ff88; color: black; margin-bottom: 15px; }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th { text-align: left; color: var(--cyan); border-bottom: 2px solid var(--cyan); padding: 12px; font-family: 'Orbitron'; font-size: 9px; }
+        td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-        /* Print Mode */
+        .act-btn { padding: 5px 10px; border-radius: 5px; border: none; font-size: 9px; cursor: pointer; font-family: 'Orbitron'; margin-right: 5px; }
+        .del-btn { background: var(--red); color: white; }
+        .down-btn { background: var(--cyan); color: black; }
+
         @media print {
-            nav, .btn-main, .action-area { display: none !important; }
-            main { background: white; color: black; }
-            .card { border: none; box-shadow: none; color: black; }
+            nav, .btn-main, .act-btn, .card-h, input, label { display: none !important; }
+            body { background: white; color: black; }
+            .wrapper { display: block; }
+            .card { border: 1px solid black; }
+            table { color: black; }
+            th { border-bottom: 2px solid black; color: black; }
         }
     </style>
 </head>
@@ -57,76 +61,48 @@
 <div class="wrapper">
     <nav>
         <div class="logo">GIBRAN_HUB</div>
-        <button class="nav-btn active" onclick="show('mon-view', this)">MONITORING</button>
+        <button class="nav-btn" onclick="show('mon-view', this)">MONITORING</button>
         <button class="nav-btn" onclick="show('input-view', this)">INPUT DATA</button>
-        <button class="nav-btn" onclick="show('gudang-view', this)">GUDANG & STOK</button>
+        <button class="nav-btn active" onclick="show('gudang-view', this)">GUDANG & STOK</button>
         <button class="nav-btn" onclick="show('notes-view', this)">CLOUD NOTES</button>
         <button class="nav-btn" style="margin-top:auto; color:var(--red);" onclick="logout()">LOGOUT</button>
     </nav>
 
     <main>
-        <div id="mon-view" class="section active">
-            <div class="card">
-                <div class="card-h">OPERATOR STATUS</div>
-                <h2 id="user-display" style="color: var(--cyan);">---</h2>
-                <p style="color: #00ff88; font-size: 12px;">Security: Enabled</p>
-            </div>
-            <div class="card">
-                <div class="card-h">MONITORING DATA MASUK</div>
-                <div style="overflow-x:auto;">
-                    <table>
-                        <thead><tr><th>TIPE</th><th>NAMA</th><th>TGL</th><th>TUJUAN</th><th>AKSI</th></tr></thead>
-                        <tbody id="tbody-monitor"></tbody>
-                    </table>
-                </div>
-            </div>
+        <div id="mon-view" class="section">
+            <div class="card"><div class="card-h">LIVE MONITOR DATA</div><div id="data-list">Loading...</div></div>
         </div>
 
         <div id="input-view" class="section">
-            <div class="flex-row">
-                <div class="flex-col">
-                    <div class="card">
-                        <div class="card-h">KHUSUS INPUT LAPORAN</div>
-                        <label>Nama yang Lapor</label><input type="text" id="l-nama">
-                        <label>Tanggal Lapor</label><input type="date" id="l-tgl">
-                        <label>Bukti Laporan</label><input type="file" id="l-bukti">
-                        <label>Tanda Tangan</label><input type="text" id="l-ttd">
-                        <label>Kirim Ke Siapa?</label>
-                        <select id="l-tujuan"><option>BU TATI</option><option>BU AMI</option></select>
-                        <button class="btn-main btn-laporan" onclick="sendLaporan()">KIRIM LAPORAN</button>
-                    </div>
-                </div>
-                <div class="flex-col">
-                    <div class="card" style="border-color: var(--cyan);">
-                        <div class="card-h">KHUSUS INPUT SETORAN</div>
-                        <label>Nama yang Setor</label><input type="text" id="s-nama">
-                        <label>Tanggal Setor</label><input type="date" id="s-tgl">
-                        <label>Bukti Setor</label><input type="file" id="s-bukti">
-                        <label>Tanda Tangan</label><input type="text" id="s-ttd">
-                        <label>Setor Ke Siapa?</label>
-                        <select id="s-tujuan"><option>BU TATI</option><option>BU AMI</option></select>
-                        <button class="btn-main btn-setoran" onclick="sendSetoran()">KIRIM SETORAN</button>
-                    </div>
-                </div>
-            </div>
+             <div class="card"><div class="card-h">INPUT SETORAN / LAPORAN</div><p>Fitur Aktif...</p></div>
         </div>
 
-        <div id="gudang-view" class="section">
+        <div id="gudang-view" class="section active">
             <div class="card">
                 <div class="card-h">INPUT STOK BARANG</div>
-                <div class="flex-row">
-                    <div class="flex-col"><input type="text" id="g-nama" placeholder="Nama Barang"></div>
-                    <div class="flex-col"><input type="text" id="g-tipe" placeholder="Tipe"></div>
-                    <div class="flex-col"><input type="text" id="g-ukuran" placeholder="Ukuran"></div>
-                    <div class="flex-col"><input type="number" id="g-stok" placeholder="Stok"></div>
+                <div class="flex-grid">
+                    <div><label>NAMA BARANG</label><input type="text" id="g-nama"></div>
+                    <div><label>TIPE</label><input type="text" id="g-tipe"></div>
+                    <div><label>JUMLAH</label><input type="number" id="g-jumlah"></div>
+                    <div><label>STOK</label><input type="number" id="g-stok"></div>
                 </div>
-                <button class="btn-main" style="background:var(--purple); color:white;" onclick="sendGudang()">SIMPAN GUDANG</button>
+                <button class="btn-main btn-purple" onclick="saveGudang()">SIMPAN STOK GUDANG</button>
             </div>
+
             <div class="card">
                 <div class="card-h">DAFTAR STOK GUDANG</div>
+                <button class="btn-main btn-green" onclick="window.print()">🖨️ PRINT SEMUA STOK (LAPORAN FISIK)</button>
                 <div style="overflow-x:auto;">
-                    <table id="table-gudang">
-                        <thead><tr><th>NAMA</th><th>TIPE</th><th>UKURAN</th><th>STOK</th><th>AKSI</th></tr></thead>
+                    <table id="stok-table">
+                        <thead>
+                            <tr>
+                                <th>NAMA</th>
+                                <th>TIPE</th>
+                                <th>UKURAN/JML</th>
+                                <th>STOK</th>
+                                <th>AKSI</th>
+                            </tr>
+                        </thead>
                         <tbody id="tbody-gudang"></tbody>
                     </table>
                 </div>
@@ -134,36 +110,18 @@
         </div>
 
         <div id="notes-view" class="section">
-            <div class="card">
-                <div class="card-h">CLOUD NOTES (AUTO-SYNC)</div>
-                <textarea id="cloud-note" style="height: 400px; background: rgba(0,0,0,0.5);" placeholder="Tulis catatan di sini..."></textarea>
-            </div>
+            <div class="card"><div class="card-h">CLOUD NOTES</div><textarea id="cloud-note" style="height:300px"></textarea></div>
         </div>
     </main>
 </div>
 
 <script>
-    // --- FIREBASE CONFIGS ---
-    const confData = { databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com" };
+    // CONFIG FIREBASE
     const confGudang = { databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
-    const confNotes = { databaseURL: "https://catatankakulator-default-rtdb.firebaseio.com" };
-
-    const appData = firebase.initializeApp(confData, "DATA");
-    const appGudang = firebase.initializeApp(confGudang, "GUDANG");
-    const appNotes = firebase.initializeApp(confNotes, "NOTES");
-
-    const dbData = firebase.database(appData);
+    const appGudang = firebase.initializeApp(confGudang, "GUDANG_APP");
     const dbGudang = firebase.database(appGudang);
-    const dbNotes = firebase.database(appNotes);
 
-    // -- Session --
-    window.onload = () => {
-        const u = localStorage.getItem('user_gibran');
-        if(!u) window.location.href='index.html';
-        document.getElementById('user-display').innerText = u;
-    };
-
-    // -- Navigasi --
+    // Navigasi
     function show(id, btn) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
@@ -171,46 +129,64 @@
         btn.classList.add('active');
     }
 
-    // -- Logic Laporan & Setoran --
-    function sendLaporan() {
-        const d = { tipe: "LAPORAN", nm: val('l-nama'), tgl: val('l-tgl'), ttd: val('l-ttd'), tujuan: val('l-tujuan') };
-        if(d.nm) dbData.ref('transaksi').push(d).then(() => alert("Laporan Terkirim!"));
+    // CRUD GUDANG
+    function saveGudang() {
+        const data = {
+            nama: document.getElementById('g-nama').value,
+            tipe: document.getElementById('g-tipe').value,
+            jumlah: document.getElementById('g-jumlah').value,
+            stok: document.getElementById('g-stok').value,
+            timestamp: new Date().toLocaleString()
+        };
+        if(data.nama) {
+            dbGudang.ref('stok_barang').push(data).then(() => {
+                alert("Data Berhasil Disimpan!");
+                document.querySelectorAll('#gudang-view input').forEach(i => i.value = "");
+            });
+        } else { alert("Minimal isi Nama Barang!"); }
     }
-    function sendSetoran() {
-        const d = { tipe: "SETORAN", nm: val('s-nama'), tgl: val('s-tgl'), ttd: val('s-ttd'), tujuan: val('s-tujuan') };
-        if(d.nm) dbData.ref('transaksi').push(d).then(() => alert("Setoran Terkirim!"));
-    }
-    dbData.ref('transaksi').on('value', s => {
-        const tb = document.getElementById('tbody-monitor'); tb.innerHTML = "";
-        s.forEach(c => {
-            const v = c.val();
-            tb.innerHTML += `<tr><td>${v.tipe}</td><td>${v.nm}</td><td>${v.tgl}</td><td>${v.tujuan}</td>
-            <td><button onclick="window.print()" style="padding:4px; font-size:9px; cursor:pointer;">PRINT</button></td></tr>`;
+
+    // Load Data ke Tabel
+    dbGudang.ref('stok_barang').on('value', snapshot => {
+        const tbody = document.getElementById('tbody-gudang');
+        tbody.innerHTML = "";
+        snapshot.forEach(child => {
+            const v = child.val();
+            const k = child.key;
+            tbody.innerHTML += `
+                <tr>
+                    <td>${v.nama}</td>
+                    <td>${v.tipe}</td>
+                    <td>${v.jumlah}</td>
+                    <td>${v.stok}</td>
+                    <td>
+                        <button class="act-btn del-btn" onclick="hapusData('${k}')">HAPUS</button>
+                        <button class="act-btn down-btn" onclick="downloadPDF('${v.nama}', '${v.tipe}', '${v.stok}')">DOWNLOAD</button>
+                    </td>
+                </tr>
+            `;
         });
     });
 
-    // -- Logic Gudang --
-    function sendGudang() {
-        const d = { nm: val('g-nama'), tp: val('g-tipe'), uk: val('g-ukuran'), st: val('g-stok') };
-        if(d.nm) dbGudang.ref('stok').push(d).then(() => alert("Gudang Updated!"));
+    function hapusData(key) {
+        if(confirm("Yakin mau hapus data ini?")) {
+            dbGudang.ref('stok_barang/' + key).remove();
+        }
     }
-    dbGudang.ref('stok').on('value', s => {
-        const tb = document.getElementById('tbody-gudang'); tb.innerHTML = "";
-        s.forEach(c => {
-            const v = c.val(); const k = c.key;
-            tb.innerHTML += `<tr><td>${v.nm}</td><td>${v.tp}</td><td>${v.uk}</td><td>${v.st}</td>
-            <td><button onclick="delG('${k}')" style="background:red; color:white; border:none; cursor:pointer;">HAPUS</button></td></tr>`;
-        });
-    });
-    function delG(k) { if(confirm("Hapus?")) dbGudang.ref('stok/'+k).remove(); }
 
-    // -- Logic Notes --
-    const noteArea = document.getElementById('cloud-note');
-    dbNotes.ref('data').on('value', s => { if(!noteArea.matches(':focus')) noteArea.value = s.val()?.text || ""; });
-    noteArea.oninput = (e) => dbNotes.ref('data').set({ text: e.target.value });
+    function downloadPDF(nama, tipe, stok) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.setFont("helvetica", "bold");
+        doc.text("BUKTI STOK GIBRAN_HUB", 10, 10);
+        doc.setFont("helvetica", "normal");
+        doc.text(`Nama Barang: ${nama}`, 10, 20);
+        doc.text(`Tipe: ${tipe}`, 10, 30);
+        doc.text(`Jumlah Stok: ${stok}`, 10, 40);
+        doc.text(`Dicetak pada: ${new Date().toLocaleString()}`, 10, 50);
+        doc.save(`stok_${nama}.pdf`);
+    }
 
-    // -- Utils --
-    function val(id) { return document.getElementById(id).value; }
     function logout() { localStorage.clear(); window.location.href='index.html'; }
 </script>
 </body>
