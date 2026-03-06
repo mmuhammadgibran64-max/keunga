@@ -3,85 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB v26.4 | ULTIMATE REPAIR</title>
+    <title>GIBRAN HUB v26.5 | ULTIMATE SYSTEM</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
 
     <style>
-        :root { --red: #ff0055; --purple: #7000ff; --cyan: #00d4ff; --bg: #050505; --card: rgba(15, 15, 15, 0.95); }
+        :root { --red: #ff0055; --purple: #7000ff; --cyan: #00d4ff; --bg: #050505; --card: rgba(15, 15, 15, 0.98); }
         body, html { margin: 0; padding: 0; background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; height: 100vh; overflow: hidden; }
-        
         .wrapper { display: flex; height: 100vh; }
-        nav { width: 260px; background: #000; border-right: 2px solid var(--cyan); padding: 25px; display: flex; flex-direction: column; gap: 10px; z-index: 10; }
+        nav { width: 260px; background: #000; border-right: 2px solid var(--cyan); padding: 25px; display: flex; flex-direction: column; gap: 8px; z-index: 10; }
         main { flex: 1; overflow-y: auto; padding: 30px; background: radial-gradient(circle at top right, #0a111a, #050505); padding-bottom: 100px; }
 
-        .logo { font-family: 'Orbitron'; color: var(--cyan); font-size: 1.4rem; margin-bottom: 40px; text-shadow: 0 0 10px var(--cyan); text-align: center; }
-        .nav-btn { background: transparent; border: 1px solid rgba(0, 212, 255, 0.2); color: #888; padding: 14px; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; border-radius: 12px; text-align: left; transition: 0.3s; outline: none; }
-        .nav-btn.active, .nav-btn:hover { background: var(--cyan); color: black; box-shadow: 0 0 20px var(--cyan); border-color: var(--cyan); }
+        .nav-btn { background: transparent; border: 1px solid rgba(0, 212, 255, 0.1); color: #888; padding: 12px; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; border-radius: 10px; text-align: left; transition: 0.3s; }
+        .nav-btn.active, .nav-btn:hover { background: var(--cyan); color: black; box-shadow: 0 0 15px var(--cyan); }
 
         .section { display: none; }
         .section.active { display: block; animation: fadeIn 0.4s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .card { background: var(--card); border: 1px solid rgba(0, 212, 255, 0.1); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.7); }
-        .card-h { font-family: 'Orbitron'; font-size: 11px; color: var(--cyan); margin-bottom: 15px; border-bottom: 1px solid rgba(0,212,255,0.2); padding-bottom: 8px; letter-spacing: 1px; }
+        .card { background: var(--card); border: 1px solid rgba(0, 212, 255, 0.1); border-radius: 15px; padding: 20px; margin-bottom: 20px; }
+        .card-h { font-family: 'Orbitron'; font-size: 11px; color: var(--cyan); margin-bottom: 15px; border-bottom: 1px solid rgba(0,212,255,0.2); padding-bottom: 8px; }
 
         .flex-row { display: flex; gap: 20px; flex-wrap: wrap; }
         .flex-col { flex: 1; min-width: 300px; }
 
-        label { display: block; font-size: 9px; color: var(--cyan); font-family: 'Orbitron'; margin-bottom: 5px; }
-        input, select, textarea { width: 100%; padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 212, 255, 0.2); color: white; border-radius: 8px; margin-bottom: 12px; outline: none; font-size: 13px; box-sizing: border-box; }
+        input, select, textarea { width: 100%; padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 212, 255, 0.2); color: white; border-radius: 8px; margin-bottom: 10px; outline: none; }
+        .btn-main { width: 100%; padding: 12px; border: none; border-radius: 8px; font-family: 'Orbitron'; font-size: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 5px; }
+
+        /* REKAP STYLE */
+        .rekap-box { background: linear-gradient(45deg, #1a1a1a, #000); border: 1px solid var(--cyan); padding: 15px; border-radius: 10px; text-align: center; }
+        .rekap-val { font-size: 24px; font-family: 'Orbitron'; color: var(--cyan); }
+
+        /* CS ONLINE STYLE */
+        #video-container { width: 100%; height: 200px; background: #000; border-radius: 10px; margin-top: 10px; display: none; overflow: hidden; }
+        video { width: 100%; height: 100%; object-fit: cover; }
         
-        .btn-main { width: 100%; padding: 14px; border: none; border-radius: 8px; font-family: 'Orbitron'; font-size: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-laporan { background: var(--red); color: white; }
-        .btn-setoran { background: var(--cyan); color: black; }
-        .btn-print { background: #00ff88; color: black; margin-bottom: 15px; }
-
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-        th { text-align: left; color: var(--cyan); border-bottom: 2px solid var(--cyan); padding: 10px; font-family: 'Orbitron'; font-size: 9px; }
-        td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-
-        .act-btn { padding: 5px 10px; border-radius: 5px; border: none; font-size: 8px; cursor: pointer; font-family: 'Orbitron'; margin-right: 5px; }
-        .del-btn { background: var(--red); color: white; }
-        .down-btn { background: var(--cyan); color: black; }
-
-        @media print {
-            nav, .btn-main, .act-btn, .card-h, input, label { display: none !important; }
-            body { background: white; color: black; }
-            .wrapper { display: block; }
-            .card { border: 1px solid black; }
-            table { color: black; }
-            th { border-bottom: 2px solid black; color: black; }
-        }
+        .profile-img-preview { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--cyan); object-fit: cover; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
 <div class="wrapper">
     <nav>
-        <div class="logo">GIBRAN_HUB</div>
+        <div class="logo" style="font-family:'Orbitron'; color:var(--cyan); text-align:center; margin-bottom:30px;">GIBRAN_HUB</div>
         <button class="nav-btn active" onclick="show('mon-view', this)">MONITORING</button>
         <button class="nav-btn" onclick="show('input-view', this)">INPUT DATA</button>
         <button class="nav-btn" onclick="show('gudang-view', this)">GUDANG & STOK</button>
         <button class="nav-btn" onclick="show('notes-view', this)">CLOUD NOTES</button>
+        <button class="nav-btn" onclick="show('cs-view', this)">📞 CS ONLINE (LIVE)</button>
+        <button class="nav-btn" onclick="show('setting-view', this)">⚙️ PENGATURAN</button>
         <button class="nav-btn" style="margin-top:auto; color:var(--red);" onclick="logout()">LOGOUT</button>
     </nav>
 
     <main>
         <div id="mon-view" class="section active">
-            <div class="card">
-                <div class="card-h">OPERATOR STATUS</div>
-                <h2 id="user-display" style="color: var(--cyan);">---</h2>
+            <div class="flex-row">
+                <div class="flex-col rekap-box">
+                    <div style="font-size:10px; font-family:'Orbitron'">TOTAL SETORAN</div>
+                    <div class="rekap-val" id="total-setoran">0</div>
+                </div>
+                <div class="flex-col rekap-box">
+                    <div style="font-size:10px; font-family:'Orbitron'">TOTAL LAPORAN</div>
+                    <div class="rekap-val" id="total-laporan">0</div>
+                </div>
             </div>
-            <div class="card">
-                <div class="card-h">MONITORING DATA MASUK</div>
+            <div class="card" style="margin-top:20px;">
+                <div class="card-h">LIVE TRANSACTION MONITOR</div>
                 <div style="overflow-x:auto;">
                     <table>
-                        <thead><tr><th>TIPE</th><th>NAMA</th><th>TGL</th><th>TUJUAN</th><th>AKSI</th></tr></thead>
+                        <thead><tr><th>TIPE</th><th>NAMA</th><th>TGL</th><th>TUJUAN</th></tr></thead>
                         <tbody id="tbody-monitor"></tbody>
                     </table>
                 </div>
@@ -90,138 +85,153 @@
 
         <div id="input-view" class="section">
             <div class="flex-row">
-                <div class="flex-col">
-                    <div class="card">
-                        <div class="card-h">KHUSUS INPUT LAPORAN</div>
-                        <label>Nama yang Lapor</label><input type="text" id="l-nama">
-                        <label>Tanggal Lapor</label><input type="date" id="l-tgl">
-                        <label>Tanda Tangan</label><input type="text" id="l-ttd">
-                        <label>Kirim Ke?</label>
-                        <select id="l-tujuan"><option>BU TATI</option><option>BU AMI</option></select>
-                        <button class="btn-main btn-laporan" onclick="sendLaporan()">KIRIM LAPORAN</button>
-                    </div>
+                <div class="flex-col card">
+                    <div class="card-h">KHUSUS INPUT LAPORAN</div>
+                    <input type="text" id="l-nama" placeholder="Nama Pelapor">
+                    <input type="date" id="l-tgl">
+                    <input type="text" id="l-ttd" placeholder="Tanda Tangan">
+                    <select id="l-tujuan"><option>BU TATI</option><option>BU AMI</option></select>
+                    <button class="btn-main" style="background:var(--red); color:white" onclick="sendLaporan('l-')">KIRIM LAPORAN</button>
                 </div>
-                <div class="flex-col">
-                    <div class="card">
-                        <div class="card-h">KHUSUS INPUT SETORAN</div>
-                        <label>Nama yang Setor</label><input type="text" id="s-nama">
-                        <label>Tanggal Setor</label><input type="date" id="s-tgl">
-                        <label>Tanda Tangan</label><input type="text" id="s-ttd">
-                        <label>Setor Ke?</label>
-                        <select id="s-tujuan"><option>BU TATI</option><option>BU AMI</option></select>
-                        <button class="btn-main btn-setoran" onclick="sendSetoran()">KIRIM SETORAN</button>
-                    </div>
+                <div class="flex-col card">
+                    <div class="card-h">KHUSUS INPUT SETORAN</div>
+                    <input type="text" id="s-nama" placeholder="Nama Penyetor">
+                    <input type="date" id="s-tgl">
+                    <input type="text" id="s-ttd" placeholder="Tanda Tangan">
+                    <select id="s-tujuan"><option>BU TATI</option><option>BU AMI</option></select>
+                    <button class="btn-main" style="background:var(--cyan); color:black" onclick="sendSetoran('s-')">KIRIM SETORAN</button>
                 </div>
             </div>
         </div>
 
+        <div id="cs-view" class="section">
+            <div class="card">
+                <div class="card-h">CUSTOMER SERVICE CENTER</div>
+                <div id="video-container">
+                    <video id="remoteVideo" autoplay playsinline></video>
+                    <video id="localVideo" autoplay playsinline muted style="width:80px; position:absolute; bottom:10px; right:10px; border:1px solid var(--cyan)"></video>
+                </div>
+                <div style="display:flex; gap:10px; margin-top:15px;">
+                    <button class="btn-main" style="background:#00ff88; color:black" onclick="startCall(true)">📹 VIDEO CALL</button>
+                    <button class="btn-main" style="background:var(--cyan); color:black" onclick="startCall(false)">📞 TELEPON</button>
+                    <button class="btn-main" style="background:var(--red); color:white" onclick="endCall()">❌ END</button>
+                </div>
+                <div id="chat-box" style="height:200px; background:rgba(0,0,0,0.5); margin-top:15px; overflow-y:auto; padding:10px; border-radius:10px; border:1px solid #333"></div>
+                <input type="text" id="cs-msg" placeholder="Ketik pesan..." style="margin-top:10px;">
+                <button class="btn-main" style="background:var(--purple); color:white" onclick="sendChat()">KIRIM CHAT</button>
+            </div>
+        </div>
+
+        <div id="setting-view" class="section">
+            <div class="card">
+                <div class="card-h">PROFIL PENGGUNA</div>
+                <center>
+                    <img id="p-img-view" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="profile-img-preview">
+                </center>
+                <label>Nama Profile</label><input type="text" id="p-nama">
+                <label>Nomor WA</label><input type="text" id="p-wa">
+                <label>Update Foto Profile (URL)</label><input type="text" id="p-url" placeholder="Paste link foto di sini...">
+                <button class="btn-main" style="background:var(--cyan); color:black" onclick="saveProfile()">SIMPAN PROFIL</button>
+            </div>
+            
+            <div class="card">
+                <div class="card-h">ADMIN: KHUSUS INPUT LAPORAN (PENGATURAN)</div>
+                <input type="text" id="set-l-nama" placeholder="Nama Pelapor">
+                <input type="date" id="set-l-tgl">
+                <input type="text" id="set-l-ttd" placeholder="Tanda Tangan">
+                <select id="set-l-tujuan"><option>BU TATI</option><option>BU AMI</option></select>
+                <button class="btn-main" style="background:var(--red); color:white" onclick="sendLaporan('set-l-')">KIRIM DARI PENGATURAN</button>
+            </div>
+        </div>
+        
         <div id="gudang-view" class="section">
-            <div class="card">
-                <div class="card-h">INPUT STOK BARANG</div>
-                <div class="flex-row">
-                    <div class="flex-col"><label>NAMA</label><input type="text" id="g-nama"></div>
-                    <div class="flex-col"><label>TIPE</label><input type="text" id="g-tipe"></div>
-                    <div class="flex-col"><label>JUMLAH</label><input type="number" id="g-jumlah"></div>
-                    <div class="flex-col"><label>STOK</label><input type="number" id="g-stok"></div>
-                </div>
-                <button class="btn-main" style="background:var(--purple); color:white;" onclick="sendGudang()">SIMPAN GUDANG</button>
-            </div>
-            <div class="card">
-                <div class="card-h">DAFTAR STOK GUDANG</div>
-                <button class="btn-main btn-print" onclick="window.print()">🖨️ PRINT SEMUA STOK</button>
-                <div style="overflow-x:auto;">
-                    <table>
-                        <thead><tr><th>NAMA</th><th>TIPE</th><th>UKURAN/JML</th><th>STOK</th><th>AKSI</th></tr></thead>
-                        <tbody id="tbody-gudang"></tbody>
-                    </table>
-                </div>
-            </div>
+             <div class="card"><div class="card-h">GUDANG SYSTEM</div><p>Sistem Aktif...</p></div>
         </div>
-
         <div id="notes-view" class="section">
-            <div class="card">
-                <div class="card-h">CLOUD NOTES (AUTO-SYNC)</div>
-                <textarea id="cloud-note" style="height: 400px; background: rgba(0,0,0,0.5);" placeholder="Tulis catatan..."></textarea>
-            </div>
+            <div class="card"><div class="card-h">CLOUD NOTES</div><textarea id="cloud-note" style="height:300px"></textarea></div>
         </div>
     </main>
 </div>
 
+
+
 <script>
-    // 1. Perbaiki Firebase Rules kamu dulu di Console (Samakan dengan gambar ke-3 tapi kurung kurawalnya benerin)
+    // --- FIREBASE MULTI-CONFIG ---
     const confData = { databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com" };
-    const confGudang = { databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
-    const confNotes = { databaseURL: "https://catatankakulator-default-rtdb.firebaseio.com" };
+    const confProf = { databaseURL: "https://nama--profile-default-rtdb.firebaseio.com" };
 
     const appData = firebase.initializeApp(confData, "DATA");
-    const appGudang = firebase.initializeApp(confGudang, "GUDANG");
-    const appNotes = firebase.initializeApp(confNotes, "NOTES");
+    const appProf = firebase.initializeApp(confProf, "PROFILE");
 
     const dbData = firebase.database(appData);
-    const dbGudang = firebase.database(appGudang);
-    const dbNotes = firebase.database(appNotes);
+    const dbProf = firebase.database(appProf);
 
-    window.onload = () => {
-        const u = localStorage.getItem('user_gibran');
-        if(!u) window.location.href='index.html';
-        document.getElementById('user-display').innerText = u;
-    };
+    // --- CS & CALL SYSTEM (PEERJS) ---
+    const peer = new Peer();
+    let currentCall;
 
+    function startCall(video) {
+        document.getElementById('video-container').style.display = 'block';
+        navigator.mediaDevices.getUserMedia({ video: video, audio: true }).then(stream => {
+            document.getElementById('localVideo').srcObject = stream;
+            // Di sini lo butuh ID Peer tujuan (admin), untuk demo gue pakai ID sendiri
+            const call = peer.call('admin-gibran-hub', stream);
+            call.on('stream', remoteStream => {
+                document.getElementById('remoteVideo').srcObject = remoteStream;
+            });
+            currentCall = call;
+        });
+    }
+
+    function endCall() {
+        if(currentCall) currentCall.close();
+        document.getElementById('video-container').style.display = 'none';
+    }
+
+    // --- PROFIL SYSTEM ---
+    function saveProfile() {
+        const d = { nama: val('p-nama'), wa: val('p-wa'), img: val('p-url') };
+        dbProf.ref('user_profile').set(d).then(() => alert("Profil Diperbarui!"));
+    }
+    dbProf.ref('user_profile').on('value', s => {
+        const v = s.val();
+        if(v) {
+            document.getElementById('p-img-view').src = v.img || "";
+            document.getElementById('p-nama').value = v.nama || "";
+            document.getElementById('p-wa').value = v.wa || "";
+        }
+    });
+
+    // --- TRANSAKSI & REKAP ---
+    function sendLaporan(pre) {
+        const d = { tipe: "LAPORAN", nm: val(pre+'nama'), tgl: val(pre+'tgl'), ttd: val(pre+'ttd'), tujuan: val(pre+'tujuan') };
+        dbData.ref('transaksi').push(d).then(() => alert("Laporan Terkirim!"));
+    }
+    function sendSetoran(pre) {
+        const d = { tipe: "SETORAN", nm: val(pre+'nama'), tgl: val(pre+'tgl'), ttd: val(pre+'ttd'), tujuan: val(pre+'tujuan') };
+        dbData.ref('transaksi').push(d).then(() => alert("Setoran Terkirim!"));
+    }
+
+    dbData.ref('transaksi').on('value', s => {
+        const tb = document.getElementById('tbody-monitor'); tb.innerHTML = "";
+        let cL = 0, cS = 0;
+        s.forEach(c => {
+            const v = c.val();
+            if(v.tipe === "LAPORAN") cL++; else cS++;
+            tb.innerHTML += `<tr><td>${v.tipe}</td><td>${v.nm}</td><td>${v.tgl}</td><td>${v.tujuan}</td></tr>`;
+        });
+        document.getElementById('total-laporan').innerText = cL;
+        document.getElementById('total-setoran').innerText = cS;
+    });
+
+    // --- UTILS ---
+    function val(id) { return document.getElementById(id).value; }
     function show(id, btn) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
-
-    // -- LAPORAN & SETORAN --
-    function sendLaporan() {
-        const d = { tipe: "LAPORAN", nm: val('l-nama'), tgl: val('l-tgl'), ttd: val('l-ttd'), tujuan: val('l-tujuan') };
-        if(d.nm) dbData.ref('transaksi').push(d).then(() => alert("Terkirim!"));
-    }
-    function sendSetoran() {
-        const d = { tipe: "SETORAN", nm: val('s-nama'), tgl: val('s-tgl'), ttd: val('s-ttd'), tujuan: val('s-tujuan') };
-        if(d.nm) dbData.ref('transaksi').push(d).then(() => alert("Terkirim!"));
-    }
-    dbData.ref('transaksi').on('value', s => {
-        const tb = document.getElementById('tbody-monitor'); tb.innerHTML = "";
-        s.forEach(c => {
-            const v = c.val();
-            tb.innerHTML += `<tr><td>${v.tipe}</td><td>${v.nm}</td><td>${v.tgl}</td><td>${v.tujuan}</td><td>-</td></tr>`;
-        });
-    });
-
-    // -- GUDANG --
-    function sendGudang() {
-        const d = { nm: val('g-nama'), tp: val('g-tipe'), uk: val('g-jumlah'), st: val('g-stok') };
-        if(d.nm) dbGudang.ref('stok').push(d).then(() => alert("Stok Disimpan!"));
-    }
-    dbGudang.ref('stok').on('value', s => {
-        const tb = document.getElementById('tbody-gudang'); tb.innerHTML = "";
-        s.forEach(c => {
-            const v = c.val(); const k = c.key;
-            tb.innerHTML += `<tr><td>${v.nm}</td><td>${v.tp}</td><td>${v.uk}</td><td>${v.st}</td>
-            <td>
-                <button class="act-btn del-btn" onclick="delG('${k}')">HAPUS</button>
-                <button class="act-btn down-btn" onclick="dlPDF('${v.nm}','${v.st}')">DL</button>
-            </td></tr>`;
-        });
-    });
-    function delG(k) { if(confirm("Hapus?")) dbGudang.ref('stok/'+k).remove(); }
-    
-    function dlPDF(n, s) {
-        const { jsPDF } = window.jspdf; const doc = new jsPDF();
-        doc.text(`LAPORAN STOK: ${n}`, 10, 10);
-        doc.text(`Jumlah Stok: ${s}`, 10, 20);
-        doc.save(`stok_${n}.pdf`);
-    }
-
-    // -- NOTES --
-    const noteArea = document.getElementById('cloud-note');
-    dbNotes.ref('data').on('value', s => { if(!noteArea.matches(':focus')) noteArea.value = s.val()?.text || ""; });
-    noteArea.oninput = (e) => dbNotes.ref('data').set({ text: e.target.value });
-
-    function val(id) { return document.getElementById(id).value; }
     function logout() { localStorage.clear(); window.location.href='index.html'; }
 </script>
 </body>
