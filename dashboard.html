@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB v28.8 | PRO & ADAPTIVE</title>
+    <title>GIBRAN HUB v28.9 | FULL BUTTON RESTORED</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -11,7 +11,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <style id="adaptive-style">
+    <style>
         :root { --red: #ff0055; --cyan: #00d4ff; --gold: #ffcc00; --bg: #050505; --card: rgba(15, 15, 15, 0.95); --purple: #bc13fe; --green: #00ff88; --nav-w: 250px; }
         body, html { margin: 0; padding: 0; background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; height: 100vh; overflow: hidden; }
         
@@ -41,11 +41,10 @@
         th { text-align: left; color: var(--cyan); border-bottom: 2px solid var(--cyan); padding: 12px; font-family: 'Orbitron'; font-size: 9px; }
         td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         
-        .act-btn { padding: 8px 10px; border-radius: 5px; border: none; cursor: pointer; font-size: 8px; font-family: 'Orbitron'; color: white; transition: 0.3s; margin-right: 2px; }
+        .act-btn { padding: 8px 10px; border-radius: 5px; border: none; cursor: pointer; font-size: 8px; font-family: 'Orbitron'; color: white; transition: 0.3s; margin-right: 2px; display: inline-block; vertical-align: middle; }
         .profile-img { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--cyan); object-fit: cover; margin-bottom: 10px; }
-        img.table-img { width: 45px; height: 45px; object-fit: cover; border-radius: 6px; border: 1px solid var(--cyan); }
+        img.table-img { width: 45px; height: 45px; object-fit: cover; border-radius: 6px; border: 1px solid var(--cyan); cursor: pointer; }
 
-        /* DEVICE MODE TOGGLES */
         .view-mode-btn { padding: 10px; background: #222; border: 1px solid var(--cyan); color: var(--cyan); font-family: 'Orbitron'; font-size: 9px; cursor: pointer; border-radius: 5px; margin-right: 5px; transition: 0.3s; }
         .view-mode-btn.active { background: var(--cyan); color: #000; }
     </style>
@@ -113,7 +112,7 @@
                     <input type="number" id="g-jumlah" placeholder="Jumlah" class="flex-col">
                     <input type="number" id="g-stok" placeholder="Stok" class="flex-col">
                 </div>
-                <button class="btn-main" style="background:var(--purple); color:white" onclick="sendG()">UPDATE GUDANG</button>
+                <button class="btn-main" style="background:var(--purple); color:white" onclick="sendG()">UPDATE DATABASE GUDANG</button>
             </div>
             <div class="card">
                 <div class="card-h">INVENTORY LIST</div>
@@ -138,8 +137,8 @@
                     <div class="flex-col"><label>KELUAR</label><input type="number" id="w-keluar" placeholder="0"></div>
                 </div>
                 <button class="btn-main" style="background:var(--gold); color:black;" onclick="updateW()">SIMPAN SALDO</button>
-                <div style="margin-top: 30px;">
-                    <div class="card-h">HISTORY TRANSAKSI</div>
+                <div style="margin-top: 35px;">
+                    <div class="card-h">HISTORY TRANSAKSI WALLET</div>
                     <div style="overflow-x:auto;">
                         <table>
                             <thead><tr><th>WAKTU</th><th>MASUK</th><th>KELUAR</th><th>AKSI</th></tr></thead>
@@ -152,7 +151,7 @@
 
         <div id="setting-view" class="section">
             <div class="card">
-                <div class="card-h">1. PENGATURAN PROFIL</div>
+                <div class="card-h">PENGATURAN PROFIL</div>
                 <div class="flex-row">
                     <div class="flex-col"><label>NAMA USAHA</label><input type="text" id="prof-nama"><label>NOMOR WA</label><input type="text" id="prof-wa"></div>
                     <div class="flex-col"><label>FOTO PROFIL</label><input type="file" id="prof-file" accept="image/*"></div>
@@ -160,8 +159,8 @@
                 <button class="btn-main" style="background:var(--cyan); color:black;" onclick="saveProfile()">UPDATE PROFIL</button>
             </div>
 
-            <div class="card" style="border-left: 5px solid var(--green);">
-                <div class="card-h">2. KASIR SALES & LABA RUGI</div>
+            <div class="card">
+                <div class="card-h">KASIR SALES & LABA RUGI</div>
                 <div class="flex-row">
                     <div class="flex-col">
                         <label>PRODUK JUAL</label>
@@ -178,36 +177,30 @@
                         <button class="btn-main" style="background:var(--green); color:black" onclick="saveSales()">INPUT SALES</button>
                     </div>
                     <div class="flex-col">
-                        <label>BIAYA/BELANJA</label>
-                        <select id="e-kat">
-                            <option value="Bahan Baku">Bahan Baku (Tepung/Kacang/Dll)</option>
-                            <option value="Operasional">Operasional (Gas)</option>
-                            <option value="Kemasan">Kemasan (Plastik/Label)</option>
-                        </select>
-                        <input type="number" id="e-rp" placeholder="Rp">
+                        <label>BELANJA BIAYA</label>
+                        <select id="e-kat"><option value="Bahan">Bahan Baku</option><option value="Operasional">Operasional (Gas)</option><option value="Kemasan">Kemasan</option></select>
+                        <input type="number" id="e-rp" placeholder="Nominal Rp">
                         <button class="btn-main" style="background:var(--red); color:white" onclick="saveExpense()">INPUT BIAYA</button>
                     </div>
                 </div>
-                <div style="background:rgba(0,0,0,0.5); padding:15px; border-radius:10px; margin-top:15px; border:1px dashed var(--gold);">
-                    <div class="flex-row" style="text-align:center;">
-                        <div class="flex-col"><label>JUAL</label><h3 id="lr-jual" style="color:var(--green); margin:0;">Rp 0</h3></div>
-                        <div class="flex-col"><label>BIAYA</label><h3 id="lr-biaya" style="color:var(--red); margin:0;">Rp 0</h3></div>
-                        <div class="flex-col"><label>CADANGAN (10%)</label><h3 id="lr-cadangan" style="color:var(--gold); margin:0;">Rp 0</h3></div>
+                <div style="background:rgba(0,0,0,0.5); padding:15px; border-radius:10px; margin-top:15px; text-align:center; border:1px solid var(--gold);">
+                    <div class="flex-row">
+                        <div class="flex-col"><label>JUAL</label><h3 id="lr-jual" style="color:var(--green);margin:0">Rp 0</h3></div>
+                        <div class="flex-col"><label>BIAYA</label><h3 id="lr-biaya" style="color:var(--red);margin:0">Rp 0</h3></div>
+                        <div class="flex-col"><label>CADANGAN (10%)</label><h3 id="lr-cadangan" style="color:var(--gold);margin:0">Rp 0</h3></div>
                     </div>
-                    <h2 id="lr-net" style="text-align:center; margin-top:15px; color:white;">LABA BERSIH: Rp 0</h2>
-                    <button class="btn-main" style="background:var(--purple); color:white; width:200px; margin:auto; display:block;" onclick="printLR()">CETAK STRUK LABA RUGI</button>
+                    <h2 id="lr-net" style="margin-top:15px">LABA BERSIH: Rp 0</h2>
+                    <button class="btn-main" style="background:var(--purple); color:white; width:auto; padding:10px 30px" onclick="printLR()">PRINT LABA RUGI</button>
                 </div>
             </div>
 
-            <div class="card" style="border-left: 5px solid var(--cyan);">
-                <div class="card-h">3. PENGATURAN TAMPILAN (ADAPTIVE MODE)</div>
-                <p style="font-size:11px; color:#aaa; margin-bottom:15px;">Pilih mode tampilan sesuai perangkat yang lo pake sekarang:</p>
+            <div class="card">
+                <div class="card-h">PENGATURAN TAMPILAN</div>
                 <div class="flex-row">
-                    <button class="view-mode-btn active" id="btn-pc" onclick="setMode('pc')">🖥️ DESKTOP / MONITOR</button>
-                    <button class="view-mode-btn" id="btn-ipad" onclick="setMode('ipad')">📱 IPAD / TABLET</button>
+                    <button class="view-mode-btn active" id="btn-pc" onclick="setMode('pc')">🖥️ PC</button>
+                    <button class="view-mode-btn" id="btn-ipad" onclick="setMode('ipad')">📱 IPAD</button>
                     <button class="view-mode-btn" id="btn-hp" onclick="setMode('hp')">🤳 HANDPHONE</button>
                 </div>
-                <div style="margin-top:20px; font-size:10px; color:var(--cyan);">*Mode ini akan menyesuaikan ukuran navigasi dan kartu agar nyaman di mata.</div>
             </div>
         </div>
     </main>
@@ -225,78 +218,69 @@
     const appG = firebase.initializeApp(configG, "G"); const dbG = firebase.database(appG);
     const appP = firebase.initializeApp(configP, "P"); const dbP = firebase.database(appP);
 
-    // --- ADAPTIVE VIEW LOGIC ---
-    function setMode(mode) {
-        const wrapper = document.getElementById('main-wrapper');
-        const nav = document.getElementById('sidebar');
-        const btns = document.querySelectorAll('.view-mode-btn');
-        btns.forEach(b => b.classList.remove('active'));
-
-        if(mode === 'hp') {
-            document.getElementById('btn-hp').classList.add('active');
-            nav.style.width = "70px";
-            nav.querySelectorAll('.nav-btn').forEach(b => { b.style.fontSize = "0px"; b.style.textAlign = "center"; });
-            document.querySelectorAll('.flex-col').forEach(c => c.style.minWidth = "100%");
-        } else if(mode === 'ipad') {
-            document.getElementById('btn-ipad').classList.add('active');
-            nav.style.width = "180px";
-            nav.querySelectorAll('.nav-btn').forEach(b => { b.style.fontSize = "8px"; b.style.textAlign = "left"; });
-            document.querySelectorAll('.flex-col').forEach(c => c.style.minWidth = "200px");
-        } else {
-            document.getElementById('btn-pc').classList.add('active');
-            nav.style.width = "250px";
-            nav.querySelectorAll('.nav-btn').forEach(b => { b.style.fontSize = "10px"; b.style.textAlign = "left"; });
-            document.querySelectorAll('.flex-col').forEach(c => c.style.minWidth = "280px");
-        }
-    }
-
-    // --- GLOBAL PRINT & SAVE ---
+    // --- GLOBAL TOOLS ---
     function printUniversal(judul, detail) {
         const p = window.open('', '_blank');
-        p.document.write(`<html><head><title>Print</title><style>body{font-family:sans-serif;padding:30px;}.b{border:2px solid #000;padding:20px;width:280px;margin:auto;}h3{text-align:center;margin-top:0; border-bottom:1px solid #000; padding-bottom:10px;}</style></head><body><div class="b"><h3>${judul}</h3>${detail}<hr><p style="font-size:10px;text-align:center">${new Date().toLocaleString()}</p></div><script>window.print();window.close();<\/script></body></html>`);
+        p.document.write(`<html><head><title>PRINT</title><style>body{font-family:sans-serif;padding:30px;}.b{border:2px solid #000;padding:20px;width:280px;margin:auto;}h3{text-align:center;border-bottom:1px solid #000;padding-bottom:10px;}</style></head><body><div class="b"><h3>${judul}</h3>${detail}<hr><p style="font-size:10px;text-align:center">${new Date().toLocaleString()}</p></div><script>window.print();window.close();<\/script></body></html>`);
     }
     function dlPDFUniversal(filename, content) {
         const { jsPDF } = window.jspdf; const doc = new jsPDF();
-        doc.text("GIBRAN HUB REPORT", 10, 20); doc.text("---------------------------------------", 10, 25);
-        let y = 40; content.forEach(line => { doc.text(line, 10, y); y += 10; });
+        doc.text("GIBRAN HUB REPORT", 10, 20); let y = 40; content.forEach(line => { doc.text(line, 10, y); y += 10; });
         doc.save(filename.replace(/[/, :]/g, '_') + ".pdf");
     }
 
-    // --- MONITORING LOGIC ---
+    // --- MONITORING (RESTORED BUTTONS) ---
     function simpan(tipe, pre) {
         const f = document.getElementById(pre+'bukti');
-        const d = { tipe: tipe, nama: v(pre+'nama'), tgl: v(pre+'tgl'), ttd: v(pre+'ttd'), tujuan: v(pre+'tujuan'), waktu: new Date().toLocaleString() };
+        const d = { tipe: tipe, nama: v(pre+'nama'), tgl: v(pre+'tgl'), ttd: v(pre+'ttd'), tujuan: v(pre+'tujuan') };
         if(f.files[0]) {
-            const r = new FileReader(); r.onload = (e) => { d.img = e.target.result; dbD.ref('transaksi').push(d).then(()=>alert("Terkirim!")); };
+            const r = new FileReader(); r.onload = (e) => { d.img = e.target.result; dbD.ref('transaksi').push(d).then(()=>alert("Success!")); };
             r.readAsDataURL(f.files[0]);
-        } else { dbD.ref('transaksi').push(d).then(()=>alert("Terkirim!")); }
+        } else { dbD.ref('transaksi').push(d).then(()=>alert("Success!")); }
     }
     dbD.ref('transaksi').on('value', s => {
         const tb = document.getElementById('tbody-monitor'); tb.innerHTML = ""; let L=0, S=0;
         s.forEach(c => {
             const r = c.val(); r.tipe === "LAPORAN" ? L++ : S++;
-            tb.innerHTML += `<tr><td>${r.tipe}</td><td>${r.nama}</td><td>${r.tgl}</td><td>${r.img ? `<img src="${r.img}" class="table-img">` : '-'}</td><td>${r.tujuan}</td>
-            <td><button class="act-btn" style="background:#333" onclick="dbD.ref('transaksi/${c.key}').remove()">X</button>
-            <button class="act-btn" style="background:var(--purple)" onclick="printUniversal('BUKTI', '<p>Nama: ${r.nama}</p>')">PRINT</button></td></tr>`;
+            tb.innerHTML += `<tr><td>${r.tipe}</td><td>${r.nama}</td><td>${r.tgl}</td>
+            <td>${r.img ? `<img src="${r.img}" class="table-img" onclick="window.open(this.src)">` : '-'}</td><td>${r.tujuan}</td>
+            <td>
+                <button class="act-btn" style="background:#333" onclick="dbD.ref('transaksi/${c.key}').remove()">X</button>
+                <button class="act-btn" style="background:var(--cyan); color:black" onclick="dlPDFUniversal('${r.tipe}_${r.nama}', ['Tipe: ${r.tipe}', 'Nama: ${r.nama}', 'Tanggal: ${r.tgl}'])">SAVE</button>
+                <button class="act-btn" style="background:var(--purple)" onclick="printUniversal('BUKTI ${r.tipe}', '<p>Nama: ${r.nama}</p><p>Tgl: ${r.tgl}</p>')">PRINT</button>
+            </td></tr>`;
         }); renderChart(L,S);
     });
 
-    // --- GUDANG LOGIC ---
+    // --- GUDANG (RESTORED BUTTONS) ---
     function sendG() { dbG.ref('stok').push({ nm:v('g-nama'), jn:v('g-jenis'), jml:v('g-jumlah'), st:v('g-stok') }); }
     dbG.ref('stok').on('value', s => {
         const tb = document.getElementById('tbody-gudang'); tb.innerHTML = "";
-        s.forEach(c => { const r = c.val(); tb.innerHTML += `<tr><td>${r.nm}</td><td>${r.jn}</td><td>${r.jml}</td><td>${r.st}</td><td><button class="act-btn" style="background:#333" onclick="dbG.ref('stok/${c.key}').remove()">X</button></td></tr>`; });
+        s.forEach(c => { const r = c.val();
+            tb.innerHTML += `<tr><td>${r.nm}</td><td>${r.jn}</td><td>${r.jml}</td><td>${r.st}</td>
+            <td>
+                <button class="act-btn" style="background:#333" onclick="dbG.ref('stok/${c.key}').remove()">X</button>
+                <button class="act-btn" style="background:var(--cyan); color:black" onclick="dlPDFUniversal('Stok_${r.nm}', ['Barang: ${r.nm}', 'Stok: ${r.st}'])">SAVE</button>
+                <button class="act-btn" style="background:var(--purple)" onclick="printUniversal('GUDANG', '<p>Nama: ${r.nm}</p><p>Stok: ${r.st}</p>')">PRINT</button>
+            </td></tr>`;
+        });
     });
 
-    // --- WALLET LOGIC ---
+    // --- WALLET (RESTORED BUTTONS) ---
     function updateW() { dbW.ref('riwayat').push({ tgl: new Date().toLocaleString('id-ID'), m: parseInt(v('w-masuk'))||0, k: parseInt(v('w-keluar'))||0 }); }
     dbW.ref('riwayat').on('value', s => {
         const tb = document.getElementById('tbody-wallet'); tb.innerHTML = ""; let tot = 0;
-        s.forEach(c => { const r = c.val(); tot += (r.m - r.k); tb.innerHTML += `<tr><td>${r.tgl}</td><td style="color:var(--green)">+${r.m}</td><td style="color:var(--red)">-${r.k}</td><td><button class="act-btn" style="background:#333" onclick="dbW.ref('riwayat/${c.key}').remove()">X</button></td></tr>`; });
-        document.getElementById('saldo-akhir').innerText = "Rp " + tot.toLocaleString();
+        s.forEach(c => { const r = c.val(); tot += (r.m - r.k);
+            tb.innerHTML += `<tr><td>${r.tgl}</td><td style="color:var(--green)">+${r.m}</td><td style="color:var(--red)">-${r.k}</td>
+            <td>
+                <button class="act-btn" style="background:#333" onclick="dbW.ref('riwayat/${c.key}').remove()">X</button>
+                <button class="act-btn" style="background:var(--cyan); color:black" onclick="dlPDFUniversal('Wallet', ['Tgl: ${r.tgl}', 'Masuk: ${r.m}'])">SAVE</button>
+                <button class="act-btn" style="background:var(--purple)" onclick="printUniversal('WALLET', '<p>Masuk: ${r.m}</p><p>Keluar: ${r.k}</p>')">PRINT</button>
+            </td></tr>`;
+        }); document.getElementById('saldo-akhir').innerText = "Rp " + tot.toLocaleString();
     });
 
-    // --- SETTING: PROFILE & FINANCE ---
+    // --- SETTING LOGIC ---
     function saveProfile() {
         const file = document.getElementById('prof-file').files[0];
         const d = { n: v('prof-nama'), w: v('prof-wa') };
@@ -304,7 +288,6 @@
             const r = new FileReader(); r.onload = (e) => { d.img = e.target.result; dbP.ref('user').set(d); };
             r.readAsDataURL(file);
         } else { dbP.ref('user').update(d); }
-        alert("Profil Updated!");
     }
     dbP.ref('user').on('value', s => {
         const d = s.val(); if(!d) return;
@@ -314,26 +297,34 @@
 
     function saveSales() { dbP.ref('finance').push({ tipe:'JUAL', p:v('p-produk'), q:v('p-qty'), tot:parseInt(v('p-total'))||0, tgl:new Date().toLocaleString() }); }
     function saveExpense() { dbP.ref('finance').push({ tipe:'BIAYA', p:v('e-kat'), tot:parseInt(v('e-rp'))||0, tgl:new Date().toLocaleString() }); }
-
     dbP.ref('finance').on('value', s => {
         let J=0, B=0; s.forEach(c => { const r = c.val(); r.tipe === 'JUAL' ? J += r.tot : B += r.tot; });
-        const net = J - B; const cad = net > 0 ? net * 0.1 : 0;
-        document.getElementById('lr-jual').innerText = "Rp " + J.toLocaleString();
-        document.getElementById('lr-biaya').innerText = "Rp " + B.toLocaleString();
-        document.getElementById('lr-cadangan').innerText = "Rp " + cad.toLocaleString();
-        document.getElementById('lr-net').innerText = "LABA BERSIH: Rp " + net.toLocaleString();
+        const net = J-B; document.getElementById('lr-jual').innerText = "Rp "+J.toLocaleString(); document.getElementById('lr-biaya').innerText = "Rp "+B.toLocaleString();
+        document.getElementById('lr-cadangan').innerText = "Rp "+(net > 0 ? net*0.1 : 0).toLocaleString(); document.getElementById('lr-net').innerText = "LABA BERSIH: Rp "+net.toLocaleString();
     });
+    function printLR() { printUniversal('LABA RUGI', `<p>Laba Bersih: ${document.getElementById('lr-net').innerText}</p>`); }
 
-    function printLR() {
-        const detail = `<p>Penjualan: ${document.getElementById('lr-jual').innerText}</p><p>Biaya: ${document.getElementById('lr-biaya').innerText}</p><h3>${document.getElementById('lr-net').innerText}</h3>`;
-        printUniversal('STRUK LABA RUGI', detail);
+    // --- TAMPILAN MODE ---
+    function setMode(mode) {
+        const nav = document.getElementById('sidebar');
+        const btns = document.querySelectorAll('.view-mode-btn'); btns.forEach(b => b.classList.remove('active'));
+        if(mode === 'hp') {
+            document.getElementById('btn-hp').classList.add('active'); nav.style.width = "70px";
+            nav.querySelectorAll('.nav-btn').forEach(b => b.style.fontSize = "0px");
+        } else if(mode === 'ipad') {
+            document.getElementById('btn-ipad').classList.add('active'); nav.style.width = "180px";
+            nav.querySelectorAll('.nav-btn').forEach(b => b.style.fontSize = "8px");
+        } else {
+            document.getElementById('btn-pc').classList.add('active'); nav.style.width = "250px";
+            nav.querySelectorAll('.nav-btn').forEach(b => b.style.fontSize = "10px");
+        }
     }
 
     // --- UTILS ---
     let chart;
     function renderChart(l, s) {
         const ctx = document.getElementById('rekapChart').getContext('2d'); if(chart) chart.destroy();
-        chart = new Chart(ctx, { type:'bar', data:{ labels:['LAPORAN','SETORAN'], datasets:[{ label:'Data', data:[l, s], backgroundColor:['#ff0055','#00d4ff'] }] }, options:{plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true, grid:{color:'rgba(255,255,255,0.05)'}}}} });
+        chart = new Chart(ctx, { type:'bar', data:{ labels:['LAPORAN','SETORAN'], datasets:[{ data:[l, s], backgroundColor:['#ff0055','#00d4ff'] }] }, options:{plugins:{legend:{display:false}}} });
     }
     function show(id, btn) { document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
     function v(id) { return document.getElementById(id).value; }
