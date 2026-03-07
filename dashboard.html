@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | DASHBOARD PRO</title>
+    <title>GIBRAN HUB | DASHBOARD FINAL ACTION</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
@@ -27,28 +25,36 @@
         main { flex: 1; overflow-y: auto; padding: 25px; background: radial-gradient(circle at top right, #0d1621, #050505); padding-bottom: 50px; }
         .section { display: none; }
         .section.active { display: block; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* CARDS */
         .card { background: var(--card); border: 1px solid rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; margin-bottom: 20px; backdrop-filter: blur(10px); }
-        .card-h { font-family: 'Orbitron'; font-size: 11px; color: var(--cyan); margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,212,255,0.1); padding-bottom: 10px; }
+        .card-h { font-family: 'Orbitron'; font-size: 11px; color: var(--cyan); margin-bottom: 15px; border-bottom: 1px solid rgba(0,212,255,0.1); padding-bottom: 10px; }
 
         /* TABLES */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; }
         th { text-align: left; color: var(--cyan); border-bottom: 1px solid var(--cyan); padding: 12px; font-family: 'Orbitron'; font-size: 9px; }
-        td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 14px; }
+        td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 13px; }
 
-        /* BUTTONS */
-        .btn-action { padding: 8px 12px; border: none; border-radius: 6px; cursor: pointer; font-family: 'Orbitron'; font-size: 9px; color: white; transition: 0.3s; margin-right: 5px; }
-        .btn-del { background: var(--red); }
-        .btn-print { background: var(--gold); color: black; }
-        .btn-main { width: 100%; padding: 15px; border: none; border-radius: 10px; font-family: 'Orbitron'; font-size: 11px; cursor: pointer; font-weight: bold; }
+        /* ACTION BUTTONS */
+        .btn-group { display: flex; gap: 5px; }
+        .act-btn { padding: 6px 8px; border: none; border-radius: 4px; cursor: pointer; font-family: 'Orbitron'; font-size: 8px; color: white; font-weight: bold; }
+        .b-del { background: var(--red); }
+        .b-down { background: #0088ff; }
+        .b-print { background: var(--gold); color: black; }
 
         /* INPUTS */
-        input, select { width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px; margin-bottom: 15px; outline: none; box-sizing: border-box; }
-        input:focus { border-color: var(--cyan); }
+        input, select { width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px; margin-bottom: 15px; outline: none; }
+        .btn-main { width: 100%; padding: 15px; border: none; border-radius: 10px; font-family: 'Orbitron'; font-size: 11px; cursor: pointer; font-weight: bold; }
+        .table-img { width: 40px; height: 40px; object-fit: cover; border-radius: 5px; border: 1px solid var(--cyan); cursor: pointer; }
 
-        .table-img { width: 45px; height: 45px; object-fit: cover; border-radius: 8px; border: 1px solid var(--cyan); cursor: pointer; }
+        /* PRINT STYLES */
+        @media print {
+            nav, .btn-group, .nav-btn, .btn-main, .card-h { display: none !important; }
+            body, main { background: white !important; color: black !important; overflow: visible !important; }
+            .card { border: 1px solid #ccc !important; box-shadow: none !important; }
+            table { color: black !important; }
+        }
     </style>
 </head>
 <body>
@@ -56,31 +62,23 @@
 <div class="wrapper">
     <nav>
         <div style="text-align: center; margin-bottom: 30px;">
-            <div id="user-display" style="font-family: 'Orbitron'; color: var(--cyan); font-size: 14px; letter-spacing: 2px;">OPERATOR</div>
-            <p style="font-size: 10px; color: #555;">GIBRAN HUB v30.0</p>
+            <div id="u-display" style="font-family:'Orbitron'; color:var(--cyan); font-size:14px;">GIBRAN HUB</div>
         </div>
         <button class="nav-btn active" onclick="show('mon', this)">📊 MONITORING</button>
         <button class="nav-btn" onclick="show('inp', this)">📝 INPUT DATA</button>
         <button class="nav-btn" onclick="show('gud', this)">📦 GUDANG</button>
         <button class="nav-btn" onclick="show('wal', this)">💰 DOMPET</button>
-        <button class="nav-btn" style="margin-top: auto; border-color: var(--red);" onclick="window.location.href='index.html'">🚪 LOGOUT</button>
+        <button class="nav-btn" style="margin-top:auto; color:var(--red);" onclick="window.location.href='index.html'">Logout</button>
     </nav>
 
-    <main id="capture-area">
-        
+    <main>
         <div id="mon" class="section active">
+            <div class="card"><div class="card-h">LIVE ANALYTICS</div><canvas id="rekapChart" style="max-height: 200px;"></canvas></div>
             <div class="card">
-                <div class="card-h">
-                    <span>LIVE ANALYTICS</span>
-                    <button class="btn-action btn-print" onclick="printPDF('mon')">DOWNLOAD PDF</button>
-                </div>
-                <canvas id="rekapChart" style="max-height: 200px;"></canvas>
-            </div>
-            <div class="card">
-                <div class="card-h">TRANSAKSI TERBARU</div>
+                <div class="card-h">DATA TRANSAKSI</div>
                 <div style="overflow-x:auto;">
                     <table>
-                        <thead><tr><th>TIPE</th><th>NAMA</th><th>TANGGAL</th><th>BUKTI</th><th>AKSI</th></tr></thead>
+                        <thead><tr><th>TIPE</th><th>NAMA</th><th>TGL</th><th>AKSI</th></tr></thead>
                         <tbody id="tbody-monitor"></tbody>
                     </table>
                 </div>
@@ -88,183 +86,128 @@
         </div>
 
         <div id="inp" class="section">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div class="card">
-                    <div class="card-h">INPUT LAPORAN</div>
-                    <input type="date" id="l-tgl"><input type="text" id="l-nama" placeholder="Nama Pelapor">
-                    <input type="file" id="l-bukti" accept="image/*"><input type="text" id="l-ttd" placeholder="Tanda Tangan">
-                    <select id="l-tujuan"><option>BU TATI</option><option>BU AMI</option></select>
-                    <button class="btn-main" style="background:var(--red); color:white" onclick="simpan('LAPORAN','l-')">KIRIM LAPORAN</button>
-                </div>
-                <div class="card">
-                    <div class="card-h">INPUT SETORAN</div>
-                    <input type="date" id="s-tgl"><input type="text" id="s-nama" placeholder="Nama Penyetor">
-                    <input type="file" id="s-bukti" accept="image/*"><input type="text" id="s-ttd" placeholder="Tanda Tangan">
-                    <select id="s-tujuan"><option>BU TATI</option><option>BU AMI</option></select>
-                    <button class="btn-main" style="background:var(--cyan); color:black" onclick="simpan('SETORAN','s-')">KIRIM SETORAN</button>
-                </div>
+            <div class="card">
+                <div class="card-h">INPUT DATA BARU</div>
+                <input type="date" id="l-tgl">
+                <input type="text" id="l-nama" placeholder="Nama Operator">
+                <select id="l-tipe"><option value="LAPORAN">LAPORAN</option><option value="SETORAN">SETORAN</option></select>
+                <input type="file" id="l-bukti" accept="image/*">
+                <button class="btn-main" style="background:var(--cyan); color:black" onclick="simpan()">KIRIM DATA</button>
             </div>
         </div>
 
         <div id="gud" class="section">
             <div class="card">
-                <div class="card-h">TAMBAH STOK BARANG</div>
-                <input type="text" id="g-nama" placeholder="Nama Barang">
-                <input type="number" id="g-stok" placeholder="Jumlah Stok">
-                <button class="btn-main" style="background:var(--purple); color:white" onclick="sendG()">UPDATE GUDANG</button>
+                <div class="card-h">UPDATE STOK</div>
+                <input type="text" id="g-nama" placeholder="Barang"><input type="number" id="g-stok" placeholder="Stok">
+                <button class="btn-main" style="background:var(--purple); color:white" onclick="sendG()">TAMBAH BARANG</button>
             </div>
-            <div class="card">
-                <div class="card-h">
-                    <span>DAFTAR INVENTORY</span>
-                    <button class="btn-action btn-print" onclick="printPDF('gud')">CETAK STOK</button>
-                </div>
-                <div style="overflow-x:auto;">
-                    <table>
-                        <thead><tr><th>BARANG</th><th>STOK</th><th>AKSI</th></tr></thead>
-                        <tbody id="tbody-gudang"></tbody>
-                    </table>
-                </div>
-            </div>
+            <div class="card"><table><thead><tr><th>BARANG</th><th>STOK</th><th>AKSI</th></tr></thead><tbody id="tbody-gudang"></tbody></table></div>
         </div>
 
         <div id="wal" class="section">
-            <div class="card" style="border: 1px solid var(--gold);">
-                <div class="card-h" style="color:var(--gold)">SALDO KAS</div>
-                <h1 id="saldo-akhir" style="text-align:center; font-family:'Orbitron'; font-size:40px;">Rp 0</h1>
-                <div style="display:flex; gap:10px;">
-                    <input type="number" id="w-masuk" placeholder="Masuk (+)">
-                    <input type="number" id="w-keluar" placeholder="Keluar (-)">
-                </div>
-                <button class="btn-main" style="background:var(--gold); color:black" onclick="updateW()">SIMPAN TRANSAKSI</button>
-            </div>
+            <div class="card" style="text-align:center;"><div class="card-h">KAS AKHIR</div><h1 id="saldo-akhir">Rp 0</h1></div>
             <div class="card">
-                <div class="card-h">
-                    <span>RIWAYAT KEUANGAN</span>
-                    <button class="btn-action btn-print" onclick="printPDF('wal')">LAPORAN KAS</button>
-                </div>
-                <div style="overflow-x:auto;">
-                    <table>
-                        <thead><tr><th>WAKTU</th><th>MASUK</th><th>KELUAR</th><th>AKSI</th></tr></thead>
-                        <tbody id="tbody-wallet"></tbody>
-                    </table>
-                </div>
+                <input type="number" id="w-masuk" placeholder="Masuk"><input type="number" id="w-keluar" placeholder="Keluar">
+                <button class="btn-main" style="background:var(--gold); color:black" onclick="updateW()">SIMPAN KAS</button>
             </div>
+            <div class="card"><table><thead><tr><th>WAKTU</th><th>M</th><th>K</th><th>AKSI</th></tr></thead><tbody id="tbody-wallet"></tbody></table></div>
         </div>
-
     </main>
 </div>
 
 <script>
-    // FIREBASE CONFIGS (Tetap pakai punya lo)
+    // FIREBASE
     const configA = { apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs", databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com" };
     const configW = { databaseURL: "https://sisa-saldo-default-rtdb.firebaseio.com" };
     const configG = { databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
-
     firebase.initializeApp(configA); const dbD = firebase.database();
     const appW = firebase.initializeApp(configW, "W"); const dbW = firebase.database(appW);
     const appG = firebase.initializeApp(configG, "G"); const dbG = firebase.database(appG);
 
-    // LOAD USERNAME
-    document.getElementById('user-display').innerText = localStorage.getItem('user_gibran') || "OPERATOR";
+    document.getElementById('u-display').innerText = localStorage.getItem('user_gibran') || "GIBRAN HUB";
 
-    // --- FITUR SIMPAN DATA ---
-    function simpan(tipe, pre) {
-        const tgl = document.getElementById(pre+'tgl').value;
-        const n = document.getElementById(pre+'nama').value;
-        if(!tgl || !n) return alert("Lengkapi Tanggal & Nama!");
-        
-        const d = { tipe: tipe, nama: n, tgl: tgl, ttd: document.getElementById(pre+'ttd').value, tujuan: document.getElementById(pre+'tujuan').value };
-        const f = document.getElementById(pre+'bukti').files[0];
-        
-        if(f) {
-            const r = new FileReader(); 
-            r.onload = (e) => { d.img = e.target.result; dbD.ref('transaksi').push(d).then(()=>alert("Berhasil!")); };
-            r.readAsDataURL(f);
-        } else { dbD.ref('transaksi').push(d).then(()=>alert("Berhasil!")); }
-    }
+    // --- FUNGSI AKSI NYATA ---
 
-    // --- REALTIME MONITORING + TOMBOL HAPUS ---
-    dbD.ref('transaksi').on('value', s => {
-        const tb = document.getElementById('tbody-monitor'); tb.innerHTML = ""; let L=0, S=0;
-        s.forEach(c => { 
-            const r = c.val(); r.tipe === "LAPORAN" ? L++ : S++;
-            tb.innerHTML += `<tr>
-                <td><b style="color:${r.tipe==='LAPORAN'?'#ff0055':'#00d4ff'}">${r.tipe}</b></td>
-                <td>${r.nama}</td><td>${r.tgl}</td>
-                <td>${r.img ? `<img src="${r.img}" class="table-img" onclick="window.open(this.src)">` : '-'}</td>
-                <td><button class="btn-action btn-del" onclick="hapusData('transaksi','${c.key}','D')">HAPUS</button></td>
-            </tr>`;
-        }); renderChart(L,S);
-    });
-
-    // --- GUDANG ---
-    function sendG() { 
-        const n = document.getElementById('g-nama').value;
-        const s = document.getElementById('g-stok').value;
-        if(n && s) dbG.ref('stok').push({ nm:n, st:s }).then(()=>alert("Stok Update!"));
-    }
-    dbG.ref('stok').on('value', s => {
-        const tb = document.getElementById('tbody-gudang'); tb.innerHTML = "";
-        s.forEach(c => { const r = c.val(); 
-            tb.innerHTML += `<tr><td>${r.nm}</td><td>${r.st}</td>
-            <td><button class="btn-action btn-del" onclick="hapusData('stok','${c.key}','G')">HAPUS</button></td></tr>`; 
-        });
-    });
-
-    // --- WALLET ---
-    function updateW() {
-        const m = parseInt(document.getElementById('w-masuk').value) || 0;
-        const k = parseInt(document.getElementById('w-keluar').value) || 0;
-        if(m > 0 || k > 0) dbW.ref('riwayat').push({ tgl: new Date().toLocaleString(), m:m, k:k });
-    }
-    dbW.ref('riwayat').on('value', s => {
-        const tb = document.getElementById('tbody-wallet'); tb.innerHTML = ""; let tot = 0;
-        s.forEach(c => { const r = c.val(); tot += (r.m - r.k); 
-            tb.innerHTML += `<tr><td>${r.tgl}</td><td style="color:var(--cyan)">+${r.m}</td><td style="color:var(--red)">-${r.k}</td>
-            <td><button class="btn-action btn-del" onclick="hapusData('riwayat','${c.key}','W')">HAPUS</button></td></tr>`; 
-        });
-        document.getElementById('saldo-akhir').innerText = "Rp " + tot.toLocaleString();
-    });
-
-    // --- FUNGSI HAPUS UNIVERSAL ---
-    function hapusData(path, key, dbTipe) {
-        if(confirm("Hapus data ini permanen?")) {
-            if(dbTipe === 'D') dbD.ref(`${path}/${key}`).remove();
-            if(dbTipe === 'G') dbG.ref(`${path}/${key}`).remove();
-            if(dbTipe === 'W') dbW.ref(`${path}/${key}`).remove();
+    // 1. HAPUS
+    function hapus(path, key, db) {
+        if(confirm("Hapus data ini?")) {
+            if(db === 'D') dbD.ref(path + '/' + key).remove();
+            if(db === 'G') dbG.ref(path + '/' + key).remove();
+            if(db === 'W') dbW.ref(path + '/' + key).remove();
         }
     }
 
-    // --- FUNGSI DOWNLOAD PDF ---
-    async function printPDF(sectionId) {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        const element = document.getElementById(sectionId);
-        
-        await html2canvas(element).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            doc.text(`LAPORAN GIBRAN HUB - ${sectionId.toUpperCase()}`, 10, 10);
-            doc.addImage(imgData, 'PNG', 10, 20, 190, 0);
-            doc.save(`Laporan_${sectionId}_${new Date().getTime()}.pdf`);
-        });
+    // 2. DOWNLOAD (SAVE TO FILE MANAGER)
+    function downloadItem(nama, tgl, info) {
+        const teks = `LAPORAN GIBRAN HUB\n====================\nNama: ${nama}\nTanggal: ${tgl}\nDetail: ${info}\n====================\nStatus: Terverifikasi`;
+        const blob = new Blob([teks], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `Laporan_${nama}_${tgl}.txt`;
+        link.click();
     }
 
-    // --- UTILS ---
-    function show(id, btn) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    // 3. PRINT (REAL PRINT)
+    function printItem(nama, tgl, info) {
+        const w = window.open('', '', 'width=600,height=600');
+        w.document.write(`<html><body style="font-family:sans-serif; padding:20px;">
+            <h2>GIBRAN HUB REPORT</h2><hr>
+            <p><b>Nama:</b> ${nama}</p>
+            <p><b>Tanggal:</b> ${tgl}</p>
+            <p><b>Keterangan:</b> ${info}</p>
+            <hr><p>Dicetak pada: ${new Date().toLocaleString()}</p>
+            <script>window.print(); setTimeout(()=>window.close(), 500);<\/script>
+        </body></html>`);
     }
+
+    // --- DATA HANDLING ---
+    function simpan() {
+        const d = { tipe: v('l-tipe'), nama: v('l-nama'), tgl: v('l-tgl') };
+        dbD.ref('transaksi').push(d).then(()=>alert("Tersimpan!"));
+    }
+
+    dbD.ref('transaksi').on('value', s => {
+        const tb = document.getElementById('tbody-monitor'); tb.innerHTML = ""; let L=0, S=0;
+        s.forEach(c => { const r = c.val(); r.tipe === 'LAPORAN' ? L++ : S++;
+            tb.innerHTML += `<tr><td>${r.tipe}</td><td>${r.nama}</td><td>${r.tgl}</td>
+            <td><div class="btn-group">
+                <button class="act-btn b-del" onclick="hapus('transaksi','${c.key}','D')">X</button>
+                <button class="act-btn b-down" onclick="downloadItem('${r.nama}','${r.tgl}','${r.tipe}')">💾</button>
+                <button class="act-btn b-print" onclick="printItem('${r.nama}','${r.tgl}','${r.tipe}')">🖨️</button>
+            </div></td></tr>`;
+        }); renderChart(L,S);
+    });
+
+    function sendG() { dbG.ref('stok').push({ nm:v('g-nama'), st:v('g-stok') }); }
+    dbG.ref('stok').on('value', s => {
+        const tb = document.getElementById('tbody-gudang'); tb.innerHTML = "";
+        s.forEach(c => { const r = c.val(); tb.innerHTML += `<tr><td>${r.nm}</td><td>${r.st}</td>
+            <td><div class="btn-group">
+                <button class="act-btn b-del" onclick="hapus('stok','${c.key}','G')">X</button>
+                <button class="act-btn b-down" onclick="downloadItem('${r.nm}','${r.st}','Stok Barang')">💾</button>
+            </div></td></tr>`;
+        });
+    });
+
+    function updateW() { dbW.ref('riwayat').push({ tgl:new Date().toLocaleString(), m:parseInt(v('w-masuk'))||0, k:parseInt(v('w-keluar'))||0 }); }
+    dbW.ref('riwayat').on('value', s => {
+        const tb = document.getElementById('tbody-wallet'); tb.innerHTML = ""; let tot = 0;
+        s.forEach(c => { const r = c.val(); tot += (r.m - r.k);
+            tb.innerHTML += `<tr><td>${r.tgl}</td><td>${r.m}</td><td>${r.k}</td>
+            <td><div class="btn-group">
+                <button class="act-btn b-del" onclick="hapus('riwayat','${c.key}','W')">X</button>
+                <button class="act-btn b-print" onclick="printItem('Dompet','${r.tgl}','M:${r.m} K:${r.k}')">🖨️</button>
+            </div></td></tr>`;
+        }); document.getElementById('saldo-akhir').innerText = "Rp " + tot.toLocaleString();
+    });
+
+    function v(id) { return document.getElementById(id).value; }
+    function show(id, btn) { document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
     let chart;
     function renderChart(l, s) {
-        const ctx = document.getElementById('rekapChart').getContext('2d');
-        if(chart) chart.destroy();
-        chart = new Chart(ctx, {
-            type:'bar',
-            data:{ labels:['LAPORAN','SETORAN'], datasets:[{ data:[l, s], backgroundColor:['#ff0055','#00d4ff'] }] },
-            options:{ plugins:{legend:{display:false}}, scales:{ y:{beginAtZero:true, grid:{color:'rgba(255,255,255,0.05)'}}} }
-        });
+        const ctx = document.getElementById('rekapChart').getContext('2d'); if(chart) chart.destroy();
+        chart = new Chart(ctx, { type:'bar', data:{ labels:['LAPORAN','SETORAN'], datasets:[{ data:[l, s], backgroundColor:['#ff0055','#00d4ff'] }] }, options:{plugins:{legend:{display:false}}} });
     }
 </script>
 </body>
