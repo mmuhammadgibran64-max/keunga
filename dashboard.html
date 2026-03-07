@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB v28.3 | INVENTORY MASTER</title>
+    <title>GIBRAN HUB v28.4 | ULTIMATE PRINT</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -33,7 +33,7 @@
         .flex-col { flex: 1; min-width: 280px; }
 
         label { font-size: 11px; color: #aaa; margin-bottom: 6px; display: block; font-family: 'Orbitron'; }
-        input, select { width: 100%; padding: 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(0, 212, 255, 0.2); color: white; border-radius: 8px; margin-bottom: 15px; font-family: 'Rajdhani'; outline: none; transition: 0.3s; }
+        input, select { width: 100%; padding: 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(0, 212, 255, 0.2); color: white; border-radius: 8px; margin-bottom: 15px; font-family: 'Rajdhani'; outline: none; }
         
         .btn-main { width: 100%; padding: 15px; border: none; border-radius: 8px; font-family: 'Orbitron'; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
         
@@ -41,7 +41,7 @@
         th { text-align: left; color: var(--cyan); border-bottom: 2px solid var(--cyan); padding: 12px; font-family: 'Orbitron'; font-size: 9px; }
         td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         
-        .act-btn { padding: 8px 10px; border-radius: 5px; border: none; cursor: pointer; font-size: 9px; font-family: 'Orbitron'; color: white; transition: 0.3s; margin-right: 4px; }
+        .act-btn { padding: 8px 10px; border-radius: 5px; border: none; cursor: pointer; font-size: 8px; font-family: 'Orbitron'; color: white; transition: 0.3s; margin-right: 2px; }
         img.table-img { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; border: 1px solid var(--cyan); }
     </style>
 </head>
@@ -76,43 +76,43 @@
             <div class="flex-row">
                 <div class="flex-col card">
                     <div class="card-h">INPUT LAPORAN</div>
-                    <label>NAMA PELAPOR</label><input type="text" id="l-nama" placeholder="Siapa yang lapor?">
-                    <label>TANGGAL LAPOR</label><input type="date" id="l-tgl">
-                    <label>BUKTI GAMBAR</label><input type="file" id="l-bukti" accept="image/*">
-                    <label>TANDA TANGAN</label><input type="text" id="l-ttd" placeholder="Nama Penandatangan">
-                    <label>LAPOR KE</label>
+                    <label>NAMA PELAPOR</label><input type="text" id="l-nama" placeholder="Nama">
+                    <label>TANGGAL</label><input type="date" id="l-tgl">
+                    <label>BUKTI</label><input type="file" id="l-bukti" accept="image/*">
+                    <label>TTD</label><input type="text" id="l-ttd" placeholder="Nama TTD">
+                    <label>KE</label>
                     <select id="l-tujuan"><option value="BU TATI">BU TATI</option><option value="BU AMI">BU AMI</option></select>
-                    <button class="btn-main" style="background:var(--red); color:white" onclick="simpan('LAPORAN','l-')">KIRIM LAPORAN</button>
+                    <button class="btn-main" style="background:var(--red); color:white" onclick="simpan('LAPORAN','l-')">KIRIM</button>
                 </div>
                 <div class="flex-col card">
                     <div class="card-h">INPUT SETORAN</div>
-                    <label>NAMA PENYETOR</label><input type="text" id="s-nama" placeholder="Siapa yang setor?">
-                    <label>TANGGAL SETOR</label><input type="date" id="s-tgl">
-                    <label>BUKTI GAMBAR</label><input type="file" id="s-bukti" accept="image/*">
-                    <label>TANDA TANGAN</label><input type="text" id="s-ttd" placeholder="Nama Penandatangan">
-                    <label>SETOR KE</label>
+                    <label>NAMA PENYETOR</label><input type="text" id="s-nama" placeholder="Nama">
+                    <label>TANGGAL</label><input type="date" id="s-tgl">
+                    <label>BUKTI</label><input type="file" id="s-bukti" accept="image/*">
+                    <label>TTD</label><input type="text" id="s-ttd" placeholder="Nama TTD">
+                    <label>KE</label>
                     <select id="s-tujuan"><option value="BU TATI">BU TATI</option><option value="BU AMI">BU AMI</option></select>
-                    <button class="btn-main" style="background:var(--cyan); color:black" onclick="simpan('SETORAN','s-')">KIRIM SETORAN</button>
+                    <button class="btn-main" style="background:var(--cyan); color:black" onclick="simpan('SETORAN','s-')">KIRIM</button>
                 </div>
             </div>
         </div>
 
         <div id="gudang-view" class="section">
             <div class="card">
-                <div class="card-h">GUDANG SYSTEM - ENTRY</div>
+                <div class="card-h">GUDANG ENTRY</div>
                 <div class="flex-row">
-                    <input type="text" id="g-nama" placeholder="Nama Barang" class="flex-col">
+                    <input type="text" id="g-nama" placeholder="Barang" class="flex-col">
                     <input type="text" id="g-jenis" placeholder="Jenis" class="flex-col">
-                    <input type="number" id="g-jumlah" placeholder="Jumlah Masuk" class="flex-col">
-                    <input type="number" id="g-stok" placeholder="Sisa Stok" class="flex-col">
+                    <input type="number" id="g-jumlah" placeholder="Jumlah" class="flex-col">
+                    <input type="number" id="g-stok" placeholder="Stok" class="flex-col">
                 </div>
-                <button class="btn-main" style="background:var(--purple); color:white" onclick="sendG()">UPDATE DATABASE GUDANG</button>
+                <button class="btn-main" style="background:var(--purple); color:white" onclick="sendG()">UPDATE GUDANG</button>
             </div>
             <div class="card">
                 <div class="card-h">INVENTORY LIST</div>
                 <div style="overflow-x:auto;">
                     <table>
-                        <thead><tr><th>NAMA BARANG</th><th>JENIS</th><th>JML</th><th>STOK</th><th>AKSI</th></tr></thead>
+                        <thead><tr><th>NAMA</th><th>JENIS</th><th>JML</th><th>STOK</th><th>AKSI</th></tr></thead>
                         <tbody id="tbody-gudang"></tbody>
                     </table>
                 </div>
@@ -123,27 +123,21 @@
             <div class="card" style="border: 2px solid var(--gold);">
                 <div class="card-h" style="color:var(--gold)">WALLET MANAGEMENT</div>
                 <div style="text-align: center; margin-bottom: 25px;">
-                    <span style="font-size: 11px; color: var(--gold); font-family: 'Orbitron';">TOTAL SALDO SAAT INI</span>
+                    <span style="font-size: 11px; color: var(--gold); font-family: 'Orbitron';">SALDO AKHIR</span>
                     <h1 id="saldo-akhir" style="color:white; font-family:'Orbitron'; margin: 10px 0; font-size: 45px; text-shadow: 0 0 15px var(--gold);">Rp 0</h1>
                 </div>
                 <div class="flex-row">
-                    <div class="flex-col">
-                        <label style="color: var(--cyan);">UANG MASUK (Rp)</label>
-                        <input type="number" id="w-masuk" placeholder="0">
-                    </div>
-                    <div class="flex-col">
-                        <label style="color: var(--red);">UANG KELUAR (Rp)</label>
-                        <input type="number" id="w-keluar" placeholder="0">
-                    </div>
+                    <div class="flex-col"><label>MASUK</label><input type="number" id="w-masuk" placeholder="0"></div>
+                    <div class="flex-col"><label>KELUAR</label><input type="number" id="w-keluar" placeholder="0"></div>
                 </div>
-                <button id="btn-wallet" class="btn-main" style="background:var(--gold); color:black;" onclick="updateW()">SIMPAN & UPDATE SALDO</button>
+                <button class="btn-main" style="background:var(--gold); color:black;" onclick="updateW()">SIMPAN SALDO</button>
 
                 <div style="margin-top: 35px;">
                     <div class="card-h">HISTORY TRANSAKSI WALLET</div>
                     <div style="overflow-x:auto;">
                         <table>
                             <thead>
-                                <tr><th>TANGGAL & JAM</th><th>MASUK</th><th>KELUAR</th><th>AKSI</th></tr>
+                                <tr><th>WAKTU</th><th>MASUK</th><th>KELUAR</th><th>AKSI</th></tr>
                             </thead>
                             <tbody id="tbody-wallet"></tbody>
                         </table>
@@ -155,23 +149,9 @@
 </div>
 
 <script>
-    // --- FIREBASE CONFIGS ---
-    const configA = {
-        apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs",
-        authDomain: "tempat-masuk-nya-data.firebaseapp.com",
-        databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com",
-        projectId: "tempat-masuk-nya-data",
-        appId: "1:918742049565:web:4490b03c04f5bf75e3f7f4"
-    };
-
-    const configB = {
-        apiKey: "AIzaSyCdNwDr9lUsUE2iv43vW6q89VZMXPix8us",
-        authDomain: "sisa-saldo.firebaseapp.com",
-        databaseURL: "https://sisa-saldo-default-rtdb.firebaseio.com",
-        projectId: "sisa-saldo",
-        appId: "1:152603234485:web:1f82e28d57b2a5f2d8aefc"
-    };
-
+    // CONFIGS
+    const configA = { apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs", authDomain: "tempat-masuk-nya-data.firebaseapp.com", databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com", projectId: "tempat-masuk-nya-data", appId: "1:918742049565:web:4490b03c04f5bf75e3f7f4" };
+    const configB = { apiKey: "AIzaSyCdNwDr9lUsUE2iv43vW6q89VZMXPix8us", authDomain: "sisa-saldo.firebaseapp.com", databaseURL: "https://sisa-saldo-default-rtdb.firebaseio.com", projectId: "sisa-saldo", appId: "1:152603234485:web:1f82e28d57b2a5f2d8aefc" };
     const configG = { databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
 
     if (!firebase.apps.length) firebase.initializeApp(configA);
@@ -182,48 +162,42 @@
     const dbG = firebase.database(appG);    
     const dbW = firebase.database(appW);    
 
-    // --- FUNGSI PRINT & SAVE KHUSUS GUDANG ---
-    function printG(nm, jn, jml, st) {
+    // --- FUNGSI PRINT & PDF GLOBAL ---
+    function printUniversal(judul, detail) {
         const p = window.open('', '_blank');
-        p.document.write(`<html><head><title>Struk_Gudang</title><style>body{font-family:sans-serif;padding:30px;}.b{border:1px solid #000;padding:20px;width:280px;margin:auto;}h3{text-align:center;margin-top:0;}</style></head><body><div class="b"><h3>GIBRAN HUB - GUDANG</h3><p>Barang: <b>${nm}</b></p><p>Jenis: ${jn}</p><p>Jumlah: ${jml}</p><p>Sisa Stok: ${st}</p><hr><p style="font-size:10px;text-align:center">${new Date().toLocaleString()}</p></div><script>window.print();window.close();<\/script></body></html>`);
+        p.document.write(`<html><head><title>Print_Struk</title><style>body{font-family:sans-serif;padding:30px;}.b{border:1px solid #000;padding:20px;width:280px;margin:auto;}h3{text-align:center;margin-top:0; border-bottom:1px solid #000; padding-bottom:10px;}</style></head><body><div class="b"><h3>${judul}</h3>${detail}<hr><p style="font-size:10px;text-align:center">${new Date().toLocaleString()}</p></div><script>window.print();window.close();<\/script></body></html>`);
     }
 
-    function dlGudangPDF(nm, jn, jml, st) {
+    function dlPDFUniversal(filename, content) {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        doc.text("LAPORAN STOK BARANG - GIBRAN HUB", 10, 20);
+        doc.text("GIBRAN HUB - OFFICIAL REPORT", 10, 20);
         doc.text("---------------------------------------", 10, 25);
-        doc.text(`Nama Barang : ${nm}`, 10, 35);
-        doc.text(`Jenis Barang: ${jn}`, 10, 45);
-        doc.text(`Jumlah Masuk: ${jml}`, 10, 55);
-        doc.text(`Sisa Stok   : ${st}`, 10, 65);
-        doc.text(`Waktu Cetak : ${new Date().toLocaleString()}`, 10, 80);
-        doc.save(`Stok_${nm.replace(/ /g, '_')}.pdf`);
+        let y = 40;
+        content.forEach(line => { doc.text(line, 10, y); y += 10; });
+        doc.save(filename + ".pdf");
     }
 
     // --- LOGIC GUDANG ---
     function sendG() {
         const n = v('g-nama'), j = v('g-jenis'), jm = v('g-jumlah'), s = v('g-stok');
         if(!n) return alert("Isi Nama Barang!");
-        dbG.ref('stok').push({ nm:n, jn:j, jml:jm, st:s }).then(()=>alert("Gudang Terupdate!"));
+        dbG.ref('stok').push({ nm:n, jn:j, jml:jm, st:s }).then(()=>alert("Gudang Updated!"));
     }
-
     dbG.ref('stok').on('value', s => {
         const tb = document.getElementById('tbody-gudang'); tb.innerHTML = "";
         s.forEach(c => {
             const r = c.val();
-            tb.innerHTML += `<tr>
-                <td>${r.nm}</td><td>${r.jn}</td><td>${r.jml}</td><td>${r.st}</td>
-                <td>
-                    <button class="act-btn" style="background:#333" onclick="if(confirm('Hapus?')) dbG.ref('stok/${c.key}').remove()">X</button>
-                    <button class="act-btn" style="background:var(--cyan); color:black" onclick="dlGudangPDF('${r.nm}','${r.jn}',${r.jml},${r.st})">SAVE</button>
-                    <button class="act-btn" style="background:var(--purple)" onclick="printG('${r.nm}','${r.jn}',${r.jml},${r.st})">PRINT</button>
-                </td>
-            </tr>`;
+            tb.innerHTML += `<tr><td>${r.nm}</td><td>${r.jn}</td><td>${r.jml}</td><td>${r.st}</td>
+            <td>
+                <button class="act-btn" style="background:#333" onclick="dbG.ref('stok/${c.key}').remove()">X</button>
+                <button class="act-btn" style="background:var(--cyan); color:black" onclick="dlPDFUniversal('Stok_${r.nm}', ['Barang: ${r.nm}', 'Jenis: ${r.jn}', 'Jumlah: ${r.jml}', 'Sisa: ${r.st}'])">SAVE</button>
+                <button class="act-btn" style="background:var(--purple)" onclick="printUniversal('STRUK GUDANG', '<p>Barang: ${r.nm}</p><p>Jenis: ${r.jn}</p><p>Jumlah: ${r.jml}</p><p>Sisa: ${r.st}</p>')">PRINT</button>
+            </td></tr>`;
         });
     });
 
-    // --- LOGIC WALLET (Tetap Sama) ---
+    // --- LOGIC WALLET ---
     function updateW() {
         const m = parseInt(v('w-masuk')) || 0, k = parseInt(v('w-keluar')) || 0;
         if(m === 0 && k === 0) return alert("Isi data!");
@@ -232,20 +206,17 @@
     }
     dbW.ref('riwayat').on('value', s => {
         const tb = document.getElementById('tbody-wallet'); tb.innerHTML = ""; let tot = 0;
-        s.forEach(c => { const r = c.val(); tot += (r.m - r.k);
+        s.forEach(c => {
+            const r = c.val(); tot += (r.m - r.k);
             tb.innerHTML += `<tr><td>${r.tgl}</td><td style="color:var(--cyan)">+ ${r.m.toLocaleString()}</td><td style="color:var(--red)">- ${r.k.toLocaleString()}</td>
-            <td><button class="act-btn" style="background:#333" onclick="dbW.ref('riwayat/${c.key}').remove()">X</button>
-            <button class="act-btn" style="background:var(--cyan); color:black" onclick="dlPDF('${r.tgl}',${r.m},${r.k})">SAVE</button></td></tr>`;
+            <td>
+                <button class="act-btn" style="background:#333" onclick="dbW.ref('riwayat/${c.key}').remove()">X</button>
+                <button class="act-btn" style="background:var(--cyan); color:black" onclick="dlPDFUniversal('Wallet_${r.tgl}', ['Waktu: ${r.tgl}', 'Masuk: Rp ${r.m}', 'Keluar: Rp ${r.k}'])">SAVE</button>
+                <button class="act-btn" style="background:var(--purple)" onclick="printUniversal('STRUK DOMPET', '<p>Waktu: ${r.tgl}</p><p>Masuk: Rp ${r.m.toLocaleString()}</p><p>Keluar: Rp ${r.k.toLocaleString()}</p>')">PRINT</button>
+            </td></tr>`;
         });
         document.getElementById('saldo-akhir').innerText = "Rp " + tot.toLocaleString();
     });
-
-    function dlPDF(t, m, k) { 
-        const { jsPDF } = window.jspdf; const doc = new jsPDF(); 
-        doc.text("STRUK WALLET", 10, 20); doc.text(`Waktu: ${t}`, 10, 30); 
-        doc.text(`Masuk: ${m}`, 10, 40); doc.text(`Keluar: ${k}`, 10, 50); 
-        doc.save(`Wallet_${t}.pdf`); 
-    }
 
     // --- LOGIC MONITORING ---
     function simpan(tipe, pre) {
@@ -263,7 +234,7 @@
         }); renderChart(L,S);
     });
 
-    // --- UTILS ---
+    // UTILS
     let chart;
     function renderChart(l, s) {
         const ctx = document.getElementById('rekapChart').getContext('2d'); if(chart) chart.destroy();
