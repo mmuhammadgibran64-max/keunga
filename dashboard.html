@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB v28.4 | ULTIMATE PRINT</title>
+    <title>GIBRAN HUB v28.5 | MEGA PRINT</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -42,7 +42,7 @@
         td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         
         .act-btn { padding: 8px 10px; border-radius: 5px; border: none; cursor: pointer; font-size: 8px; font-family: 'Orbitron'; color: white; transition: 0.3s; margin-right: 2px; }
-        img.table-img { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; border: 1px solid var(--cyan); }
+        img.table-img { width: 45px; height: 45px; object-fit: cover; border-radius: 6px; border: 1px solid var(--cyan); cursor: pointer; }
     </style>
 </head>
 <body>
@@ -175,8 +175,31 @@
         doc.text("---------------------------------------", 10, 25);
         let y = 40;
         content.forEach(line => { doc.text(line, 10, y); y += 10; });
-        doc.save(filename + ".pdf");
+        doc.save(filename.replace(/[/, :]/g, '_') + ".pdf");
     }
+
+    // --- LOGIC MONITORING (RECENT TRANSACTIONS) ---
+    function simpan(tipe, pre) {
+        const f = document.getElementById(pre+'bukti');
+        const d = { tipe: tipe, nama: v(pre+'nama'), tgl: v(pre+'tgl'), ttd: v(pre+'ttd'), tujuan: v(pre+'tujuan'), waktu: new Date().toLocaleString() };
+        if(f.files[0]) {
+            const r = new FileReader(); r.onload = (e) => { d.img = e.target.result; dbD.ref('transaksi').push(d).then(()=>alert("Terkirim!")); };
+            r.readAsDataURL(f.files[0]);
+        } else { dbD.ref('transaksi').push(d).then(()=>alert("Terkirim!")); }
+    }
+    dbD.ref('transaksi').on('value', s => {
+        const tb = document.getElementById('tbody-monitor'); tb.innerHTML = ""; let L=0, S=0;
+        s.forEach(c => {
+            const r = c.val(); r.tipe === "LAPORAN" ? L++ : S++;
+            tb.innerHTML += `<tr><td>${r.tipe}</td><td>${r.nama}</td><td>${r.tgl}</td>
+            <td>${r.img ? `<img src="${r.img}" class="table-img" onclick="window.open(this.src)">` : '-'}</td><td>${r.tujuan}</td>
+            <td>
+                <button class="act-btn" style="background:#333" onclick="dbD.ref('transaksi/${c.key}').remove()">X</button>
+                <button class="act-btn" style="background:var(--cyan); color:black" onclick="dlPDFUniversal('${r.tipe}_${r.nama}', ['Tipe: ${r.tipe}', 'Nama: ${r.nama}', 'Tanggal: ${r.tgl}', 'Tujuan: ${r.tujuan}', 'TTD: ${r.ttd}'])">SAVE</button>
+                <button class="act-btn" style="background:var(--purple)" onclick="printUniversal('BUKTI ${r.tipe}', '<p>Tipe: ${r.tipe}</p><p>Nama: ${r.nama}</p><p>Tanggal: ${r.tgl}</p><p>Tujuan: ${r.tujuan}</p><p>TTD: ${r.ttd}</p>')">PRINT</button>
+            </td></tr>`;
+        }); renderChart(L,S);
+    });
 
     // --- LOGIC GUDANG ---
     function sendG() {
@@ -216,22 +239,6 @@
             </td></tr>`;
         });
         document.getElementById('saldo-akhir').innerText = "Rp " + tot.toLocaleString();
-    });
-
-    // --- LOGIC MONITORING ---
-    function simpan(tipe, pre) {
-        const f = document.getElementById(pre+'bukti');
-        const d = { tipe: tipe, nama: v(pre+'nama'), tgl: v(pre+'tgl'), ttd: v(pre+'ttd'), tujuan: v(pre+'tujuan'), waktu: new Date().toLocaleString() };
-        if(f.files[0]) {
-            const r = new FileReader(); r.onload = (e) => { d.img = e.target.result; dbD.ref('transaksi').push(d).then(()=>alert("Terkirim!")); };
-            r.readAsDataURL(f.files[0]);
-        } else { dbD.ref('transaksi').push(d).then(()=>alert("Terkirim!")); }
-    }
-    dbD.ref('transaksi').on('value', s => {
-        const tb = document.getElementById('tbody-monitor'); tb.innerHTML = ""; let L=0, S=0;
-        s.forEach(c => { const r = c.val(); r.tipe === "LAPORAN" ? L++ : S++;
-            tb.innerHTML += `<tr><td>${r.tipe}</td><td>${r.nama}</td><td>${r.tgl}</td><td>${r.img ? `<img src="${r.img}" class="table-img" onclick="window.open(this.src)">` : '-'}</td><td>${r.tujuan}</td><td><button class="act-btn" style="background:#333" onclick="dbD.ref('transaksi/${c.key}').remove()">X</button></td></tr>`;
-        }); renderChart(L,S);
     });
 
     // UTILS
