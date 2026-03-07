@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB v28.6 | ENTERPRISE</title>
+    <title>GIBRAN HUB v28.7 | CLEAN OPERATIONAL</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -15,25 +15,34 @@
         :root { --red: #ff0055; --cyan: #00d4ff; --gold: #ffcc00; --bg: #050505; --card: rgba(15, 15, 15, 0.95); --purple: #bc13fe; --green: #00ff88; }
         body, html { margin: 0; padding: 0; background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; height: 100vh; overflow: hidden; }
         .wrapper { display: flex; height: 100vh; }
-        nav { width: 250px; background: #000; border-right: 2px solid var(--cyan); padding: 25px; display: flex; flex-direction: column; gap: 12px; }
+        nav { width: 250px; background: #000; border-right: 2px solid var(--cyan); padding: 25px; display: flex; flex-direction: column; gap: 12px; box-shadow: 5px 0 20px rgba(0, 212, 255, 0.2); }
         main { flex: 1; overflow-y: auto; padding: 30px; background: radial-gradient(circle at top right, #0d1621, #050505); padding-bottom: 100px; }
-        .nav-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 212, 255, 0.1); color: #777; padding: 14px; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; border-radius: 10px; text-align: left; transition: 0.4s; }
-        .nav-btn.active, .nav-btn:hover { background: var(--cyan); color: black; box-shadow: 0 0 20px var(--cyan); }
+        
+        .nav-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(0, 212, 255, 0.1); color: #777; padding: 14px; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; border-radius: 10px; text-align: left; transition: 0.4s; letter-spacing: 1px; }
+        .nav-btn.active, .nav-btn:hover { background: var(--cyan); color: black; box-shadow: 0 0 20px var(--cyan); border: 1px solid var(--cyan); font-weight: bold; }
+        
         .section { display: none; }
-        .section.active { display: block; animation: slideUp 0.4s; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; } }
-        .card { background: var(--card); border: 1px solid rgba(0, 212, 255, 0.1); border-radius: 15px; padding: 20px; margin-bottom: 25px; }
-        .card-h { font-family: 'Orbitron'; font-size: 12px; color: var(--cyan); margin-bottom: 15px; border-bottom: 1px solid rgba(0,212,255,0.2); padding-bottom: 8px; text-transform: uppercase; }
-        .flex-row { display: flex; gap: 15px; flex-wrap: wrap; }
-        .flex-col { flex: 1; min-width: 250px; }
-        label { font-size: 10px; color: #aaa; font-family: 'Orbitron'; margin-bottom: 5px; display: block; }
-        input, select { width: 100%; padding: 10px; background: rgba(0,0,0,0.4); border: 1px solid rgba(0, 212, 255, 0.2); color: white; border-radius: 8px; margin-bottom: 10px; font-family: 'Rajdhani'; }
-        .btn-main { width: 100%; padding: 12px; border: none; border-radius: 8px; font-family: 'Orbitron'; font-size: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; margin-bottom: 5px; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        th { text-align: left; color: var(--cyan); border-bottom: 1px solid var(--cyan); padding: 10px; font-family: 'Orbitron'; font-size: 9px; }
-        td { padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .act-btn { padding: 6px 8px; border-radius: 4px; border: none; cursor: pointer; font-size: 8px; font-family: 'Orbitron'; color: white; margin-right: 2px; }
+        .section.active { display: block; animation: slideUp 0.4s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card { background: var(--card); border: 1px solid rgba(0, 212, 255, 0.1); border-radius: 15px; padding: 20px; margin-bottom: 25px; backdrop-filter: blur(10px); }
+        .card-h { font-family: 'Orbitron'; font-size: 12px; color: var(--cyan); margin-bottom: 15px; border-bottom: 1px solid rgba(0,212,255,0.2); padding-bottom: 8px; text-transform: uppercase; letter-spacing: 2px; }
+
+        .flex-row { display: flex; gap: 20px; flex-wrap: wrap; }
+        .flex-col { flex: 1; min-width: 280px; }
+
+        label { font-size: 11px; color: #aaa; margin-bottom: 6px; display: block; font-family: 'Orbitron'; }
+        input, select { width: 100%; padding: 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(0, 212, 255, 0.2); color: white; border-radius: 8px; margin-bottom: 15px; font-family: 'Rajdhani'; outline: none; }
+        
+        .btn-main { width: 100%; padding: 15px; border: none; border-radius: 8px; font-family: 'Orbitron'; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
+        
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th { text-align: left; color: var(--cyan); border-bottom: 2px solid var(--cyan); padding: 12px; font-family: 'Orbitron'; font-size: 9px; }
+        td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        
+        .act-btn { padding: 8px 10px; border-radius: 5px; border: none; cursor: pointer; font-size: 8px; font-family: 'Orbitron'; color: white; transition: 0.3s; margin-right: 2px; }
         .profile-img { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--cyan); object-fit: cover; margin-bottom: 10px; }
+        img.table-img { width: 45px; height: 45px; object-fit: cover; border-radius: 6px; border: 1px solid var(--cyan); }
     </style>
 </head>
 <body>
@@ -42,79 +51,50 @@
     <nav>
         <div style="text-align:center; margin-bottom:20px;">
             <img id="display-foto" src="https://via.placeholder.com/80" class="profile-img">
-            <div id="display-nama" style="font-family:'Orbitron'; color:var(--cyan); font-size:14px;">USER_NAME</div>
+            <div id="display-nama" style="font-family:'Orbitron'; color:var(--cyan); font-size:12px; letter-spacing:1px;">USER_NAME</div>
         </div>
         <button class="nav-btn active" onclick="show('mon-view', this)">📊 MONITORING</button>
-        <button class="nav-btn" onclick="show('sales-view', this)">💰 SALES & LABA RUGI</button>
+        <button class="nav-btn" onclick="show('input-view', this)">📝 INPUT DATA</button>
         <button class="nav-btn" onclick="show('gudang-view', this)">📦 GUDANG</button>
-        <button class="nav-btn" onclick="show('setting-view', this)">⚙️ SETTING PROFIL</button>
+        <button class="nav-btn" onclick="show('wallet-view', this)">💰 DOMPET</button>
+        <button class="nav-btn" onclick="show('setting-view', this)">⚙️ PENGATURAN</button>
     </nav>
 
     <main>
-        <div id="sales-view" class="section">
-            <div class="flex-row">
-                <div class="flex-col card">
-                    <div class="card-h">INPUT PENJUALAN HARIAN</div>
-                    <label>PRODUK</label>
-                    <select id="p-produk">
-                        <option value="Peye Kacang Kecil">Peye Kacang Kecil</option>
-                        <option value="Peye Kacang Besar">Peye Kacang Besar</option>
-                        <option value="Slondok (Orang)">Slondok (Orang)</option>
-                        <option value="Opak (Orang)">Opak (Orang)</option>
-                        <option value="Kacang (Sendiri)">Kacang (Sendiri)</option>
-                        <option value="Kue Sus (Orang)">Kue Sus (Orang)</option>
-                        <option value="Rengginang Isi 3">Rengginang Isi 3</option>
-                    </select>
-                    <label>JUMLAH (Bungkus)</label><input type="number" id="p-qty" placeholder="0">
-                    <label>HARGA JUAL TOTAL (Rp)</label><input type="number" id="p-total" placeholder="Rp">
-                    <button class="btn-main" style="background:var(--green); color:black" onclick="saveSales()">SIMPAN PENJUALAN</button>
+        <div id="mon-view" class="section active">
+            <div class="card"><div class="card-h">LIVE ANALYTICS</div><canvas id="rekapChart" style="max-height: 220px;"></canvas></div>
+            <div class="card">
+                <div class="card-h">RECENT TRANSACTIONS</div>
+                <div style="overflow-x:auto;">
+                    <table>
+                        <thead><tr><th>TIPE</th><th>NAMA</th><th>TGL</th><th>BUKTI</th><th>TUJUAN</th><th>AKSI</th></tr></thead>
+                        <tbody id="tbody-monitor"></tbody>
+                    </table>
                 </div>
-                <div class="flex-col card">
-                    <div class="card-h">INPUT PENGELUARAN & MODAL</div>
-                    <label>KATEGORI</label>
-                    <select id="e-kat">
-                        <option value="Bahan (Tepung/Kacang/Dll)">Bahan Baku</option>
-                        <option value="Operasional (Gas)">Operasional</option>
-                        <option value="Kemasan (Plastik/Stiker)">Kemasan</option>
-                    </select>
-                    <label>NOMINAL (Rp)</label><input type="number" id="e-rp" placeholder="Rp">
-                    <button class="btn-main" style="background:var(--red); color:white" onclick="saveExpense()">SIMPAN PENGELUARAN</button>
-                </div>
-            </div>
-
-            <div class="card" style="border: 2px solid var(--gold);">
-                <div class="card-h" style="color:var(--gold)">LAPORAN LABA RUGI REAL-TIME</div>
-                <div class="flex-row" style="text-align: center;">
-                    <div class="flex-col">
-                        <label>TOTAL PENJUALAN</label>
-                        <h2 id="lr-jual" style="color:var(--green)">Rp 0</h2>
-                    </div>
-                    <div class="flex-col">
-                        <label>TOTAL BIAYA (BAHAN+OPS)</label>
-                        <h2 id="lr-biaya" style="color:var(--red)">Rp 0</h2>
-                    </div>
-                    <div class="flex-col">
-                        <label>LABA BERSIH</label>
-                        <h2 id="lr-net" style="text-shadow: 0 0 10px var(--cyan);">Rp 0</h2>
-                    </div>
-                    <div class="flex-col" style="border-left: 1px solid #333;">
-                        <label>DANA CADANGAN STOK (10%)</label>
-                        <h2 id="lr-cadangan" style="color:var(--gold)">Rp 0</h2>
-                    </div>
-                </div>
-                <button class="btn-main" style="background:var(--purple); color:white; width: 200px; margin: 20px auto; display: block;" onclick="printLR()">PRINT LAPORAN LABA RUGI</button>
             </div>
         </div>
 
-        <div id="mon-view" class="section active">
-            <div class="card"><div class="card-h">SALES ANALYTICS</div><canvas id="rekapChart" style="max-height: 200px;"></canvas></div>
-            <div class="card">
-                <div class="card-h">HISTORY PENJUALAN</div>
-                <div style="overflow-x:auto;">
-                    <table>
-                        <thead><tr><th>WAKTU</th><th>PRODUK</th><th>QTY</th><th>TOTAL</th><th>AKSI</th></tr></thead>
-                        <tbody id="tbody-sales"></tbody>
-                    </table>
+        <div id="input-view" class="section">
+            <div class="flex-row">
+                <div class="flex-col card">
+                    <div class="card-h">INPUT LAPORAN</div>
+                    <label>NAMA PELAPOR</label><input type="text" id="l-nama" placeholder="Nama">
+                    <label>TANGGAL</label><input type="date" id="l-tgl">
+                    <label>BUKTI</label><input type="file" id="l-bukti" accept="image/*">
+                    <label>TTD</label><input type="text" id="l-ttd" placeholder="Nama TTD">
+                    <label>KE</label>
+                    <select id="l-tujuan"><option value="BU TATI">BU TATI</option><option value="BU AMI">BU AMI</option></select>
+                    <button class="btn-main" style="background:var(--red); color:white" onclick="simpan('LAPORAN','l-')">KIRIM LAPORAN</button>
+                </div>
+                <div class="flex-col card">
+                    <div class="card-h">INPUT SETORAN</div>
+                    <label>NAMA PENYETOR</label><input type="text" id="s-nama" placeholder="Nama">
+                    <label>TANGGAL</label><input type="date" id="s-tgl">
+                    <label>BUKTI</label><input type="file" id="s-bukti" accept="image/*">
+                    <label>TTD</label><input type="text" id="s-ttd" placeholder="Nama TTD">
+                    <label>KE</label>
+                    <select id="s-tujuan"><option value="BU TATI">BU TATI</option><option value="BU AMI">BU AMI</option></select>
+                    <button class="btn-main" style="background:var(--cyan); color:black" onclick="simpan('SETORAN','s-')">KIRIM SETORAN</button>
                 </div>
             </div>
         </div>
@@ -124,36 +104,101 @@
                 <div class="card-h">GUDANG ENTRY</div>
                 <div class="flex-row">
                     <input type="text" id="g-nama" placeholder="Barang" class="flex-col">
+                    <input type="text" id="g-jenis" placeholder="Jenis" class="flex-col">
+                    <input type="number" id="g-jumlah" placeholder="Jumlah" class="flex-col">
                     <input type="number" id="g-stok" placeholder="Stok" class="flex-col">
-                    <button class="btn-main" style="background:var(--cyan); color:black; flex: 0.5;" onclick="sendG()">UPDATE</button>
                 </div>
+                <button class="btn-main" style="background:var(--purple); color:white" onclick="sendG()">UPDATE DATABASE GUDANG</button>
             </div>
             <div class="card">
                 <div class="card-h">INVENTORY LIST</div>
                 <div style="overflow-x:auto;">
                     <table>
-                        <thead><tr><th>NAMA</th><th>STOK</th><th>AKSI</th></tr></thead>
+                        <thead><tr><th>NAMA</th><th>JENIS</th><th>JML</th><th>STOK</th><th>AKSI</th></tr></thead>
                         <tbody id="tbody-gudang"></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <div id="setting-view" class="section">
-            <div class="card">
-                <div class="card-h">PENGATURAN PROFIL USAHA</div>
+        <div id="wallet-view" class="section">
+            <div class="card" style="border: 2px solid var(--gold);">
+                <div class="card-h" style="color:var(--gold)">WALLET MANAGEMENT</div>
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <span style="font-size: 11px; color: var(--gold); font-family: 'Orbitron';">SALDO AKHIR</span>
+                    <h1 id="saldo-akhir" style="color:white; font-family:'Orbitron'; margin: 10px 0; font-size: 45px; text-shadow: 0 0 15px var(--gold);">Rp 0</h1>
+                </div>
                 <div class="flex-row">
-                    <div class="flex-col">
-                        <label>NAMA PEMILIK / USAHA</label><input type="text" id="prof-nama">
-                        <label>NOMOR WA TERDAFTAR</label><input type="text" id="prof-wa">
-                    </div>
-                    <div class="flex-col">
-                        <label>FOTO PROFIL (UPLOAD)</label>
-                        <input type="file" id="prof-file" accept="image/*">
-                        <p style="font-size: 10px; color: #666;">*Foto akan disimpan secara lokal/database profil.</p>
+                    <div class="flex-col"><label>MASUK</label><input type="number" id="w-masuk" placeholder="0"></div>
+                    <div class="flex-col"><label>KELUAR</label><input type="number" id="w-keluar" placeholder="0"></div>
+                </div>
+                <button class="btn-main" style="background:var(--gold); color:black;" onclick="updateW()">SIMPAN SALDO</button>
+                <div style="margin-top: 35px;">
+                    <div class="card-h">HISTORY TRANSAKSI WALLET</div>
+                    <div style="overflow-x:auto;">
+                        <table>
+                            <thead><tr><th>WAKTU</th><th>MASUK</th><th>KELUAR</th><th>AKSI</th></tr></thead>
+                            <tbody id="tbody-wallet"></tbody>
+                        </table>
                     </div>
                 </div>
-                <button class="btn-main" style="background:var(--cyan); color:black;" onclick="saveProfile()">SIMPAN PERUBAHAN PROFIL</button>
+            </div>
+        </div>
+
+        <div id="setting-view" class="section">
+            <div class="card">
+                <div class="card-h">PENGATURAN PROFIL</div>
+                <div class="flex-row">
+                    <div class="flex-col">
+                        <label>NAMA USAHA</label><input type="text" id="prof-nama">
+                        <label>NOMOR WA</label><input type="text" id="prof-wa">
+                    </div>
+                    <div class="flex-col">
+                        <label>FOTO PROFIL</label><input type="file" id="prof-file" accept="image/*">
+                    </div>
+                </div>
+                <button class="btn-main" style="background:var(--cyan); color:black;" onclick="saveProfile()">UPDATE PROFIL</button>
+            </div>
+
+            <div class="card">
+                <div class="card-h">KASIR SALES & LABA RUGI</div>
+                <div class="flex-row">
+                    <div class="flex-col" style="border-right: 1px solid #333; padding-right: 10px;">
+                        <label>PRODUK JUAL</label>
+                        <select id="p-produk">
+                            <option value="Peye Kacang Kecil">Peye Kacang Kecil</option>
+                            <option value="Peye Kacang Besar">Peye Kacang Besar</option>
+                            <option value="Slondok (Orang)">Slondok (Orang)</option>
+                            <option value="Opak (Orang)">Opak (Orang)</option>
+                            <option value="Kacang (Sendiri)">Kacang (Sendiri)</option>
+                            <option value="Kue Sus (Orang)">Kue Sus (Orang)</option>
+                            <option value="Rengginang Isi 3">Rengginang Isi 3</option>
+                        </select>
+                        <label>JUMLAH & TOTAL (Rp)</label>
+                        <div class="flex-row"><input type="number" id="p-qty" placeholder="Qty" class="flex-col"><input type="number" id="p-total" placeholder="Total Rp" class="flex-col"></div>
+                        <button class="btn-main" style="background:var(--green); color:black" onclick="saveSales()">INPUT SALES</button>
+                    </div>
+                    <div class="flex-col">
+                        <label>BELANJA / BIAYA</label>
+                        <select id="e-kat">
+                            <option value="Bahan Baku">Bahan Baku (Tepung/Kacang/Dll)</option>
+                            <option value="Operasional">Operasional (Gas)</option>
+                            <option value="Kemasan">Kemasan (Plastik/Label)</option>
+                        </select>
+                        <label>NOMINAL (Rp)</label><input type="number" id="e-rp" placeholder="Rp">
+                        <button class="btn-main" style="background:var(--red); color:white" onclick="saveExpense()">INPUT BIAYA</button>
+                    </div>
+                </div>
+                
+                <div style="background:rgba(255,204,0,0.1); padding:15px; border-radius:10px; margin-top:15px; text-align:center;">
+                    <div class="flex-row">
+                        <div class="flex-col"><label>TOTAL JUAL</label><h3 id="lr-jual" style="color:var(--green); margin:0;">Rp 0</h3></div>
+                        <div class="flex-col"><label>TOTAL BIAYA</label><h3 id="lr-biaya" style="color:var(--red); margin:0;">Rp 0</h3></div>
+                        <div class="flex-col"><label>DANA CADANGAN (10%)</label><h3 id="lr-cadangan" style="color:var(--gold); margin:0;">Rp 0</h3></div>
+                    </div>
+                    <h2 id="lr-net" style="margin-top:20px; border-top:1px solid #ffcc00; padding-top:10px;">LABA BERSIH: Rp 0</h2>
+                    <button class="btn-main" style="background:var(--purple); color:white; width:auto; padding:10px 30px;" onclick="printLR()">CETAK LAPORAN LABA RUGI</button>
+                </div>
             </div>
         </div>
     </main>
@@ -161,100 +206,120 @@
 
 <script>
     // --- FIREBASE CONFIGS ---
-    const configProfile = {
-        apiKey: "AIzaSyDHZv0Ofds9O3Tyg0PJzjj326eG1hbDhug",
-        authDomain: "nama--profile.firebaseapp.com",
-        databaseURL: "https://nama--profile-default-rtdb.firebaseio.com",
-        projectId: "nama--profile",
-        storageBucket: "nama--profile.firebasestorage.app",
-        appId: "1:341046321280:web:29f9e0ea8dc7ae64198665"
-    };
+    const configA = { apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs", authDomain: "tempat-masuk-nya-data.firebaseapp.com", databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com", projectId: "tempat-masuk-nya-data", appId: "1:918742049565:web:4490b03c04f5bf75e3f7f4" };
+    const configW = { apiKey: "AIzaSyCdNwDr9lUsUE2iv43vW6q89VZMXPix8us", authDomain: "sisa-saldo.firebaseapp.com", databaseURL: "https://sisa-saldo-default-rtdb.firebaseio.com", projectId: "sisa-saldo", appId: "1:152603234485:web:1f82e28d57b2a5f2d8aefc" };
+    const configG = { databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
+    const configP = { apiKey: "AIzaSyDHZv0Ofds9O3Tyg0PJzjj326eG1hbDhug", authDomain: "nama--profile.firebaseapp.com", databaseURL: "https://nama--profile-default-rtdb.firebaseio.com", projectId: "nama--profile", appId: "1:341046321280:web:29f9e0ea8dc7ae64198665" };
 
-    const configGudang = { databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
+    firebase.initializeApp(configA);
+    const dbD = firebase.database();
+    const appW = firebase.initializeApp(configW, "W"); const dbW = firebase.database(appW);
+    const appG = firebase.initializeApp(configG, "G"); const dbG = firebase.database(appG);
+    const appP = firebase.initializeApp(configP, "P"); const dbP = firebase.database(appP);
 
-    firebase.initializeApp(configProfile);
-    const dbP = firebase.database(); 
-    const appG = firebase.initializeApp(configGudang, "G");
-    const dbG = firebase.database(appG);
+    // --- GLOBAL PRINT & SAVE ---
+    function printUniversal(judul, detail) {
+        const p = window.open('', '_blank');
+        p.document.write(`<html><head><title>Print</title><style>body{font-family:sans-serif;padding:30px;}.b{border:1px solid #000;padding:20px;width:280px;margin:auto;}h3{text-align:center;margin-top:0; border-bottom:1px solid #000; padding-bottom:10px;}</style></head><body><div class="b"><h3>${judul}</h3>${detail}<hr><p style="font-size:10px;text-align:center">${new Date().toLocaleString()}</p></div><script>window.print();window.close();<\/script></body></html>`);
+    }
+    function dlPDFUniversal(filename, content) {
+        const { jsPDF } = window.jspdf; const doc = new jsPDF();
+        doc.text("GIBRAN HUB REPORT", 10, 20); doc.text("---------------------------------------", 10, 25);
+        let y = 40; content.forEach(line => { doc.text(line, 10, y); y += 10; });
+        doc.save(filename.replace(/[/, :]/g, '_') + ".pdf");
+    }
 
-    // --- PROFILE LOGIC ---
+    // --- MONITORING LOGIC ---
+    function simpan(tipe, pre) {
+        const f = document.getElementById(pre+'bukti');
+        const d = { tipe: tipe, nama: v(pre+'nama'), tgl: v(pre+'tgl'), ttd: v(pre+'ttd'), tujuan: v(pre+'tujuan'), waktu: new Date().toLocaleString() };
+        if(f.files[0]) {
+            const r = new FileReader(); r.onload = (e) => { d.img = e.target.result; dbD.ref('transaksi').push(d).then(()=>alert("Terkirim!")); };
+            r.readAsDataURL(f.files[0]);
+        } else { dbD.ref('transaksi').push(d).then(()=>alert("Terkirim!")); }
+    }
+    dbD.ref('transaksi').on('value', s => {
+        const tb = document.getElementById('tbody-monitor'); tb.innerHTML = ""; let L=0, S=0;
+        s.forEach(c => {
+            const r = c.val(); r.tipe === "LAPORAN" ? L++ : S++;
+            tb.innerHTML += `<tr><td>${r.tipe}</td><td>${r.nama}</td><td>${r.tgl}</td>
+            <td>${r.img ? `<img src="${r.img}" class="table-img" onclick="window.open(this.src)">` : '-'}</td><td>${r.tujuan}</td>
+            <td>
+                <button class="act-btn" style="background:#333" onclick="dbD.ref('transaksi/${c.key}').remove()">X</button>
+                <button class="act-btn" style="background:var(--cyan); color:black" onclick="dlPDFUniversal('${r.tipe}_${r.nama}', ['Tipe: ${r.tipe}', 'Nama: ${r.nama}', 'Tanggal: ${r.tgl}'])">SAVE</button>
+                <button class="act-btn" style="background:var(--purple)" onclick="printUniversal('BUKTI ${r.tipe}', '<p>Nama: ${r.nama}</p><p>Tgl: ${r.tgl}</p>')">PRINT</button>
+            </td></tr>`;
+        }); renderChart(L,S);
+    });
+
+    // --- GUDANG LOGIC ---
+    function sendG() { dbG.ref('stok').push({ nm:v('g-nama'), jn:v('g-jenis'), jml:v('g-jumlah'), st:v('g-stok') }).then(()=>alert("Gudang Updated!")); }
+    dbG.ref('stok').on('value', s => {
+        const tb = document.getElementById('tbody-gudang'); tb.innerHTML = "";
+        s.forEach(c => { const r = c.val();
+            tb.innerHTML += `<tr><td>${r.nm}</td><td>${r.jn}</td><td>${r.jml}</td><td>${r.st}</td>
+            <td>
+                <button class="act-btn" style="background:#333" onclick="dbG.ref('stok/${c.key}').remove()">X</button>
+                <button class="act-btn" style="background:var(--cyan); color:black" onclick="dlPDFUniversal('Stok_${r.nm}', ['Barang: ${r.nm}', 'Stok: ${r.st}'])">SAVE</button>
+                <button class="act-btn" style="background:var(--purple)" onclick="printUniversal('STRUK GUDANG', '<p>Barang: ${r.nm}</p><p>Stok: ${r.st}</p>')">PRINT</button>
+            </td></tr>`;
+        });
+    });
+
+    // --- WALLET LOGIC ---
+    function updateW() { dbW.ref('riwayat').push({ tgl: new Date().toLocaleString('id-ID'), m: parseInt(v('w-masuk'))||0, k: parseInt(v('w-keluar'))||0 }); }
+    dbW.ref('riwayat').on('value', s => {
+        const tb = document.getElementById('tbody-wallet'); tb.innerHTML = ""; let tot = 0;
+        s.forEach(c => { const r = c.val(); tot += (r.m - r.k);
+            tb.innerHTML += `<tr><td>${r.tgl}</td><td style="color:var(--cyan)">+ ${r.m.toLocaleString()}</td><td style="color:var(--red)">- ${r.k.toLocaleString()}</td>
+            <td>
+                <button class="act-btn" style="background:#333" onclick="dbW.ref('riwayat/${c.key}').remove()">X</button>
+                <button class="act-btn" style="background:var(--cyan); color:black" onclick="dlPDFUniversal('Wallet_${r.tgl}', ['Masuk: ${r.m}', 'Keluar: ${r.k}'])">SAVE</button>
+                <button class="act-btn" style="background:var(--purple)" onclick="printUniversal('STRUK DOMPET', '<p>Masuk: ${r.m}</p><p>Keluar: ${r.k}</p>')">PRINT</button>
+            </td></tr>`;
+        }); document.getElementById('saldo-akhir').innerText = "Rp " + tot.toLocaleString();
+    });
+
+    // --- SETTING: PROFILE & FINANCE ---
     function saveProfile() {
         const file = document.getElementById('prof-file').files[0];
-        const data = { n: v('prof-nama'), w: v('prof-wa') };
+        const d = { n: v('prof-nama'), w: v('prof-wa') };
         if(file) {
-            const r = new FileReader(); r.onload = (e) => { data.img = e.target.result; dbP.ref('user').set(data); };
+            const r = new FileReader(); r.onload = (e) => { d.img = e.target.result; dbP.ref('user').set(d); };
             r.readAsDataURL(file);
-        } else { dbP.ref('user').update(data); }
-        alert("Profil Terupdate!");
+        } else { dbP.ref('user').update(d); }
+        alert("Profil Updated!");
     }
     dbP.ref('user').on('value', s => {
         const d = s.val(); if(!d) return;
-        document.getElementById('display-nama').innerText = d.n;
-        document.getElementById('prof-nama').value = d.n;
-        document.getElementById('prof-wa').value = d.w;
-        if(d.img) document.getElementById('display-foto').src = d.img;
+        document.getElementById('display-nama').innerText = d.n; if(d.img) document.getElementById('display-foto').src = d.img;
+        document.getElementById('prof-nama').value = d.n; document.getElementById('prof-wa').value = d.w;
     });
 
-    // --- SALES & LABA RUGI LOGIC (REAL CALCULATION) ---
-    function saveSales() {
-        const d = { tipe: 'JUAL', p: v('p-produk'), q: v('p-qty'), tot: parseInt(v('p-total')), tgl: new Date().toLocaleString() };
-        dbP.ref('finance').push(d);
-    }
-    function saveExpense() {
-        const d = { tipe: 'BIAYA', p: v('e-kat'), tot: parseInt(v('e-rp')), tgl: new Date().toLocaleString() };
-        dbP.ref('finance').push(d);
-    }
+    function saveSales() { dbP.ref('finance').push({ tipe:'JUAL', p:v('p-produk'), q:v('p-qty'), tot:parseInt(v('p-total'))||0, tgl:new Date().toLocaleString() }); alert("Sales Terinput!"); }
+    function saveExpense() { dbP.ref('finance').push({ tipe:'BIAYA', p:v('e-kat'), tot:parseInt(v('e-rp'))||0, tgl:new Date().toLocaleString() }); alert("Biaya Terinput!"); }
 
     dbP.ref('finance').on('value', s => {
-        const tb = document.getElementById('tbody-sales'); tb.innerHTML = "";
-        let TJual = 0, TBiaya = 0;
-        s.forEach(c => {
-            const r = c.val();
-            if(r.tipe === 'JUAL') {
-                TJual += r.tot;
-                tb.innerHTML += `<tr><td>${r.tgl}</td><td>${r.p}</td><td>${r.q}</td><td>${r.tot.toLocaleString()}</td><td><button class="act-btn" style="background:#333" onclick="dbP.ref('finance/${c.key}').remove()">X</button></td></tr>`;
-            } else { TBiaya += r.tot; }
-        });
-        const LabaNet = TJual - TBiaya;
-        const Cadangan = LabaNet > 0 ? LabaNet * 0.1 : 0;
-
-        document.getElementById('lr-jual').innerText = "Rp " + TJual.toLocaleString();
-        document.getElementById('lr-biaya').innerText = "Rp " + TBiaya.toLocaleString();
-        document.getElementById('lr-net').innerText = "Rp " + LabaNet.toLocaleString();
-        document.getElementById('lr-cadangan').innerText = "Rp " + Cadangan.toLocaleString();
-        updateChart(TJual, TBiaya);
+        let J=0, B=0; s.forEach(c => { const r = c.val(); r.tipe === 'JUAL' ? J += r.tot : B += r.tot; });
+        const net = J - B; const cad = net > 0 ? net * 0.1 : 0;
+        document.getElementById('lr-jual').innerText = "Rp " + J.toLocaleString();
+        document.getElementById('lr-biaya').innerText = "Rp " + B.toLocaleString();
+        document.getElementById('lr-cadangan').innerText = "Rp " + cad.toLocaleString();
+        document.getElementById('lr-net').innerText = "LABA BERSIH: Rp " + net.toLocaleString();
     });
 
-    // --- PRINT LABA RUGI ---
     function printLR() {
-        const j = document.getElementById('lr-jual').innerText;
-        const b = document.getElementById('lr-biaya').innerText;
-        const n = document.getElementById('lr-net').innerText;
-        const c = document.getElementById('lr-cadangan').innerText;
-        const p = window.open('', '_blank');
-        p.document.write(`<html><head><title>LabaRugi</title><style>body{font-family:sans-serif;padding:40px;}.box{border:2px solid #000;padding:20px;}h2{text-align:center;}</style></head><body><div class="box"><h2>LAPORAN LABA RUGI PRO</h2><hr><p>Total Penjualan: <b>${j}</b></p><p>Total Biaya: <b>${b}</b></p><hr><h3>LABA BERSIH: ${n}</h3><p>Dana Cadangan (10%): ${c}</p></div><script>window.print();<\/script></body></html>`);
+        const detail = `<p>Penjualan: ${document.getElementById('lr-jual').innerText}</p><p>Biaya: ${document.getElementById('lr-biaya').innerText}</p><h3>${document.getElementById('lr-net').innerText}</h3>`;
+        printUniversal('LAPORAN LABA RUGI', detail);
     }
-
-    // --- GUDANG LOGIC ---
-    function sendG() { dbG.ref('stok').push({ nm:v('g-nama'), st:v('g-stok') }); }
-    dbG.ref('stok').on('value', s => {
-        const tb = document.getElementById('tbody-gudang'); tb.innerHTML = "";
-        s.forEach(c => { const r = c.val(); tb.innerHTML += `<tr><td>${r.nm}</td><td>${r.st}</td><td><button class="act-btn" style="background:#333" onclick="dbG.ref('stok/${c.key}').remove()">X</button></td></tr>`; });
-    });
 
     // --- UTILS ---
     let chart;
-    function updateChart(j, b) {
-        const ctx = document.getElementById('rekapChart').getContext('2d');
-        if(chart) chart.destroy();
-        chart = new Chart(ctx, { type:'pie', data:{ labels:['Penjualan','Biaya'], datasets:[{ data:[j,b], backgroundColor:[ '#00ff88', '#ff0055' ] }] }, options:{plugins:{legend:{position:'bottom',labels:{color:'white'}}}} });
+    function renderChart(l, s) {
+        const ctx = document.getElementById('rekapChart').getContext('2d'); if(chart) chart.destroy();
+        chart = new Chart(ctx, { type:'bar', data:{ labels:['LAPORAN','SETORAN'], datasets:[{ label:'Data', data:[l, s], backgroundColor:['#ff0055','#00d4ff'] }] }, options:{plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true, grid:{color:'rgba(255,255,255,0.05)'}}}} });
     }
-    function show(id, btn) { 
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); 
-        document.getElementById(id).classList.add('active'); 
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); 
-        btn.classList.add('active'); 
-    }
+    function show(id, btn) { document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
     function v(id) { return document.getElementById(id).value; }
 </script>
 </body>
