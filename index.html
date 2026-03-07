@@ -3,80 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | AUTH CENTER</title>
+    <title>GIBRAN HUB | OFFICIAL ACCESS</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --red: #ff0055; --purple: #7000ff; --bg: #050505; }
+        :root { --red: #ff0055; --purple: #7000ff; --bg: #050505; --cyan: #00d4ff; }
         
-        /* BACKGROUND KEUANGAN SESUAI PERMINTAAN */
+        /* FIX BACKGROUND: Biar tetep muncul di semua perangkat */
         body, html { 
-            margin: 0; padding: 0; height: 100%; 
+            margin: 0; padding: 0; height: 100%; width: 100%;
             font-family: 'Rajdhani', sans-serif; 
-            display: flex; align-items: center; justify-content: center; 
-            color: white; overflow: hidden;
-            /* Pakai Gambar Keuangan sebagai Background Utama */
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
-                        url('https://i.ibb.co/v6mYfXy/keuangan-png.jpg');
+            background-color: #000; color: white; overflow: hidden;
+        }
+
+        .bg-layer {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            /* MENGGUNAKAN DUA METODE: GRADIENT + IMAGE URL */
+            background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.9) 100%), 
+                        url('https://i.ibb.co/v6mYfXy/keuangan-png.jpg') no-repeat center center;
             background-size: cover;
-            background-position: center;
-        }
-        
-        /* Container Utama */
-        .auth-container { 
-            background: rgba(10, 10, 10, 0.85); 
-            border: 1px solid var(--purple); 
-            padding: 35px; 
-            border-radius: 20px; 
-            width: 100%; 
-            max-width: 380px; 
-            position: relative; 
-            box-shadow: 0 0 50px rgba(112, 0, 255, 0.3); 
-            backdrop-filter: blur(15px); /* Efek kaca transparan */
+            z-index: -1;
+            /* Efek Zoom pelan ala Android */
+            animation: kenBurns 15s infinite alternate;
         }
 
-        .logo { font-family: 'Orbitron'; font-size: 1.6rem; color: var(--red); text-align: center; margin-bottom: 25px; text-shadow: 0 0 10px var(--red); letter-spacing: 3px; }
-        
-        /* Form Switcher */
-        .form-box { display: none; animation: slideIn 0.4s ease forwards; }
-        .form-box.active { display: block; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes kenBurns {
+            from { transform: scale(1); }
+            to { transform: scale(1.15); }
+        }
 
-        .input-group { margin-bottom: 15px; }
-        label { display: block; font-family: 'Orbitron'; font-size: 9px; color: var(--purple); margin-bottom: 5px; letter-spacing: 1px; }
-        input { width: 100%; padding: 11px; background: rgba(255,255,255,0.05); border: 1px solid rgba(112, 0, 255, 0.3); border-radius: 8px; color: white; outline: none; box-sizing: border-box; transition: 0.3s; }
-        input:focus { border-color: var(--red); background: rgba(255,255,255,0.1); box-shadow: 0 0 10px rgba(255, 0, 85, 0.2); }
+        /* SPLASH SCREEN */
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 1s ease-out;
+        }
 
-        .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; color: white; font-family: 'Orbitron'; font-size: 11px; cursor: pointer; transition: 0.3s; margin-top: 10px; font-weight: bold; text-transform: uppercase; }
-        .btn-login { background: var(--purple); box-shadow: 0 0 15px var(--purple); }
-        .btn-reg { background: var(--red); box-shadow: 0 0 15px var(--red); }
-        .btn:hover { transform: scale(1.02); filter: brightness(1.2); }
+        .logo-box {
+            position: relative; width: 120px; height: 120px;
+            border: 2px solid var(--cyan); border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 30px var(--cyan);
+            animation: logoPop 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes logoPop { from { transform: scale(0); rotate: -20deg; } to { transform: scale(1); rotate: 0; } }
 
-        .toggle-link { text-align: center; margin-top: 20px; font-size: 12px; color: #888; cursor: pointer; text-decoration: none; font-weight: bold; }
-        .toggle-link span { color: var(--red); text-decoration: underline; }
-        .toggle-link:hover { color: white; }
+        /* AUTH BOX */
+        .auth-wrapper {
+            height: 100%; display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: 1.5s ease; padding: 20px;
+        }
+
+        .auth-card {
+            background: rgba(0, 0, 0, 0.6); /* Transparan Kaca */
+            padding: 30px; border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%; max-width: 350px; backdrop-filter: blur(15px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+
+        .input-group { margin-bottom: 20px; }
+        label { display: block; font-family: 'Orbitron'; font-size: 10px; color: var(--cyan); margin-bottom: 8px; letter-spacing: 1px; }
+        input { 
+            width: 100%; padding: 14px; background: rgba(255,255,255,0.08); 
+            border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 15px; 
+            color: white; outline: none; box-sizing: border-box; font-size: 14px;
+        }
+        input:focus { border-color: var(--cyan); box-shadow: 0 0 15px rgba(0, 212, 255, 0.3); }
+
+        .btn { 
+            width: 100%; padding: 16px; border: none; border-radius: 15px; 
+            color: white; font-family: 'Orbitron'; font-size: 12px; cursor: pointer; 
+            font-weight: bold; margin-top: 10px; transition: 0.3s; 
+        }
+        .btn-login { background: linear-gradient(45deg, var(--purple), #4e00b3); box-shadow: 0 10px 20px rgba(112, 0, 255, 0.3); }
+        .btn-reg { background: linear-gradient(45deg, var(--red), #b3003b); box-shadow: 0 10px 20px rgba(255, 0, 85, 0.3); }
+
+        .form-box { display: none; }
+        .form-box.active { display: block; animation: slideUp 0.6s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<div class="auth-container">
-    <div class="logo">GIBRAN_HUB</div>
+<div class="bg-layer"></div>
 
-    <div id="loginForm" class="form-box active">
-        <div style="color: var(--purple); font-family: 'Orbitron'; font-size: 12px; margin-bottom: 15px; text-align: center; letter-spacing: 1px;">SECURE ACCESS LOGIN</div>
-        <div class="input-group"><label>NAMA OPERATOR</label><input type="text" id="logNama" placeholder="Nama Anda..."></div>
-        <div class="input-group"><label>NOMOR WHATSAPP</label><input type="tel" id="logWA" placeholder="08xxxxxxxxxx"></div>
-        <button class="btn btn-login" id="btnMasuk">AUTHORIZE & ENTER</button>
-        <div class="toggle-link" onclick="toggleForm('reg')">Belum punya akun? <span>Daftar di sini</span></div>
+<div id="splash-screen">
+    <div class="logo-box">
+        <span style="font-family:'Orbitron'; font-size: 40px; color:var(--cyan);">G</span>
     </div>
+    <h1 style="font-family:'Orbitron'; font-size: 18px; margin-top: 20px; letter-spacing: 5px;">GIBRAN HUB</h1>
+    <div style="width: 100px; height: 2px; background: rgba(0,212,255,0.2); margin-top: 15px; overflow: hidden;">
+        <div id="loader" style="width: 0%; height: 100%; background: var(--cyan); transition: 2s;"></div>
+    </div>
+</div>
 
-    <div id="regForm" class="form-box">
-        <div style="color: var(--red); font-family: 'Orbitron'; font-size: 12px; margin-bottom: 15px; text-align: center; letter-spacing: 1px;">CREATE NEW ACCOUNT</div>
-        <div class="input-group"><label>NAMA LENGKAP</label><input type="text" id="regNama"></div>
-        <div class="input-group"><label>NOMOR WHATSAPP</label><input type="tel" id="regWA"></div>
-        <div class="input-group"><label>ALAMAT</label><input type="text" id="regAlamat"></div>
-        <div class="input-group"><label>PASSWORD</label><input type="password" id="regPass"></div>
-        <button class="btn btn-reg" id="btnDaftar">CONFIRM REGISTRATION</button>
-        <div class="toggle-link" onclick="toggleForm('login')">Sudah punya akun? <span>Login di sini</span></div>
+<div class="auth-wrapper" id="auth-ui">
+    <div class="auth-card">
+        <h2 style="font-family:'Orbitron'; font-size: 18px; text-align: center; color: var(--cyan); margin-bottom: 30px;">AUTHENTICATION</h2>
+
+        <div id="loginForm" class="form-box active">
+            <div class="input-group"><label>OPERATOR NAME</label><input type="text" id="logNama" placeholder="Nama Operator"></div>
+            <div class="input-group"><label>WHATSAPP</label><input type="tel" id="logWA" placeholder="08xxxxxxxx"></div>
+            <button class="btn btn-login" id="btnMasuk">LOGIN SYSTEM</button>
+            <p onclick="toggle('reg')" style="text-align:center; font-size:12px; color:#aaa; margin-top:20px; cursor:pointer;">New User? <span style="color:var(--cyan)">Register</span></p>
+        </div>
+
+        <div id="regForm" class="form-box">
+            <div class="input-group"><label>NAMA LENGKAP</label><input type="text" id="regNama"></div>
+            <div class="input-group"><label>WHATSAPP</label><input type="tel" id="regWA"></div>
+            <div class="input-group"><label>PASSWORD</label><input type="password" id="regPass"></div>
+            <button class="btn btn-reg" id="btnDaftar">SIGN UP</button>
+            <p onclick="toggle('login')" style="text-align:center; font-size:12px; color:#aaa; margin-top:20px; cursor:pointer;">Have account? <span style="color:var(--red)">Login</span></p>
+        </div>
     </div>
 </div>
 
@@ -84,75 +122,52 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
     import { getDatabase, ref, set, push } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
-    const configDaftar = {
-        apiKey: "AIzaSyB4ZKcy0TGDQ_i5LGXIsFH9pSSXGfifzqg",
-        authDomain: "daftar-akun-2f94c.firebaseapp.com",
-        databaseURL: "https://daftar-akun-2f94c-default-rtdb.firebaseio.com",
-        projectId: "daftar-akun-2f94c",
-        appId: "1:225880747346:web:e6565efca909fb2f4c1e8b"
+    const configDaftar = { apiKey: "AIzaSyB4ZKcy0TGDQ_i5LGXIsFH9pSSXGfifzqg", databaseURL: "https://daftar-akun-2f94c-default-rtdb.firebaseio.com" };
+    const configLogin = { apiKey: "AIzaSyC_89eDNhdOojD_w8cCYADrF6Sj5R64mro", databaseURL: "https://login-1f788-default-rtdb.firebaseio.com" };
+
+    const dbDaftar = getDatabase(initializeApp(configDaftar, "appDaftar"));
+    const dbLogin = getDatabase(initializeApp(configLogin, "appLogin"));
+
+    // SPLASH TIMING
+    window.onload = () => {
+        document.getElementById('loader').style.width = '100%';
+        setTimeout(() => {
+            document.getElementById('splash-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('splash-screen').style.display = 'none';
+                document.getElementById('auth-ui').style.opacity = '1';
+            }, 1000);
+        }, 2500);
     };
 
-    const configLogin = {
-        apiKey: "AIzaSyC_89eDNhdOojD_w8cCYADrF6Sj5R64mro",
-        authDomain: "login-1f788.firebaseapp.com",
-        databaseURL: "https://login-1f788-default-rtdb.firebaseio.com",
-        projectId: "login-1f788",
-        appId: "1:180921561129:web:6e4d60a74a871691346c38"
+    // DAFTAR
+    document.getElementById('btnDaftar').onclick = async () => {
+        const n = document.getElementById('regNama').value;
+        const w = document.getElementById('regWA').value;
+        const p = document.getElementById('regPass').value;
+        if(n && w && p) {
+            await set(ref(dbDaftar, 'users/' + w), { nama:n, wa:w, pass:p });
+            alert("Registered!"); window.location.reload();
+        }
     };
 
-    const appDaftar = initializeApp(configDaftar, "appDaftar");
-    const appLogin = initializeApp(configLogin, "appLogin");
-    const dbDaftar = getDatabase(appDaftar);
-    const dbLogin = getDatabase(appLogin);
-
-    // --- DAFTAR ---
-    document.getElementById('btnDaftar').onclick = async function() {
-        const nama = document.getElementById('regNama').value;
-        const wa = document.getElementById('regWA').value;
-        const alamat = document.getElementById('regAlamat').value;
-        const pass = document.getElementById('regPass').value;
-
-        if(nama && wa && alamat && pass) {
-            try {
-                await set(ref(dbDaftar, 'users/' + wa), {
-                    nama, wa, alamat, pass, tgl_daftar: new Date().toLocaleString()
-                });
-                alert("Akun Berhasil Dibuat! Silakan Login.");
-                window.location.reload();
-            } catch (e) { alert("Error Daftar: " + e.message); }
-        } else { alert("Lengkapi data daftar!"); }
-    };
-
-    // --- LOGIN ---
-    document.getElementById('btnMasuk').onclick = async function() {
-        const nama = document.getElementById('logNama').value;
-        const wa = document.getElementById('logWA').value;
-
-        if(nama && wa) {
-            try {
-                const loginRef = push(ref(dbLogin, 'data_login'));
-                await set(loginRef, {
-                    nama: nama,
-                    wa: wa,
-                    waktu_masuk: new Date().toLocaleString(),
-                    status: "Online"
-                });
-
-                localStorage.setItem('user_gibran', nama);
-                alert("Akses Diterima!");
-                // PINDAH KE DASHBOARD
-                window.location.href = "dashboard.html";
-            } catch (e) { alert("Error Login: " + e.message); }
-        } else { alert("Isi Nama & WA!"); }
+    // LOGIN
+    document.getElementById('btnMasuk').onclick = async () => {
+        const n = document.getElementById('logNama').value;
+        const w = document.getElementById('logWA').value;
+        if(n && w) {
+            await set(push(ref(dbLogin, 'data_login')), { nama:n, wa:w, time: new Date().toLocaleString() });
+            localStorage.setItem('user_gibran', n);
+            window.location.href = "dashboard.html";
+        }
     };
 </script>
 
 <script>
-    function toggleForm(type) {
-        document.getElementById('loginForm').classList.toggle('active', type === 'login');
-        document.getElementById('regForm').classList.toggle('active', type === 'reg');
+    function toggle(t) {
+        document.getElementById('loginForm').classList.toggle('active', t === 'login');
+        document.getElementById('regForm').classList.toggle('active', t === 'reg');
     }
 </script>
-
 </body>
 </html>
