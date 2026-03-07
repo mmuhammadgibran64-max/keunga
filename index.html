@@ -7,28 +7,52 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root { --red: #ff0055; --purple: #7000ff; --bg: #050505; }
-        body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); font-family: 'Rajdhani', sans-serif; display: flex; align-items: center; justify-content: center; color: white; overflow: hidden; }
+        
+        /* BACKGROUND KEUANGAN SESUAI PERMINTAAN */
+        body, html { 
+            margin: 0; padding: 0; height: 100%; 
+            font-family: 'Rajdhani', sans-serif; 
+            display: flex; align-items: center; justify-content: center; 
+            color: white; overflow: hidden;
+            /* Pakai Gambar Keuangan sebagai Background Utama */
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
+                        url('https://i.ibb.co/v6mYfXy/keuangan-png.jpg');
+            background-size: cover;
+            background-position: center;
+        }
         
         /* Container Utama */
-        .auth-container { background: rgba(20, 20, 20, 0.95); border: 1px solid var(--purple); padding: 35px; border-radius: 20px; width: 100%; max-width: 380px; position: relative; box-shadow: 0 0 30px rgba(112, 0, 255, 0.2); }
-        .logo { font-family: 'Orbitron'; font-size: 1.6rem; color: var(--red); text-align: center; margin-bottom: 25px; text-shadow: 0 0 10px var(--red); }
+        .auth-container { 
+            background: rgba(10, 10, 10, 0.85); 
+            border: 1px solid var(--purple); 
+            padding: 35px; 
+            border-radius: 20px; 
+            width: 100%; 
+            max-width: 380px; 
+            position: relative; 
+            box-shadow: 0 0 50px rgba(112, 0, 255, 0.3); 
+            backdrop-filter: blur(15px); /* Efek kaca transparan */
+        }
+
+        .logo { font-family: 'Orbitron'; font-size: 1.6rem; color: var(--red); text-align: center; margin-bottom: 25px; text-shadow: 0 0 10px var(--red); letter-spacing: 3px; }
         
         /* Form Switcher */
         .form-box { display: none; animation: slideIn 0.4s ease forwards; }
         .form-box.active { display: block; }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .input-group { margin-bottom: 15px; }
         label { display: block; font-family: 'Orbitron'; font-size: 9px; color: var(--purple); margin-bottom: 5px; letter-spacing: 1px; }
         input { width: 100%; padding: 11px; background: rgba(255,255,255,0.05); border: 1px solid rgba(112, 0, 255, 0.3); border-radius: 8px; color: white; outline: none; box-sizing: border-box; transition: 0.3s; }
-        input:focus { border-color: var(--red); background: rgba(255,255,255,0.1); }
+        input:focus { border-color: var(--red); background: rgba(255,255,255,0.1); box-shadow: 0 0 10px rgba(255, 0, 85, 0.2); }
 
-        .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; color: white; font-family: 'Orbitron'; font-size: 11px; cursor: pointer; transition: 0.3s; margin-top: 10px; font-weight: bold; }
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 8px; color: white; font-family: 'Orbitron'; font-size: 11px; cursor: pointer; transition: 0.3s; margin-top: 10px; font-weight: bold; text-transform: uppercase; }
         .btn-login { background: var(--purple); box-shadow: 0 0 15px var(--purple); }
         .btn-reg { background: var(--red); box-shadow: 0 0 15px var(--red); }
         .btn:hover { transform: scale(1.02); filter: brightness(1.2); }
 
-        .toggle-link { text-align: center; margin-top: 20px; font-size: 12px; color: #888; cursor: pointer; text-decoration: underline; }
+        .toggle-link { text-align: center; margin-top: 20px; font-size: 12px; color: #888; cursor: pointer; text-decoration: none; font-weight: bold; }
+        .toggle-link span { color: var(--red); text-decoration: underline; }
         .toggle-link:hover { color: white; }
     </style>
 </head>
@@ -38,21 +62,21 @@
     <div class="logo">GIBRAN_HUB</div>
 
     <div id="loginForm" class="form-box active">
-        <div style="color: var(--purple); font-family: 'Orbitron'; font-size: 12px; margin-bottom: 15px; text-align: center;">SECURE ACCESS LOGIN</div>
+        <div style="color: var(--purple); font-family: 'Orbitron'; font-size: 12px; margin-bottom: 15px; text-align: center; letter-spacing: 1px;">SECURE ACCESS LOGIN</div>
         <div class="input-group"><label>NAMA OPERATOR</label><input type="text" id="logNama" placeholder="Nama Anda..."></div>
         <div class="input-group"><label>NOMOR WHATSAPP</label><input type="tel" id="logWA" placeholder="08xxxxxxxxxx"></div>
         <button class="btn btn-login" id="btnMasuk">AUTHORIZE & ENTER</button>
-        <div class="toggle-link" onclick="toggleForm('reg')">Belum punya akun? Daftar di sini</div>
+        <div class="toggle-link" onclick="toggleForm('reg')">Belum punya akun? <span>Daftar di sini</span></div>
     </div>
 
     <div id="regForm" class="form-box">
-        <div style="color: var(--red); font-family: 'Orbitron'; font-size: 12px; margin-bottom: 15px; text-align: center;">CREATE NEW ACCOUNT</div>
+        <div style="color: var(--red); font-family: 'Orbitron'; font-size: 12px; margin-bottom: 15px; text-align: center; letter-spacing: 1px;">CREATE NEW ACCOUNT</div>
         <div class="input-group"><label>NAMA LENGKAP</label><input type="text" id="regNama"></div>
         <div class="input-group"><label>NOMOR WHATSAPP</label><input type="tel" id="regWA"></div>
         <div class="input-group"><label>ALAMAT</label><input type="text" id="regAlamat"></div>
         <div class="input-group"><label>PASSWORD</label><input type="password" id="regPass"></div>
         <button class="btn btn-reg" id="btnDaftar">CONFIRM REGISTRATION</button>
-        <div class="toggle-link" onclick="toggleForm('login')">Sudah punya akun? Login di sini</div>
+        <div class="toggle-link" onclick="toggleForm('login')">Sudah punya akun? <span>Login di sini</span></div>
     </div>
 </div>
 
@@ -60,35 +84,28 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
     import { getDatabase, ref, set, push } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
 
-    // DB 1: UNTUK DAFTAR
     const configDaftar = {
         apiKey: "AIzaSyB4ZKcy0TGDQ_i5LGXIsFH9pSSXGfifzqg",
         authDomain: "daftar-akun-2f94c.firebaseapp.com",
         databaseURL: "https://daftar-akun-2f94c-default-rtdb.firebaseio.com",
         projectId: "daftar-akun-2f94c",
-        storageBucket: "daftar-akun-2f94c.firebasestorage.app",
-        messagingSenderId: "225880747346",
         appId: "1:225880747346:web:e6565efca909fb2f4c1e8b"
     };
 
-    // DB 2: UNTUK LOGIN
     const configLogin = {
         apiKey: "AIzaSyC_89eDNhdOojD_w8cCYADrF6Sj5R64mro",
         authDomain: "login-1f788.firebaseapp.com",
         databaseURL: "https://login-1f788-default-rtdb.firebaseio.com",
         projectId: "login-1f788",
-        storageBucket: "login-1f788.firebasestorage.app",
-        messagingSenderId: "180921561129",
         appId: "1:180921561129:web:6e4d60a74a871691346c38"
     };
 
-    // Initialize Both
     const appDaftar = initializeApp(configDaftar, "appDaftar");
     const appLogin = initializeApp(configLogin, "appLogin");
     const dbDaftar = getDatabase(appDaftar);
     const dbLogin = getDatabase(appLogin);
 
-    // --- LOGIKA DAFTAR ---
+    // --- DAFTAR ---
     document.getElementById('btnDaftar').onclick = async function() {
         const nama = document.getElementById('regNama').value;
         const wa = document.getElementById('regWA').value;
@@ -101,19 +118,18 @@
                     nama, wa, alamat, pass, tgl_daftar: new Date().toLocaleString()
                 });
                 alert("Akun Berhasil Dibuat! Silakan Login.");
-                window.location.reload(); // Balik ke Login
+                window.location.reload();
             } catch (e) { alert("Error Daftar: " + e.message); }
         } else { alert("Lengkapi data daftar!"); }
     };
 
-    // --- LOGIKA LOGIN ---
+    // --- LOGIN ---
     document.getElementById('btnMasuk').onclick = async function() {
         const nama = document.getElementById('logNama').value;
         const wa = document.getElementById('logWA').value;
 
         if(nama && wa) {
             try {
-                // Simpan Riwayat Login
                 const loginRef = push(ref(dbLogin, 'data_login'));
                 await set(loginRef, {
                     nama: nama,
@@ -124,6 +140,7 @@
 
                 localStorage.setItem('user_gibran', nama);
                 alert("Akses Diterima!");
+                // PINDAH KE DASHBOARD
                 window.location.href = "dashboard.html";
             } catch (e) { alert("Error Login: " + e.message); }
         } else { alert("Isi Nama & WA!"); }
@@ -131,16 +148,9 @@
 </script>
 
 <script>
-    // FUNGSI PINDAH FORM
     function toggleForm(type) {
-        document.getElementById('loginForm').classList.remove('active');
-        document.getElementById('regForm').classList.remove('active');
-        
-        if(type === 'reg') {
-            document.getElementById('regForm').classList.add('active');
-        } else {
-            document.getElementById('loginForm').classList.add('active');
-        }
+        document.getElementById('loginForm').classList.toggle('active', type === 'login');
+        document.getElementById('regForm').classList.toggle('active', type === 'reg');
     }
 </script>
 
