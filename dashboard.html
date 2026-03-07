@@ -3,40 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | KIRIM SETORAN</title>
+    <title>GIBRAN HUB | FORM SISTEM</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <style>
-        :root { --primary-blue: #00c3ff; --bg-light: #f8fbff; --text-dark: #333; }
-        body, html { margin: 0; padding: 0; background: var(--bg-light); font-family: 'Rajdhani', sans-serif; color: var(--text-dark); }
+        :root { --primary-blue: #00c3ff; --bg-light: #f8fbff; }
+        body, html { margin: 0; padding: 0; background: var(--bg-light); font-family: 'Rajdhani', sans-serif; color: #333; }
 
-        /* HEADER */
+        /* HEADER SESUAI GAMBAR */
         header { 
             background: white; padding: 15px 20px; display: flex; align-items: center; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02); position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 100;
         }
-        .header-btn { font-size: 20px; cursor: pointer; border: none; background: none; color: #555; }
-        header h2 { margin: 0; font-size: 18px; flex: 1; text-align: center; font-family: 'Orbitron'; font-weight: bold; }
+        .header-icon { font-size: 20px; cursor: pointer; border: none; background: none; color: #444; padding: 5px; }
+        header h2 { margin: 0; font-size: 18px; flex: 1; text-align: center; font-family: 'Orbitron'; }
 
-        /* MAIN CONTENT */
         main { padding: 20px; max-width: 450px; margin: auto; padding-bottom: 120px; }
 
-        label { display: block; font-weight: 700; margin: 20px 0 10px; font-size: 15px; }
+        label { display: block; font-weight: 700; margin: 20px 0 10px; font-size: 14px; text-transform: uppercase; color: #666; }
 
         /* UPLOAD BOX */
         .upload-container {
             border: 2px dashed #bde0fe; border-radius: 20px; padding: 40px 20px;
             text-align: center; background: #f0f7ff; cursor: pointer; position: relative;
         }
-        .upload-container img.icon { width: 60px; margin-bottom: 15px; opacity: 0.8; }
-        .upload-title { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
+        .upload-container img.icon { width: 50px; margin-bottom: 15px; }
+        .upload-text { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
         .upload-sub { font-size: 12px; color: #888; margin-bottom: 20px; }
         .btn-pilih { 
             background: var(--primary-blue); color: white; border: none; padding: 12px 30px; 
-            border-radius: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0, 195, 255, 0.2);
+            border-radius: 12px; font-weight: bold; cursor: pointer;
         }
         #preview-img { width: 100%; border-radius: 15px; display: none; margin-top: 10px; }
 
@@ -44,200 +43,223 @@
         .input-field {
             width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #e1e9f0;
             background: #fff; box-sizing: border-box; outline: none; font-size: 15px;
-            transition: 0.3s;
         }
-        .input-field:focus { border-color: var(--primary-blue); box-shadow: 0 0 8px rgba(0, 195, 255, 0.1); }
 
-        /* TARGET SELECTION */
+        /* TARGET SELECTION (BU TATI / BU AMI) */
         .target-group { display: flex; gap: 15px; }
         .target-card {
             flex: 1; border: 1.5px solid #e1e9f0; padding: 15px; border-radius: 18px;
-            text-align: center; cursor: pointer; background: #fff; transition: 0.3s;
+            text-align: center; cursor: pointer; background: #fff; transition: 0.2s;
         }
-        .target-card.active { border-color: var(--primary-blue); background: #f0faff; }
+        .target-card.active { border-color: var(--primary-blue); background: #f0faff; box-shadow: 0 4px 12px rgba(0,195,255,0.1); }
         .target-card img { width: 35px; margin-bottom: 8px; }
-        .target-card p { margin: 0; font-weight: 600; font-size: 14px; }
+        .target-card p { margin: 0; font-weight: 600; }
 
-        /* SIGNATURE */
-        .sig-wrapper { border: 1px solid #e1e9f0; border-radius: 18px; background: #fff; position: relative; height: 180px; }
+        /* SIGNATURE BOX */
+        .sig-wrapper { border: 1px solid #e1e9f0; border-radius: 18px; background: #fff; position: relative; height: 180px; margin-top: 10px; }
         .sig-canvas { width: 100%; height: 100%; border-radius: 18px; cursor: crosshair; }
-        .sig-hint { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #bbb; pointer-events: none; }
-        .btn-hapus-ttd { color: #00c3ff; font-weight: bold; font-size: 13px; cursor: pointer; float: right; }
+        .sig-hint { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #ccc; pointer-events: none; text-align: center; font-size: 14px; font-style: italic; }
+        .btn-clear { color: #ff0055; font-weight: bold; font-size: 13px; cursor: pointer; float: right; margin-bottom: 5px; }
 
-        /* FOOTER ACTIONS */
-        .action-bar {
-            position: fixed; bottom: 85px; left: 0; width: 100%; padding: 0 20px; box-sizing: border-box;
-            display: flex; gap: 12px;
+        /* FOOTER ACTIONS SESUAI GAMBAR TERBARU */
+        .footer-actions {
+            position: fixed; bottom: 80px; left: 0; width: 100%; padding: 0 20px; box-sizing: border-box;
+            display: flex; gap: 15px; background: transparent;
         }
         .btn-cetak {
-            background: #f1f4f9; color: #333; border: none; padding: 18px;
+            background: #f1f4f9; color: #333; border: 1px solid #e1e9f0; padding: 16px;
             border-radius: 15px; font-weight: bold; flex: 1; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
         }
         .btn-kirim {
-            background: var(--primary-blue); color: white; border: none; padding: 18px;
-            border-radius: 15px; font-weight: bold; flex: 3; cursor: pointer;
-            font-size: 16px; box-shadow: 0 8px 20px rgba(0, 195, 255, 0.3);
+            background: var(--primary-blue); color: white; border: none; padding: 16px;
+            border-radius: 15px; font-weight: bold; flex: 2; cursor: pointer;
+            font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 0 8px 15px rgba(0, 195, 255, 0.2);
         }
 
         /* BOTTOM NAV */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%; background: white;
             display: flex; justify-content: space-around; padding: 15px 0;
-            box-shadow: 0 -2px 15px rgba(0,0,0,0.03); border-radius: 20px 20px 0 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.02);
         }
         .nav-link { text-align: center; color: #aaa; text-decoration: none; font-size: 10px; font-weight: bold; }
         .nav-link.active { color: var(--primary-blue); }
-        .nav-link i { font-size: 22px; display: block; margin-bottom: 4px; }
+
+        @media print {
+            header, .footer-actions, .bottom-nav, .btn-clear, .btn-pilih { display: none !important; }
+            main { padding: 0; }
+            .sig-wrapper { border: 1px solid #000; }
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <button class="header-btn" onclick="history.back()">←</button>
-    <h2>Kirim Setoran</h2>
-    <button class="header-btn" onclick="downloadData()">📥</button>
+    <button class="header-icon" onclick="history.back()">←</button>
+    <h2 id="page-title">Kirim Setoran</h2>
+    <button class="header-icon" onclick="downloadData()">📥</button>
 </header>
 
-<main id="main-content">
-    <label>Bukti Setor</label>
+<main>
+    <label>Bukti Laporan/Setoran</label>
     <div class="upload-container" onclick="document.getElementById('img-input').click()">
-        <img src="https://cdn-icons-png.flaticon.com/512/338/338908.png" class="icon" id="upload-icon">
-        <div class="upload-title">Upload Bukti Setor</div>
-        <div class="upload-sub">Ketuk untuk mengambil foto atau pilih file dari galeri</div>
+        <img src="https://cdn-icons-png.flaticon.com/512/338/338908.png" class="icon" id="up-icon">
+        <div class="upload-text">Pilih Gambar Bukti</div>
+        <div class="upload-sub">Ketuk untuk mengambil foto atau pilih dari galeri</div>
         <button class="btn-pilih">Pilih Gambar</button>
         <input type="file" id="img-input" hidden accept="image/*">
         <img id="preview-img">
     </div>
 
-    <label>Nama Penyetor</label>
-    <input type="text" id="nama-penyetor" class="input-field" placeholder="Masukkan nama lengkap">
+    <label>Nama Pengirim</label>
+    <input type="text" id="nama-user" class="input-field" placeholder="Masukkan nama Anda">
 
-    <label>Tanggal Setor</label>
-    <input type="date" id="tgl-setor" class="input-field">
+    <label>Tanggal</label>
+    <input type="date" id="tgl-input" class="input-field">
 
-    <label>Setor Ke Siapa</label>
+    <label>Kirim Ke Siapa</label>
     <div class="target-group">
-        <div class="target-card active" id="t-tati" onclick="pilihTujuan('Bu Tati')">
+        <div class="target-card active" id="t-tati" onclick="setTujuan('Bu Tati')">
             <img src="https://cdn-icons-png.flaticon.com/512/4140/4140047.png">
             <p>Bu Tati</p>
         </div>
-        <div class="target-card" id="t-ami" onclick="pilihTujuan('Bu Ami')">
+        <div class="target-card" id="t-ami" onclick="setTujuan('Bu Ami')">
             <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png">
             <p>Bu Ami</p>
         </div>
     </div>
 
-    <div style="margin-top:25px; overflow: hidden;">
-        <span class="btn-hapus-ttd" onclick="clearSignature()">Hapus</span>
+    <div style="margin-top:25px;">
+        <span class="btn-clear" onclick="hapusTTD()">Hapus</span>
         <label style="margin:0">Tanda Tangan</label>
     </div>
-    <div class="sig-wrapper" style="margin-top:10px;">
+    <div class="sig-wrapper">
         <canvas id="canvas-ttd" class="sig-canvas"></canvas>
-        <div id="ttd-hint" class="sig-hint">Tanda tangan di sini</div>
+        <div id="hint-ttd" class="sig-hint">Goreskan tanda tangan di sini</div>
     </div>
 
-    <div class="action-bar">
+    <div class="footer-actions">
         <button class="btn-cetak" onclick="window.print()">🖨️ Cetak</button>
-        <button class="btn-kirim" onclick="kirimSekarang()">➤ Kirim Setoran</button>
+        <button class="btn-kirim" onclick="kirimData()">➤ Kirim Data</button>
     </div>
 </main>
 
 <nav class="bottom-nav">
-    <a href="#" class="nav-link"><i>🏠</i>BERANDA</a>
-    <a href="#" class="nav-link active"><i>📋</i>SETORAN</a>
-    <a href="#" class="nav-link"><i>👤</i>PROFIL</a>
+    <a href="#" class="nav-link">🏠 BERANDA</a>
+    <a href="#" class="nav-link active">📋 FORM</a>
+    <a href="#" class="nav-link">👤 PROFIL</a>
 </nav>
 
 <script>
-    // INITIALIZE FIREBASE SESUAI CONFIG LO
+    // FIREBASE CONFIG SESUAI PERMINTAAN
     const firebaseConfig = {
         apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs",
-        databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com"
+        authDomain: "tempat-masuk-nya-data.firebaseapp.com",
+        databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com",
+        projectId: "tempat-masuk-nya-data",
+        storageBucket: "tempat-masuk-nya-data.firebasestorage.app",
+        messagingSenderId: "918742049565",
+        appId: "1:918742049565:web:4490b03c04f5bf75e3f7f4",
+        measurementId: "G-C0EBFBVVVJ"
     };
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
 
-    let tujuan = "Bu Tati";
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let tujuanPenerima = "Bu Tati";
     const canvas = document.getElementById('canvas-ttd');
     const ctx = canvas.getContext('2d');
     let isDrawing = false;
 
-    // RESIZE CANVAS BIAR SMOOTH
+    // Resize Canvas
     function resize() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
     window.onload = resize;
 
-    // LOGIKA TANDA TANGAN
-    canvas.addEventListener('mousedown', (e) => start(e.clientX, e.clientY));
-    canvas.addEventListener('mousemove', (e) => draw(e.clientX, e.clientY));
-    canvas.addEventListener('mouseup', () => isDrawing = false);
-    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); start(e.touches[0].clientX, e.touches[0].clientY); });
-    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e.touches[0].clientX, e.touches[0].clientY); });
-    canvas.addEventListener('touchend', () => isDrawing = false);
+    // Signature Logic
+    canvas.addEventListener('mousedown', start);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stop);
+    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); const t = e.touches[0]; start(t); });
+    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); const t = e.touches[0]; draw(t); });
+    canvas.addEventListener('touchend', stop);
 
-    function start(x, y) {
+    function start(e) {
         isDrawing = true;
-        document.getElementById('ttd-hint').style.display = 'none';
+        document.getElementById('hint-ttd').style.display = 'none';
         ctx.beginPath();
-        ctx.moveTo(x - canvas.getBoundingClientRect().left, y - canvas.getBoundingClientRect().top);
+        const rect = canvas.getBoundingClientRect();
+        ctx.moveTo((e.clientX || e.pageX) - rect.left, (e.clientY || e.pageY) - rect.top);
     }
-    function draw(x, y) {
-        if (!isDrawing) return;
-        ctx.lineTo(x - canvas.getBoundingClientRect().left, y - canvas.getBoundingClientRect().top);
-        ctx.strokeStyle = "#333"; ctx.lineWidth = 3; ctx.lineCap = "round"; ctx.stroke();
-    }
-    function clearSignature() { ctx.clearRect(0, 0, canvas.width, canvas.height); document.getElementById('ttd-hint').style.display = 'block'; }
 
-    // PREVIEW IMAGE
+    function draw(e) {
+        if (!isDrawing) return;
+        const rect = canvas.getBoundingClientRect();
+        ctx.lineTo((e.clientX || e.pageX) - rect.left, (e.clientY || e.pageY) - rect.top);
+        ctx.strokeStyle = "#000"; ctx.lineWidth = 3; ctx.lineCap = "round"; ctx.stroke();
+    }
+
+    function stop() { isDrawing = false; }
+    function hapusTTD() { ctx.clearRect(0, 0, canvas.width, canvas.height); document.getElementById('hint-ttd').style.display = 'block'; }
+
+    // Preview Foto
     document.getElementById('img-input').onchange = function(e) {
         const reader = new FileReader();
         reader.onload = function() {
             const preview = document.getElementById('preview-img');
             preview.src = reader.result;
             preview.style.display = 'block';
-            document.getElementById('upload-icon').style.display = 'none';
+            document.getElementById('up-icon').style.display = 'none';
         }
         reader.readAsDataURL(e.target.files[0]);
     }
 
-    function pilihTujuan(nama) {
-        tujuan = nama;
+    function setTujuan(nama) {
+        tujuanPenerima = nama;
         document.getElementById('t-tati').classList.toggle('active', nama === 'Bu Tati');
         document.getElementById('t-ami').classList.toggle('active', nama === 'Bu Ami');
     }
 
-    // KIRIM DATA KE FIREBASE
-    async function kirimSekarang() {
-        const n = document.getElementById('nama-penyetor').value;
-        const t = document.getElementById('tgl-setor').value;
-        const b = document.getElementById('preview-img').src;
-        const s = canvas.toDataURL();
+    // Fungsi DOWNLOAD DATA
+    function downloadData() {
+        const nama = document.getElementById('nama-user').value || "Tanpa_Nama";
+        const tgl = document.getElementById('tgl-input').value || "Tanpa_Tanggal";
+        const konten = `LAPORAN SISTEM GIBRAN HUB\n========================\nNama: ${nama}\nTanggal: ${tgl}\nTujuan: ${tujuanPenerima}\nStatus: Berhasil di-Download`;
+        
+        const blob = new Blob([konten], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `Laporan_${nama}_${tgl}.txt`;
+        link.click();
+    }
 
-        if(!n || !t || b.includes('undefined')) return alert("Lengkapi data dan foto bukti!");
+    // KIRIM KE FIREBASE
+    async function kirimData() {
+        const nama = document.getElementById('nama-user').value;
+        const tgl = document.getElementById('tgl-input').value;
+        const foto = document.getElementById('preview-img').src;
+        const ttd = canvas.toDataURL();
 
-        const dataSetoran = {
-            nama: n,
-            tanggal: t,
-            kepada: tujuan,
-            foto_bukti: b,
-            ttd_digital: s,
-            waktu_input: new Date().toISOString()
+        if(!nama || !tgl || foto.includes('undefined')) return alert("⚠️ Mohon isi nama, tanggal, dan upload foto!");
+
+        const payload = {
+            pengirim: nama,
+            tanggal: tgl,
+            tujuan: tujuanPenerima,
+            bukti_foto: foto,
+            tanda_tangan: ttd,
+            timestamp: Date.now()
         };
 
         try {
-            await database.ref('setoran_masuk').push(dataSetoran);
-            alert("✅ Setoran Terkirim!");
+            await db.ref('data_masuk').push(payload);
+            alert("✅ Data Berhasil Terkirim!");
             location.reload();
-        } catch(e) { alert("Error: " + e.message); }
-    }
-
-    // DOWNLOAD DATA (SIMULASI)
-    function downloadData() {
-        const n = document.getElementById('nama-penyetor').value || "Data";
-        const link = document.createElement('a');
-        link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent("Laporan Setoran Gibran Hub"));
-        link.setAttribute('download', n + "_laporan.txt");
-        link.click();
+        } catch (err) {
+            alert("❌ Gagal: " + err.message);
+        }
     }
 </script>
 
