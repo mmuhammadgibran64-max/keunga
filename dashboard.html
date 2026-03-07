@@ -3,212 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | DASHBOARD FINAL ACTION</title>
+    <title>GIBRAN HUB | KIRIM SETORAN</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        :root { --red: #ff0055; --cyan: #00d4ff; --gold: #ffcc00; --bg: #050505; --card: rgba(20, 20, 20, 0.9); --purple: #bc13fe; --nav-w: 240px; }
-        body, html { margin: 0; padding: 0; background: var(--bg); color: white; font-family: 'Rajdhani', sans-serif; height: 100vh; overflow: hidden; }
+        :root { --primary-blue: #00c3ff; --bg-light: #f8fbff; --text-dark: #333; }
+        body, html { margin: 0; padding: 0; background: var(--bg-light); font-family: 'Rajdhani', sans-serif; color: var(--text-dark); }
 
-        .wrapper { display: flex; height: 100vh; }
-        
-        /* SIDEBAR */
-        nav { width: var(--nav-w); background: #000; border-right: 1px solid rgba(0, 212, 255, 0.3); padding: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 100; }
-        .nav-btn { background: transparent; border: 1px solid rgba(255,255,255,0.05); color: #888; padding: 15px; font-family: 'Orbitron'; font-size: 10px; cursor: pointer; border-radius: 12px; text-align: left; transition: 0.3s; }
-        .nav-btn.active, .nav-btn:hover { background: var(--cyan); color: black; box-shadow: 0 0 15px var(--cyan); border: 1px solid var(--cyan); font-weight: bold; }
+        /* HEADER */
+        header { 
+            background: white; padding: 15px 20px; display: flex; align-items: center; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02); position: sticky; top: 0; z-index: 100;
+        }
+        .header-btn { font-size: 20px; cursor: pointer; border: none; background: none; color: #555; }
+        header h2 { margin: 0; font-size: 18px; flex: 1; text-align: center; font-family: 'Orbitron'; font-weight: bold; }
 
         /* MAIN CONTENT */
-        main { flex: 1; overflow-y: auto; padding: 25px; background: radial-gradient(circle at top right, #0d1621, #050505); padding-bottom: 50px; }
-        .section { display: none; }
-        .section.active { display: block; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        main { padding: 20px; max-width: 450px; margin: auto; padding-bottom: 120px; }
 
-        /* CARDS */
-        .card { background: var(--card); border: 1px solid rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; margin-bottom: 20px; backdrop-filter: blur(10px); }
-        .card-h { font-family: 'Orbitron'; font-size: 11px; color: var(--cyan); margin-bottom: 15px; border-bottom: 1px solid rgba(0,212,255,0.1); padding-bottom: 10px; }
+        label { display: block; font-weight: 700; margin: 20px 0 10px; font-size: 15px; }
 
-        /* TABLES */
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; color: var(--cyan); border-bottom: 1px solid var(--cyan); padding: 12px; font-family: 'Orbitron'; font-size: 9px; }
-        td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 13px; }
-
-        /* ACTION BUTTONS */
-        .btn-group { display: flex; gap: 5px; }
-        .act-btn { padding: 6px 8px; border: none; border-radius: 4px; cursor: pointer; font-family: 'Orbitron'; font-size: 8px; color: white; font-weight: bold; }
-        .b-del { background: var(--red); }
-        .b-down { background: #0088ff; }
-        .b-print { background: var(--gold); color: black; }
+        /* UPLOAD BOX */
+        .upload-container {
+            border: 2px dashed #bde0fe; border-radius: 20px; padding: 40px 20px;
+            text-align: center; background: #f0f7ff; cursor: pointer; position: relative;
+        }
+        .upload-container img.icon { width: 60px; margin-bottom: 15px; opacity: 0.8; }
+        .upload-title { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
+        .upload-sub { font-size: 12px; color: #888; margin-bottom: 20px; }
+        .btn-pilih { 
+            background: var(--primary-blue); color: white; border: none; padding: 12px 30px; 
+            border-radius: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0, 195, 255, 0.2);
+        }
+        #preview-img { width: 100%; border-radius: 15px; display: none; margin-top: 10px; }
 
         /* INPUTS */
-        input, select { width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 8px; margin-bottom: 15px; outline: none; }
-        .btn-main { width: 100%; padding: 15px; border: none; border-radius: 10px; font-family: 'Orbitron'; font-size: 11px; cursor: pointer; font-weight: bold; }
-        .table-img { width: 40px; height: 40px; object-fit: cover; border-radius: 5px; border: 1px solid var(--cyan); cursor: pointer; }
-
-        /* PRINT STYLES */
-        @media print {
-            nav, .btn-group, .nav-btn, .btn-main, .card-h { display: none !important; }
-            body, main { background: white !important; color: black !important; overflow: visible !important; }
-            .card { border: 1px solid #ccc !important; box-shadow: none !important; }
-            table { color: black !important; }
+        .input-field {
+            width: 100%; padding: 15px; border-radius: 15px; border: 1px solid #e1e9f0;
+            background: #fff; box-sizing: border-box; outline: none; font-size: 15px;
+            transition: 0.3s;
         }
+        .input-field:focus { border-color: var(--primary-blue); box-shadow: 0 0 8px rgba(0, 195, 255, 0.1); }
+
+        /* TARGET SELECTION */
+        .target-group { display: flex; gap: 15px; }
+        .target-card {
+            flex: 1; border: 1.5px solid #e1e9f0; padding: 15px; border-radius: 18px;
+            text-align: center; cursor: pointer; background: #fff; transition: 0.3s;
+        }
+        .target-card.active { border-color: var(--primary-blue); background: #f0faff; }
+        .target-card img { width: 35px; margin-bottom: 8px; }
+        .target-card p { margin: 0; font-weight: 600; font-size: 14px; }
+
+        /* SIGNATURE */
+        .sig-wrapper { border: 1px solid #e1e9f0; border-radius: 18px; background: #fff; position: relative; height: 180px; }
+        .sig-canvas { width: 100%; height: 100%; border-radius: 18px; cursor: crosshair; }
+        .sig-hint { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #bbb; pointer-events: none; }
+        .btn-hapus-ttd { color: #00c3ff; font-weight: bold; font-size: 13px; cursor: pointer; float: right; }
+
+        /* FOOTER ACTIONS */
+        .action-bar {
+            position: fixed; bottom: 85px; left: 0; width: 100%; padding: 0 20px; box-sizing: border-box;
+            display: flex; gap: 12px;
+        }
+        .btn-cetak {
+            background: #f1f4f9; color: #333; border: none; padding: 18px;
+            border-radius: 15px; font-weight: bold; flex: 1; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-kirim {
+            background: var(--primary-blue); color: white; border: none; padding: 18px;
+            border-radius: 15px; font-weight: bold; flex: 3; cursor: pointer;
+            font-size: 16px; box-shadow: 0 8px 20px rgba(0, 195, 255, 0.3);
+        }
+
+        /* BOTTOM NAV */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; background: white;
+            display: flex; justify-content: space-around; padding: 15px 0;
+            box-shadow: 0 -2px 15px rgba(0,0,0,0.03); border-radius: 20px 20px 0 0;
+        }
+        .nav-link { text-align: center; color: #aaa; text-decoration: none; font-size: 10px; font-weight: bold; }
+        .nav-link.active { color: var(--primary-blue); }
+        .nav-link i { font-size: 22px; display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
-<div class="wrapper">
-    <nav>
-        <div style="text-align: center; margin-bottom: 30px;">
-            <div id="u-display" style="font-family:'Orbitron'; color:var(--cyan); font-size:14px;">GIBRAN HUB</div>
-        </div>
-        <button class="nav-btn active" onclick="show('mon', this)">📊 MONITORING</button>
-        <button class="nav-btn" onclick="show('inp', this)">📝 INPUT DATA</button>
-        <button class="nav-btn" onclick="show('gud', this)">📦 GUDANG</button>
-        <button class="nav-btn" onclick="show('wal', this)">💰 DOMPET</button>
-        <button class="nav-btn" style="margin-top:auto; color:var(--red);" onclick="window.location.href='index.html'">Logout</button>
-    </nav>
+<header>
+    <button class="header-btn" onclick="history.back()">←</button>
+    <h2>Kirim Setoran</h2>
+    <button class="header-btn" onclick="downloadData()">📥</button>
+</header>
 
-    <main>
-        <div id="mon" class="section active">
-            <div class="card"><div class="card-h">LIVE ANALYTICS</div><canvas id="rekapChart" style="max-height: 200px;"></canvas></div>
-            <div class="card">
-                <div class="card-h">DATA TRANSAKSI</div>
-                <div style="overflow-x:auto;">
-                    <table>
-                        <thead><tr><th>TIPE</th><th>NAMA</th><th>TGL</th><th>AKSI</th></tr></thead>
-                        <tbody id="tbody-monitor"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+<main id="main-content">
+    <label>Bukti Setor</label>
+    <div class="upload-container" onclick="document.getElementById('img-input').click()">
+        <img src="https://cdn-icons-png.flaticon.com/512/338/338908.png" class="icon" id="upload-icon">
+        <div class="upload-title">Upload Bukti Setor</div>
+        <div class="upload-sub">Ketuk untuk mengambil foto atau pilih file dari galeri</div>
+        <button class="btn-pilih">Pilih Gambar</button>
+        <input type="file" id="img-input" hidden accept="image/*">
+        <img id="preview-img">
+    </div>
 
-        <div id="inp" class="section">
-            <div class="card">
-                <div class="card-h">INPUT DATA BARU</div>
-                <input type="date" id="l-tgl">
-                <input type="text" id="l-nama" placeholder="Nama Operator">
-                <select id="l-tipe"><option value="LAPORAN">LAPORAN</option><option value="SETORAN">SETORAN</option></select>
-                <input type="file" id="l-bukti" accept="image/*">
-                <button class="btn-main" style="background:var(--cyan); color:black" onclick="simpan()">KIRIM DATA</button>
-            </div>
-        </div>
+    <label>Nama Penyetor</label>
+    <input type="text" id="nama-penyetor" class="input-field" placeholder="Masukkan nama lengkap">
 
-        <div id="gud" class="section">
-            <div class="card">
-                <div class="card-h">UPDATE STOK</div>
-                <input type="text" id="g-nama" placeholder="Barang"><input type="number" id="g-stok" placeholder="Stok">
-                <button class="btn-main" style="background:var(--purple); color:white" onclick="sendG()">TAMBAH BARANG</button>
-            </div>
-            <div class="card"><table><thead><tr><th>BARANG</th><th>STOK</th><th>AKSI</th></tr></thead><tbody id="tbody-gudang"></tbody></table></div>
-        </div>
+    <label>Tanggal Setor</label>
+    <input type="date" id="tgl-setor" class="input-field">
 
-        <div id="wal" class="section">
-            <div class="card" style="text-align:center;"><div class="card-h">KAS AKHIR</div><h1 id="saldo-akhir">Rp 0</h1></div>
-            <div class="card">
-                <input type="number" id="w-masuk" placeholder="Masuk"><input type="number" id="w-keluar" placeholder="Keluar">
-                <button class="btn-main" style="background:var(--gold); color:black" onclick="updateW()">SIMPAN KAS</button>
-            </div>
-            <div class="card"><table><thead><tr><th>WAKTU</th><th>M</th><th>K</th><th>AKSI</th></tr></thead><tbody id="tbody-wallet"></tbody></table></div>
+    <label>Setor Ke Siapa</label>
+    <div class="target-group">
+        <div class="target-card active" id="t-tati" onclick="pilihTujuan('Bu Tati')">
+            <img src="https://cdn-icons-png.flaticon.com/512/4140/4140047.png">
+            <p>Bu Tati</p>
         </div>
-    </main>
-</div>
+        <div class="target-card" id="t-ami" onclick="pilihTujuan('Bu Ami')">
+            <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png">
+            <p>Bu Ami</p>
+        </div>
+    </div>
+
+    <div style="margin-top:25px; overflow: hidden;">
+        <span class="btn-hapus-ttd" onclick="clearSignature()">Hapus</span>
+        <label style="margin:0">Tanda Tangan</label>
+    </div>
+    <div class="sig-wrapper" style="margin-top:10px;">
+        <canvas id="canvas-ttd" class="sig-canvas"></canvas>
+        <div id="ttd-hint" class="sig-hint">Tanda tangan di sini</div>
+    </div>
+
+    <div class="action-bar">
+        <button class="btn-cetak" onclick="window.print()">🖨️ Cetak</button>
+        <button class="btn-kirim" onclick="kirimSekarang()">➤ Kirim Setoran</button>
+    </div>
+</main>
+
+<nav class="bottom-nav">
+    <a href="#" class="nav-link"><i>🏠</i>BERANDA</a>
+    <a href="#" class="nav-link active"><i>📋</i>SETORAN</a>
+    <a href="#" class="nav-link"><i>👤</i>PROFIL</a>
+</nav>
 
 <script>
-    // FIREBASE
-    const configA = { apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs", databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com" };
-    const configW = { databaseURL: "https://sisa-saldo-default-rtdb.firebaseio.com" };
-    const configG = { databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
-    firebase.initializeApp(configA); const dbD = firebase.database();
-    const appW = firebase.initializeApp(configW, "W"); const dbW = firebase.database(appW);
-    const appG = firebase.initializeApp(configG, "G"); const dbG = firebase.database(appG);
+    // INITIALIZE FIREBASE SESUAI CONFIG LO
+    const firebaseConfig = {
+        apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs",
+        databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
 
-    document.getElementById('u-display').innerText = localStorage.getItem('user_gibran') || "GIBRAN HUB";
+    let tujuan = "Bu Tati";
+    const canvas = document.getElementById('canvas-ttd');
+    const ctx = canvas.getContext('2d');
+    let isDrawing = false;
 
-    // --- FUNGSI AKSI NYATA ---
+    // RESIZE CANVAS BIAR SMOOTH
+    function resize() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
+    window.onload = resize;
 
-    // 1. HAPUS
-    function hapus(path, key, db) {
-        if(confirm("Hapus data ini?")) {
-            if(db === 'D') dbD.ref(path + '/' + key).remove();
-            if(db === 'G') dbG.ref(path + '/' + key).remove();
-            if(db === 'W') dbW.ref(path + '/' + key).remove();
+    // LOGIKA TANDA TANGAN
+    canvas.addEventListener('mousedown', (e) => start(e.clientX, e.clientY));
+    canvas.addEventListener('mousemove', (e) => draw(e.clientX, e.clientY));
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); start(e.touches[0].clientX, e.touches[0].clientY); });
+    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e.touches[0].clientX, e.touches[0].clientY); });
+    canvas.addEventListener('touchend', () => isDrawing = false);
+
+    function start(x, y) {
+        isDrawing = true;
+        document.getElementById('ttd-hint').style.display = 'none';
+        ctx.beginPath();
+        ctx.moveTo(x - canvas.getBoundingClientRect().left, y - canvas.getBoundingClientRect().top);
+    }
+    function draw(x, y) {
+        if (!isDrawing) return;
+        ctx.lineTo(x - canvas.getBoundingClientRect().left, y - canvas.getBoundingClientRect().top);
+        ctx.strokeStyle = "#333"; ctx.lineWidth = 3; ctx.lineCap = "round"; ctx.stroke();
+    }
+    function clearSignature() { ctx.clearRect(0, 0, canvas.width, canvas.height); document.getElementById('ttd-hint').style.display = 'block'; }
+
+    // PREVIEW IMAGE
+    document.getElementById('img-input').onchange = function(e) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            const preview = document.getElementById('preview-img');
+            preview.src = reader.result;
+            preview.style.display = 'block';
+            document.getElementById('upload-icon').style.display = 'none';
         }
+        reader.readAsDataURL(e.target.files[0]);
     }
 
-    // 2. DOWNLOAD (SAVE TO FILE MANAGER)
-    function downloadItem(nama, tgl, info) {
-        const teks = `LAPORAN GIBRAN HUB\n====================\nNama: ${nama}\nTanggal: ${tgl}\nDetail: ${info}\n====================\nStatus: Terverifikasi`;
-        const blob = new Blob([teks], { type: 'text/plain' });
+    function pilihTujuan(nama) {
+        tujuan = nama;
+        document.getElementById('t-tati').classList.toggle('active', nama === 'Bu Tati');
+        document.getElementById('t-ami').classList.toggle('active', nama === 'Bu Ami');
+    }
+
+    // KIRIM DATA KE FIREBASE
+    async function kirimSekarang() {
+        const n = document.getElementById('nama-penyetor').value;
+        const t = document.getElementById('tgl-setor').value;
+        const b = document.getElementById('preview-img').src;
+        const s = canvas.toDataURL();
+
+        if(!n || !t || b.includes('undefined')) return alert("Lengkapi data dan foto bukti!");
+
+        const dataSetoran = {
+            nama: n,
+            tanggal: t,
+            kepada: tujuan,
+            foto_bukti: b,
+            ttd_digital: s,
+            waktu_input: new Date().toISOString()
+        };
+
+        try {
+            await database.ref('setoran_masuk').push(dataSetoran);
+            alert("✅ Setoran Terkirim!");
+            location.reload();
+        } catch(e) { alert("Error: " + e.message); }
+    }
+
+    // DOWNLOAD DATA (SIMULASI)
+    function downloadData() {
+        const n = document.getElementById('nama-penyetor').value || "Data";
         const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `Laporan_${nama}_${tgl}.txt`;
+        link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent("Laporan Setoran Gibran Hub"));
+        link.setAttribute('download', n + "_laporan.txt");
         link.click();
     }
-
-    // 3. PRINT (REAL PRINT)
-    function printItem(nama, tgl, info) {
-        const w = window.open('', '', 'width=600,height=600');
-        w.document.write(`<html><body style="font-family:sans-serif; padding:20px;">
-            <h2>GIBRAN HUB REPORT</h2><hr>
-            <p><b>Nama:</b> ${nama}</p>
-            <p><b>Tanggal:</b> ${tgl}</p>
-            <p><b>Keterangan:</b> ${info}</p>
-            <hr><p>Dicetak pada: ${new Date().toLocaleString()}</p>
-            <script>window.print(); setTimeout(()=>window.close(), 500);<\/script>
-        </body></html>`);
-    }
-
-    // --- DATA HANDLING ---
-    function simpan() {
-        const d = { tipe: v('l-tipe'), nama: v('l-nama'), tgl: v('l-tgl') };
-        dbD.ref('transaksi').push(d).then(()=>alert("Tersimpan!"));
-    }
-
-    dbD.ref('transaksi').on('value', s => {
-        const tb = document.getElementById('tbody-monitor'); tb.innerHTML = ""; let L=0, S=0;
-        s.forEach(c => { const r = c.val(); r.tipe === 'LAPORAN' ? L++ : S++;
-            tb.innerHTML += `<tr><td>${r.tipe}</td><td>${r.nama}</td><td>${r.tgl}</td>
-            <td><div class="btn-group">
-                <button class="act-btn b-del" onclick="hapus('transaksi','${c.key}','D')">X</button>
-                <button class="act-btn b-down" onclick="downloadItem('${r.nama}','${r.tgl}','${r.tipe}')">💾</button>
-                <button class="act-btn b-print" onclick="printItem('${r.nama}','${r.tgl}','${r.tipe}')">🖨️</button>
-            </div></td></tr>`;
-        }); renderChart(L,S);
-    });
-
-    function sendG() { dbG.ref('stok').push({ nm:v('g-nama'), st:v('g-stok') }); }
-    dbG.ref('stok').on('value', s => {
-        const tb = document.getElementById('tbody-gudang'); tb.innerHTML = "";
-        s.forEach(c => { const r = c.val(); tb.innerHTML += `<tr><td>${r.nm}</td><td>${r.st}</td>
-            <td><div class="btn-group">
-                <button class="act-btn b-del" onclick="hapus('stok','${c.key}','G')">X</button>
-                <button class="act-btn b-down" onclick="downloadItem('${r.nm}','${r.st}','Stok Barang')">💾</button>
-            </div></td></tr>`;
-        });
-    });
-
-    function updateW() { dbW.ref('riwayat').push({ tgl:new Date().toLocaleString(), m:parseInt(v('w-masuk'))||0, k:parseInt(v('w-keluar'))||0 }); }
-    dbW.ref('riwayat').on('value', s => {
-        const tb = document.getElementById('tbody-wallet'); tb.innerHTML = ""; let tot = 0;
-        s.forEach(c => { const r = c.val(); tot += (r.m - r.k);
-            tb.innerHTML += `<tr><td>${r.tgl}</td><td>${r.m}</td><td>${r.k}</td>
-            <td><div class="btn-group">
-                <button class="act-btn b-del" onclick="hapus('riwayat','${c.key}','W')">X</button>
-                <button class="act-btn b-print" onclick="printItem('Dompet','${r.tgl}','M:${r.m} K:${r.k}')">🖨️</button>
-            </div></td></tr>`;
-        }); document.getElementById('saldo-akhir').innerText = "Rp " + tot.toLocaleString();
-    });
-
-    function v(id) { return document.getElementById(id).value; }
-    function show(id, btn) { document.querySelectorAll('.section').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }
-    let chart;
-    function renderChart(l, s) {
-        const ctx = document.getElementById('rekapChart').getContext('2d'); if(chart) chart.destroy();
-        chart = new Chart(ctx, { type:'bar', data:{ labels:['LAPORAN','SETORAN'], datasets:[{ data:[l, s], backgroundColor:['#ff0055','#00d4ff'] }] }, options:{plugins:{legend:{display:false}}} });
-    }
 </script>
+
 </body>
 </html>
