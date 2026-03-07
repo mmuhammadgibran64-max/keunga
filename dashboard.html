@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB v28.9 | FULL BUTTON RESTORED</title>
+    <title>GIBRAN HUB v29.0 | DATE FIXED</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -41,7 +41,7 @@
         th { text-align: left; color: var(--cyan); border-bottom: 2px solid var(--cyan); padding: 12px; font-family: 'Orbitron'; font-size: 9px; }
         td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         
-        .act-btn { padding: 8px 10px; border-radius: 5px; border: none; cursor: pointer; font-size: 8px; font-family: 'Orbitron'; color: white; transition: 0.3s; margin-right: 2px; display: inline-block; vertical-align: middle; }
+        .act-btn { padding: 8px 10px; border-radius: 5px; border: none; cursor: pointer; font-size: 8px; font-family: 'Orbitron'; color: white; transition: 0.3s; margin-right: 2px; display: inline-block; }
         .profile-img { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--cyan); object-fit: cover; margin-bottom: 10px; }
         img.table-img { width: 45px; height: 45px; object-fit: cover; border-radius: 6px; border: 1px solid var(--cyan); cursor: pointer; }
 
@@ -82,21 +82,21 @@
             <div class="flex-row">
                 <div class="flex-col card">
                     <div class="card-h">INPUT LAPORAN</div>
-                    <label>NAMA PELAPOR</label><input type="text" id="l-nama" placeholder="Nama">
-                    <label>TANGGAL</label><input type="date" id="l-tgl">
-                    <label>BUKTI</label><input type="file" id="l-bukti" accept="image/*">
-                    <label>TTD</label><input type="text" id="l-ttd" placeholder="Nama TTD">
-                    <label>KE</label>
+                    <label>NAMA PELAPOR</label><input type="text" id="l-nama" placeholder="Masukkan Nama">
+                    <label>TANGGAL LAPORAN</label><input type="date" id="l-tgl">
+                    <label>BUKTI FOTO</label><input type="file" id="l-bukti" accept="image/*">
+                    <label>TTD</label><input type="text" id="l-ttd" placeholder="Nama Penanggung Jawab">
+                    <label>KEPADA</label>
                     <select id="l-tujuan"><option value="BU TATI">BU TATI</option><option value="BU AMI">BU AMI</option></select>
                     <button class="btn-main" style="background:var(--red); color:white" onclick="simpan('LAPORAN','l-')">KIRIM LAPORAN</button>
                 </div>
                 <div class="flex-col card">
                     <div class="card-h">INPUT SETORAN</div>
-                    <label>NAMA PENYETOR</label><input type="text" id="s-nama" placeholder="Nama">
-                    <label>TANGGAL</label><input type="date" id="s-tgl">
-                    <label>BUKTI</label><input type="file" id="s-bukti" accept="image/*">
-                    <label>TTD</label><input type="text" id="s-ttd" placeholder="Nama TTD">
-                    <label>KE</label>
+                    <label>NAMA PENYETOR</label><input type="text" id="s-nama" placeholder="Masukkan Nama">
+                    <label>TANGGAL SETORAN</label><input type="date" id="s-tgl">
+                    <label>BUKTI FOTO</label><input type="file" id="s-bukti" accept="image/*">
+                    <label>TTD</label><input type="text" id="s-ttd" placeholder="Nama Penanggung Jawab">
+                    <label>KEPADA</label>
                     <select id="s-tujuan"><option value="BU TATI">BU TATI</option><option value="BU AMI">BU AMI</option></select>
                     <button class="btn-main" style="background:var(--cyan); color:black" onclick="simpan('SETORAN','s-')">KIRIM SETORAN</button>
                 </div>
@@ -112,7 +112,7 @@
                     <input type="number" id="g-jumlah" placeholder="Jumlah" class="flex-col">
                     <input type="number" id="g-stok" placeholder="Stok" class="flex-col">
                 </div>
-                <button class="btn-main" style="background:var(--purple); color:white" onclick="sendG()">UPDATE DATABASE GUDANG</button>
+                <button class="btn-main" style="background:var(--purple); color:white" onclick="sendG()">UPDATE DATA GUDANG</button>
             </div>
             <div class="card">
                 <div class="card-h">INVENTORY LIST</div>
@@ -137,7 +137,7 @@
                     <div class="flex-col"><label>KELUAR</label><input type="number" id="w-keluar" placeholder="0"></div>
                 </div>
                 <button class="btn-main" style="background:var(--gold); color:black;" onclick="updateW()">SIMPAN SALDO</button>
-                <div style="margin-top: 35px;">
+                <div style="margin-top: 30px;">
                     <div class="card-h">HISTORY TRANSAKSI WALLET</div>
                     <div style="overflow-x:auto;">
                         <table>
@@ -177,28 +177,28 @@
                         <button class="btn-main" style="background:var(--green); color:black" onclick="saveSales()">INPUT SALES</button>
                     </div>
                     <div class="flex-col">
-                        <label>BELANJA BIAYA</label>
-                        <select id="e-kat"><option value="Bahan">Bahan Baku</option><option value="Operasional">Operasional (Gas)</option><option value="Kemasan">Kemasan</option></select>
+                        <label>BELANJA / BIAYA</label>
+                        <select id="e-kat"><option value="Bahan">Bahan Baku</option><option value="Operasional">Operasional</option><option value="Kemasan">Kemasan</option></select>
                         <input type="number" id="e-rp" placeholder="Nominal Rp">
                         <button class="btn-main" style="background:var(--red); color:white" onclick="saveExpense()">INPUT BIAYA</button>
                     </div>
                 </div>
                 <div style="background:rgba(0,0,0,0.5); padding:15px; border-radius:10px; margin-top:15px; text-align:center; border:1px solid var(--gold);">
                     <div class="flex-row">
-                        <div class="flex-col"><label>JUAL</label><h3 id="lr-jual" style="color:var(--green);margin:0">Rp 0</h3></div>
-                        <div class="flex-col"><label>BIAYA</label><h3 id="lr-biaya" style="color:var(--red);margin:0">Rp 0</h3></div>
+                        <div class="flex-col"><label>TOTAL JUAL</label><h3 id="lr-jual" style="color:var(--green);margin:0">Rp 0</h3></div>
+                        <div class="flex-col"><label>TOTAL BIAYA</label><h3 id="lr-biaya" style="color:var(--red);margin:0">Rp 0</h3></div>
                         <div class="flex-col"><label>CADANGAN (10%)</label><h3 id="lr-cadangan" style="color:var(--gold);margin:0">Rp 0</h3></div>
                     </div>
                     <h2 id="lr-net" style="margin-top:15px">LABA BERSIH: Rp 0</h2>
-                    <button class="btn-main" style="background:var(--purple); color:white; width:auto; padding:10px 30px" onclick="printLR()">PRINT LABA RUGI</button>
+                    <button class="btn-main" style="background:var(--purple); color:white; width:auto; padding:10px 30px" onclick="printLR()">PRINT STRUK LABA RUGI</button>
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-h">PENGATURAN TAMPILAN</div>
                 <div class="flex-row">
-                    <button class="view-mode-btn active" id="btn-pc" onclick="setMode('pc')">🖥️ PC</button>
-                    <button class="view-mode-btn" id="btn-ipad" onclick="setMode('ipad')">📱 IPAD</button>
+                    <button class="view-mode-btn active" id="btn-pc" onclick="setMode('pc')">🖥️ PC / DESKTOP</button>
+                    <button class="view-mode-btn" id="btn-ipad" onclick="setMode('ipad')">📱 IPAD / TABLET</button>
                     <button class="view-mode-btn" id="btn-hp" onclick="setMode('hp')">🤳 HANDPHONE</button>
                 </div>
             </div>
@@ -207,7 +207,7 @@
 </div>
 
 <script>
-    // --- FIREBASE CONFIGS ---
+    // --- DATABASE CONFIGS ---
     const configA = { apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs", authDomain: "tempat-masuk-nya-data.firebaseapp.com", databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com", projectId: "tempat-masuk-nya-data", appId: "1:918742049565:web:4490b03c04f5bf75e3f7f4" };
     const configW = { apiKey: "AIzaSyCdNwDr9lUsUE2iv43vW6q89VZMXPix8us", authDomain: "sisa-saldo.firebaseapp.com", databaseURL: "https://sisa-saldo-default-rtdb.firebaseio.com", projectId: "sisa-saldo", appId: "1:152603234485:web:1f82e28d57b2a5f2d8aefc" };
     const configG = { databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
@@ -229,15 +229,20 @@
         doc.save(filename.replace(/[/, :]/g, '_') + ".pdf");
     }
 
-    // --- MONITORING (RESTORED BUTTONS) ---
+    // --- MONITORING (RESTORED BUTTONS & FIXED DATE LOGIC) ---
     function simpan(tipe, pre) {
+        const tglVal = v(pre+'tgl');
+        if(!tglVal) { alert("Pilih Tanggal Dulu!"); return; }
+        
         const f = document.getElementById(pre+'bukti');
-        const d = { tipe: tipe, nama: v(pre+'nama'), tgl: v(pre+'tgl'), ttd: v(pre+'ttd'), tujuan: v(pre+'tujuan') };
+        const d = { tipe: tipe, nama: v(pre+'nama'), tgl: tglVal, ttd: v(pre+'ttd'), tujuan: v(pre+'tujuan'), timestamp: new Date().getTime() };
+        
         if(f.files[0]) {
-            const r = new FileReader(); r.onload = (e) => { d.img = e.target.result; dbD.ref('transaksi').push(d).then(()=>alert("Success!")); };
+            const r = new FileReader(); r.onload = (e) => { d.img = e.target.result; dbD.ref('transaksi').push(d).then(()=>alert("Berhasil Dikirim!")); };
             r.readAsDataURL(f.files[0]);
-        } else { dbD.ref('transaksi').push(d).then(()=>alert("Success!")); }
+        } else { dbD.ref('transaksi').push(d).then(()=>alert("Berhasil Dikirim!")); }
     }
+
     dbD.ref('transaksi').on('value', s => {
         const tb = document.getElementById('tbody-monitor'); tb.innerHTML = ""; let L=0, S=0;
         s.forEach(c => {
@@ -246,13 +251,13 @@
             <td>${r.img ? `<img src="${r.img}" class="table-img" onclick="window.open(this.src)">` : '-'}</td><td>${r.tujuan}</td>
             <td>
                 <button class="act-btn" style="background:#333" onclick="dbD.ref('transaksi/${c.key}').remove()">X</button>
-                <button class="act-btn" style="background:var(--cyan); color:black" onclick="dlPDFUniversal('${r.tipe}_${r.nama}', ['Tipe: ${r.tipe}', 'Nama: ${r.nama}', 'Tanggal: ${r.tgl}'])">SAVE</button>
+                <button class="act-btn" style="background:var(--cyan); color:black" onclick="dlPDFUniversal('${r.tipe}_${r.nama}', ['Tipe: ${r.tipe}', 'Nama: ${r.nama}', 'Tgl: ${r.tgl}'])">SAVE</button>
                 <button class="act-btn" style="background:var(--purple)" onclick="printUniversal('BUKTI ${r.tipe}', '<p>Nama: ${r.nama}</p><p>Tgl: ${r.tgl}</p>')">PRINT</button>
             </td></tr>`;
         }); renderChart(L,S);
     });
 
-    // --- GUDANG (RESTORED BUTTONS) ---
+    // --- GUDANG ---
     function sendG() { dbG.ref('stok').push({ nm:v('g-nama'), jn:v('g-jenis'), jml:v('g-jumlah'), st:v('g-stok') }); }
     dbG.ref('stok').on('value', s => {
         const tb = document.getElementById('tbody-gudang'); tb.innerHTML = "";
@@ -266,21 +271,20 @@
         });
     });
 
-    // --- WALLET (RESTORED BUTTONS) ---
+    // --- WALLET ---
     function updateW() { dbW.ref('riwayat').push({ tgl: new Date().toLocaleString('id-ID'), m: parseInt(v('w-masuk'))||0, k: parseInt(v('w-keluar'))||0 }); }
     dbW.ref('riwayat').on('value', s => {
         const tb = document.getElementById('tbody-wallet'); tb.innerHTML = ""; let tot = 0;
         s.forEach(c => { const r = c.val(); tot += (r.m - r.k);
-            tb.innerHTML += `<tr><td>${r.tgl}</td><td style="color:var(--green)">+${r.m}</td><td style="color:var(--red)">-${r.k}</td>
+            tb.innerHTML += `<tr><td>${r.tgl}</td><td style="color:var(--green)">+${r.m.toLocaleString()}</td><td style="color:var(--red)">-${r.k.toLocaleString()}</td>
             <td>
                 <button class="act-btn" style="background:#333" onclick="dbW.ref('riwayat/${c.key}').remove()">X</button>
-                <button class="act-btn" style="background:var(--cyan); color:black" onclick="dlPDFUniversal('Wallet', ['Tgl: ${r.tgl}', 'Masuk: ${r.m}'])">SAVE</button>
                 <button class="act-btn" style="background:var(--purple)" onclick="printUniversal('WALLET', '<p>Masuk: ${r.m}</p><p>Keluar: ${r.k}</p>')">PRINT</button>
             </td></tr>`;
         }); document.getElementById('saldo-akhir').innerText = "Rp " + tot.toLocaleString();
     });
 
-    // --- SETTING LOGIC ---
+    // --- SETTING (PROFILE, FINANCE, MODE) ---
     function saveProfile() {
         const file = document.getElementById('prof-file').files[0];
         const d = { n: v('prof-nama'), w: v('prof-wa') };
@@ -295,16 +299,15 @@
         document.getElementById('prof-nama').value = d.n; document.getElementById('prof-wa').value = d.w;
     });
 
-    function saveSales() { dbP.ref('finance').push({ tipe:'JUAL', p:v('p-produk'), q:v('p-qty'), tot:parseInt(v('p-total'))||0, tgl:new Date().toLocaleString() }); }
-    function saveExpense() { dbP.ref('finance').push({ tipe:'BIAYA', p:v('e-kat'), tot:parseInt(v('e-rp'))||0, tgl:new Date().toLocaleString() }); }
+    function saveSales() { dbP.ref('finance').push({ tipe:'JUAL', p:v('p-produk'), q:v('p-qty'), tot:parseInt(v('p-total'))||0, tgl:new Date().toLocaleDateString() }); }
+    function saveExpense() { dbP.ref('finance').push({ tipe:'BIAYA', p:v('e-kat'), tot:parseInt(v('e-rp'))||0, tgl:new Date().toLocaleDateString() }); }
     dbP.ref('finance').on('value', s => {
         let J=0, B=0; s.forEach(c => { const r = c.val(); r.tipe === 'JUAL' ? J += r.tot : B += r.tot; });
         const net = J-B; document.getElementById('lr-jual').innerText = "Rp "+J.toLocaleString(); document.getElementById('lr-biaya').innerText = "Rp "+B.toLocaleString();
         document.getElementById('lr-cadangan').innerText = "Rp "+(net > 0 ? net*0.1 : 0).toLocaleString(); document.getElementById('lr-net').innerText = "LABA BERSIH: Rp "+net.toLocaleString();
     });
-    function printLR() { printUniversal('LABA RUGI', `<p>Laba Bersih: ${document.getElementById('lr-net').innerText}</p>`); }
+    function printLR() { printUniversal('LAPORAN LABA RUGI', `<p>Laba Bersih: ${document.getElementById('lr-net').innerText}</p>`); }
 
-    // --- TAMPILAN MODE ---
     function setMode(mode) {
         const nav = document.getElementById('sidebar');
         const btns = document.querySelectorAll('.view-mode-btn'); btns.forEach(b => b.classList.remove('active'));
