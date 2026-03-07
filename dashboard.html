@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB v28.2 | PRO WALLET</title>
+    <title>GIBRAN HUB v28.3 | INVENTORY MASTER</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -36,25 +36,13 @@
         input, select { width: 100%; padding: 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(0, 212, 255, 0.2); color: white; border-radius: 8px; margin-bottom: 15px; font-family: 'Rajdhani'; outline: none; transition: 0.3s; }
         
         .btn-main { width: 100%; padding: 15px; border: none; border-radius: 8px; font-family: 'Orbitron'; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
-        .btn-main:active { transform: scale(0.98); }
         
         table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        th { text-align: left; color: var(--cyan); border-bottom: 2px solid var(--cyan); padding: 12px; font-family: 'Orbitron'; font-size: 9px; letter-spacing: 1px; }
+        th { text-align: left; color: var(--cyan); border-bottom: 2px solid var(--cyan); padding: 12px; font-family: 'Orbitron'; font-size: 9px; }
         td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         
         .act-btn { padding: 8px 10px; border-radius: 5px; border: none; cursor: pointer; font-size: 9px; font-family: 'Orbitron'; color: white; transition: 0.3s; margin-right: 4px; }
-        img.table-img { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; cursor: pointer; border: 1px solid var(--cyan); }
-
-        /* Style khusus untuk Print */
-        @media print {
-            nav, .btn-main, .act-btn, label, input, select, .card-h { display: none !important; }
-            body { background: white; color: black; overflow: visible; }
-            main { padding: 0; background: white; }
-            .card { border: none; background: white; box-shadow: none; }
-            table { width: 100%; color: black; border: 1px solid black; }
-            th, td { border: 1px solid black; color: black; padding: 10px; }
-            #saldo-akhir { color: black !important; text-shadow: none !important; }
-        }
+        img.table-img { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; border: 1px solid var(--cyan); }
     </style>
 </head>
 <body>
@@ -68,7 +56,7 @@
         <button class="nav-btn" onclick="show('setting-view', this)">💰 DOMPET & SETTING</button>
     </nav>
 
-    <main id="printable-area">
+    <main>
         <div id="mon-view" class="section active">
             <div class="card"><div class="card-h">LIVE ANALYTICS</div><canvas id="rekapChart" style="max-height: 220px;"></canvas></div>
             <div class="card">
@@ -111,20 +99,20 @@
 
         <div id="gudang-view" class="section">
             <div class="card">
-                <div class="card-h">GUDANG SYSTEM</div>
+                <div class="card-h">GUDANG SYSTEM - ENTRY</div>
                 <div class="flex-row">
                     <input type="text" id="g-nama" placeholder="Nama Barang" class="flex-col">
                     <input type="text" id="g-jenis" placeholder="Jenis" class="flex-col">
-                    <input type="number" id="g-jumlah" placeholder="Jumlah" class="flex-col">
-                    <input type="number" id="g-stok" placeholder="Stok" class="flex-col">
+                    <input type="number" id="g-jumlah" placeholder="Jumlah Masuk" class="flex-col">
+                    <input type="number" id="g-stok" placeholder="Sisa Stok" class="flex-col">
                 </div>
-                <button class="btn-main" style="background:var(--purple); color:white" onclick="sendG()">UPDATE DATABASE</button>
+                <button class="btn-main" style="background:var(--purple); color:white" onclick="sendG()">UPDATE DATABASE GUDANG</button>
             </div>
             <div class="card">
                 <div class="card-h">INVENTORY LIST</div>
                 <div style="overflow-x:auto;">
                     <table>
-                        <thead><tr><th>NAMA</th><th>JENIS</th><th>JML</th><th>STOK</th><th>AKSI</th></tr></thead>
+                        <thead><tr><th>NAMA BARANG</th><th>JENIS</th><th>JML</th><th>STOK</th><th>AKSI</th></tr></thead>
                         <tbody id="tbody-gudang"></tbody>
                     </table>
                 </div>
@@ -167,7 +155,7 @@
 </div>
 
 <script>
-    // --- FIREBASE CONFIG A (Laporan) ---
+    // --- FIREBASE CONFIGS ---
     const configA = {
         apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs",
         authDomain: "tempat-masuk-nya-data.firebaseapp.com",
@@ -176,7 +164,6 @@
         appId: "1:918742049565:web:4490b03c04f5bf75e3f7f4"
     };
 
-    // --- FIREBASE CONFIG B (Dompet - Sisa Saldo) ---
     const configB = {
         apiKey: "AIzaSyCdNwDr9lUsUE2iv43vW6q89VZMXPix8us",
         authDomain: "sisa-saldo.firebaseapp.com",
@@ -195,80 +182,79 @@
     const dbG = firebase.database(appG);    
     const dbW = firebase.database(appW);    
 
-    // --- FUNGSI PRINT & PDF ---
-    function directPrint(tgl, m, k) {
-        const printWindow = window.open('', '_blank');
-        printWindow.document.write(`
-            <html><head><title>Struk_${tgl}</title><style>
-            body{font-family:sans-serif; padding:40px;}
-            .box{border:2px solid black; padding:20px; width:300px; margin:auto;}
-            h2{text-align:center; border-bottom:1px solid black;}
-            </style></head><body>
-            <div class="box">
-                <h2>GIBRAN HUB</h2>
-                <p><b>Waktu:</b> ${tgl}</p>
-                <p><b>Masuk:</b> Rp ${m.toLocaleString()}</p>
-                <p><b>Keluar:</b> Rp ${k.toLocaleString()}</p>
-                <p><b>Sisa:</b> Rp ${(m-k).toLocaleString()}</p>
-                <hr>
-                <p style="text-align:center; font-size:10px;">Terima Kasih</p>
-            </div>
-            <script>window.print(); window.close();<\/script>
-            </body></html>
-        `);
+    // --- FUNGSI PRINT & SAVE KHUSUS GUDANG ---
+    function printG(nm, jn, jml, st) {
+        const p = window.open('', '_blank');
+        p.document.write(`<html><head><title>Struk_Gudang</title><style>body{font-family:sans-serif;padding:30px;}.b{border:1px solid #000;padding:20px;width:280px;margin:auto;}h3{text-align:center;margin-top:0;}</style></head><body><div class="b"><h3>GIBRAN HUB - GUDANG</h3><p>Barang: <b>${nm}</b></p><p>Jenis: ${jn}</p><p>Jumlah: ${jml}</p><p>Sisa Stok: ${st}</p><hr><p style="font-size:10px;text-align:center">${new Date().toLocaleString()}</p></div><script>window.print();window.close();<\/script></body></html>`);
     }
 
-    function dlPDF(tgl, m, k) {
+    function dlGudangPDF(nm, jn, jml, st) {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-        doc.text("STRUK DOMPET DIGITAL - GIBRAN HUB", 10, 20);
-        doc.text("----------------------------------", 10, 25);
-        doc.text(`Waktu: ${tgl}`, 10, 35);
-        doc.text(`Masuk: Rp ${m.toLocaleString()}`, 10, 45);
-        doc.text(`Keluar: Rp ${k.toLocaleString()}`, 10, 55);
-        doc.text(`Hasil: Rp ${(m-k).toLocaleString()}`, 10, 65);
-        doc.save(`Struk_${tgl.replace(/[/, :]/g, '_')}.pdf`);
+        doc.text("LAPORAN STOK BARANG - GIBRAN HUB", 10, 20);
+        doc.text("---------------------------------------", 10, 25);
+        doc.text(`Nama Barang : ${nm}`, 10, 35);
+        doc.text(`Jenis Barang: ${jn}`, 10, 45);
+        doc.text(`Jumlah Masuk: ${jml}`, 10, 55);
+        doc.text(`Sisa Stok   : ${st}`, 10, 65);
+        doc.text(`Waktu Cetak : ${new Date().toLocaleString()}`, 10, 80);
+        doc.save(`Stok_${nm.replace(/ /g, '_')}.pdf`);
     }
 
-    // --- LOGIC WALLET ---
-    function updateW() {
-        const m = parseInt(document.getElementById('w-masuk').value) || 0;
-        const k = parseInt(document.getElementById('w-keluar').value) || 0;
-        if(m === 0 && k === 0) return alert("Isi data dulu!");
-        
-        dbW.ref('riwayat').push({ tgl: new Date().toLocaleString('id-ID'), m: m, k: k }).then(() => {
-            document.getElementById('w-masuk').value = "";
-            document.getElementById('w-keluar').value = "";
-        });
+    // --- LOGIC GUDANG ---
+    function sendG() {
+        const n = v('g-nama'), j = v('g-jenis'), jm = v('g-jumlah'), s = v('g-stok');
+        if(!n) return alert("Isi Nama Barang!");
+        dbG.ref('stok').push({ nm:n, jn:j, jml:jm, st:s }).then(()=>alert("Gudang Terupdate!"));
     }
 
-    dbW.ref('riwayat').on('value', s => {
-        const tb = document.getElementById('tbody-wallet'); tb.innerHTML = "";
-        let tot = 0;
+    dbG.ref('stok').on('value', s => {
+        const tb = document.getElementById('tbody-gudang'); tb.innerHTML = "";
         s.forEach(c => {
-            const r = c.val(); tot += (r.m - r.k);
+            const r = c.val();
             tb.innerHTML += `<tr>
-                <td>${r.tgl}</td>
-                <td style="color:var(--cyan)">+ ${r.m.toLocaleString()}</td>
-                <td style="color:var(--red)">- ${r.k.toLocaleString()}</td>
+                <td>${r.nm}</td><td>${r.jn}</td><td>${r.jml}</td><td>${r.st}</td>
                 <td>
-                    <button class="act-btn" style="background:#333" onclick="if(confirm('Hapus?')) dbW.ref('riwayat/${c.key}').remove()">X</button>
-                    <button class="act-btn" style="background:var(--cyan); color:black" onclick="dlPDF('${r.tgl}',${r.m},${r.k})">SAVE</button>
-                    <button class="act-btn" style="background:var(--purple)" onclick="directPrint('${r.tgl}',${r.m},${r.k})">PRINT</button>
+                    <button class="act-btn" style="background:#333" onclick="if(confirm('Hapus?')) dbG.ref('stok/${c.key}').remove()">X</button>
+                    <button class="act-btn" style="background:var(--cyan); color:black" onclick="dlGudangPDF('${r.nm}','${r.jn}',${r.jml},${r.st})">SAVE</button>
+                    <button class="act-btn" style="background:var(--purple)" onclick="printG('${r.nm}','${r.jn}',${r.jml},${r.st})">PRINT</button>
                 </td>
             </tr>`;
+        });
+    });
+
+    // --- LOGIC WALLET (Tetap Sama) ---
+    function updateW() {
+        const m = parseInt(v('w-masuk')) || 0, k = parseInt(v('w-keluar')) || 0;
+        if(m === 0 && k === 0) return alert("Isi data!");
+        dbW.ref('riwayat').push({ tgl: new Date().toLocaleString('id-ID'), m: m, k: k });
+        document.getElementById('w-masuk').value = ""; document.getElementById('w-keluar').value = "";
+    }
+    dbW.ref('riwayat').on('value', s => {
+        const tb = document.getElementById('tbody-wallet'); tb.innerHTML = ""; let tot = 0;
+        s.forEach(c => { const r = c.val(); tot += (r.m - r.k);
+            tb.innerHTML += `<tr><td>${r.tgl}</td><td style="color:var(--cyan)">+ ${r.m.toLocaleString()}</td><td style="color:var(--red)">- ${r.k.toLocaleString()}</td>
+            <td><button class="act-btn" style="background:#333" onclick="dbW.ref('riwayat/${c.key}').remove()">X</button>
+            <button class="act-btn" style="background:var(--cyan); color:black" onclick="dlPDF('${r.tgl}',${r.m},${r.k})">SAVE</button></td></tr>`;
         });
         document.getElementById('saldo-akhir').innerText = "Rp " + tot.toLocaleString();
     });
 
-    // --- LOGIC LAIN (Laporan & Gudang Tetap) ---
+    function dlPDF(t, m, k) { 
+        const { jsPDF } = window.jspdf; const doc = new jsPDF(); 
+        doc.text("STRUK WALLET", 10, 20); doc.text(`Waktu: ${t}`, 10, 30); 
+        doc.text(`Masuk: ${m}`, 10, 40); doc.text(`Keluar: ${k}`, 10, 50); 
+        doc.save(`Wallet_${t}.pdf`); 
+    }
+
+    // --- LOGIC MONITORING ---
     function simpan(tipe, pre) {
         const f = document.getElementById(pre+'bukti');
         const d = { tipe: tipe, nama: v(pre+'nama'), tgl: v(pre+'tgl'), ttd: v(pre+'ttd'), tujuan: v(pre+'tujuan'), waktu: new Date().toLocaleString() };
         if(f.files[0]) {
-            const r = new FileReader(); r.onload = (e) => { d.img = e.target.result; dbD.ref('transaksi').push(d).then(()=>alert("Berhasil!")); };
+            const r = new FileReader(); r.onload = (e) => { d.img = e.target.result; dbD.ref('transaksi').push(d).then(()=>alert("Terkirim!")); };
             r.readAsDataURL(f.files[0]);
-        } else { dbD.ref('transaksi').push(d).then(()=>alert("Berhasil!")); }
+        } else { dbD.ref('transaksi').push(d).then(()=>alert("Terkirim!")); }
     }
     dbD.ref('transaksi').on('value', s => {
         const tb = document.getElementById('tbody-monitor'); tb.innerHTML = ""; let L=0, S=0;
@@ -276,11 +262,8 @@
             tb.innerHTML += `<tr><td>${r.tipe}</td><td>${r.nama}</td><td>${r.tgl}</td><td>${r.img ? `<img src="${r.img}" class="table-img" onclick="window.open(this.src)">` : '-'}</td><td>${r.tujuan}</td><td><button class="act-btn" style="background:#333" onclick="dbD.ref('transaksi/${c.key}').remove()">X</button></td></tr>`;
         }); renderChart(L,S);
     });
-    function sendG() { dbG.ref('stok').push({ nm:v('g-nama'), jn:v('g-jenis'), jml:v('g-jumlah'), st:v('g-stok') }); }
-    dbG.ref('stok').on('value', s => {
-        const tb = document.getElementById('tbody-gudang'); tb.innerHTML = "";
-        s.forEach(c => { const r = c.val(); tb.innerHTML += `<tr><td>${r.nm}</td><td>${r.jn}</td><td>${r.jml}</td><td>${r.st}</td><td><button class="act-btn" style="background:#333" onclick="dbG.ref('stok/${c.key}').remove()">X</button></td></tr>`; });
-    });
+
+    // --- UTILS ---
     let chart;
     function renderChart(l, s) {
         const ctx = document.getElementById('rekapChart').getContext('2d'); if(chart) chart.destroy();
