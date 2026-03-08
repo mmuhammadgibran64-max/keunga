@@ -3,241 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gibran Hub | Dashboard System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
-    
+    <title>Gibran Hub | Input</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
     <style>
-        :root { --blue: #00c3ff; --pink: #ff0088; --dark: #1a1c24; --bg: #f8fbff; }
-        body { margin: 0; font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #333; }
+        body { font-family: 'Rajdhani', sans-serif; background: #f8fbff; margin: 0; padding: 0; }
+        header { background: white; padding: 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; }
+        main { padding: 20px; max-width: 500px; margin: auto; }
         
-        /* HEADER */
-        header { 
-            background: white; padding: 15px 20px; display: flex; align-items: center; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 100;
-        }
-        .btn-head { font-size: 20px; cursor: pointer; border: none; background: none; color: #444; }
-        header h2 { margin: 0; font-size: 16px; flex: 1; text-align: center; font-family: 'Orbitron'; }
-
-        main { padding: 20px; max-width: 480px; margin: auto; padding-bottom: 120px; }
-
-        /* TAB MENU 3 BARIS */
-        .tab-menu { display: flex; gap: 8px; margin-bottom: 25px; }
-        .tab { 
-            flex: 1; padding: 12px 5px; border-radius: 12px; text-align: center; 
-            background: white; border: 1.5px solid #e1e9f0; cursor: pointer; 
-            font-weight: bold; font-family: 'Orbitron'; font-size: 9px; transition: 0.3s;
-        }
-        .tab.active[data-mode="SETORAN"] { border-color: var(--blue); background: #eefbff; color: var(--blue); }
-        .tab.active[data-mode="LAPORAN"] { border-color: var(--pink); background: #fff0f7; color: var(--pink); }
-        .tab.active[data-mode="GUDANG"] { border-color: var(--dark); background: #f0f0f0; color: var(--dark); }
-
-        /* FORM BOX */
-        label { display: block; font-weight: 700; margin: 15px 0 8px; font-size: 13px; color: #666; text-transform: uppercase; }
-        .input-field { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #e1e9f0; box-sizing: border-box; font-size: 14px; }
+        .upload-box { border: 2px dashed #bde0fe; border-radius: 20px; padding: 30px; text-align: center; background: #f0f7ff; margin-bottom: 20px; cursor: pointer; }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; color: #444; }
+        .input-field { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; box-sizing: border-box; }
         
-        .upload-box { border: 2px dashed #bde0fe; border-radius: 20px; padding: 30px; text-align: center; background: #f0f7ff; cursor: pointer; }
-        #preview-img { width: 100%; border-radius: 15px; display: none; margin-top: 10px; }
-
-        /* TARGET */
-        .target-group { display: flex; gap: 10px; }
-        .target-card { flex: 1; border: 1.5px solid #e1e9f0; padding: 12px; border-radius: 15px; text-align: center; cursor: pointer; background: #fff; }
-        .target-card.active { border-color: var(--blue); background: #f0faff; }
-        .target-card img { width: 30px; margin-bottom: 5px; }
-
-        /* SIGNATURE */
-        .sig-box { border: 1px solid #e1e9f0; border-radius: 15px; background: white; height: 150px; }
-        canvas { width: 100%; height: 100%; cursor: crosshair; }
-
-        /* FOOTER BUTTONS */
-        .footer-fixed { position: fixed; bottom: 80px; left: 0; width: 100%; padding: 0 20px; box-sizing: border-box; display: flex; gap: 10px; }
-        .btn-print { background: #f1f4f9; border: 1px solid #ddd; padding: 15px; border-radius: 15px; flex: 1; font-weight: bold; cursor: pointer; }
-        .btn-submit { background: var(--blue); color: white; border: none; padding: 15px; border-radius: 15px; flex: 2; font-weight: bold; font-size: 16px; cursor: pointer; }
-        .btn-submit.pink { background: var(--pink); }
-        .btn-submit.dark { background: var(--dark); }
-
+        .btn-send { background: #00c3ff; color: white; border: none; width: 100%; padding: 15px; border-radius: 15px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 20px; }
+        .btn-print { background: #f1f4f9; color: #333; border: 1px solid #ddd; padding: 15px; border-radius: 15px; width: 30%; font-weight: bold; cursor: pointer; }
+        
+        .sig-canvas { border: 1px solid #ddd; background: white; width: 100%; height: 150px; border-radius: 15px; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
 <header>
-    <button class="btn-head" onclick="history.back()">←</button>
-    <h2 id="page-title">GIBRAN HUB</h2>
-    <button class="btn-head" onclick="downloadData()">📥</button>
+    <button onclick="location.href='index.html'" style="border:none; background:none; font-size:20px;">←</button>
+    <h2 id="page-title" style="margin:0; font-size:18px;">Input Data</h2>
+    <button onclick="window.print()" style="border:none; background:none; font-size:20px;">📥</button>
 </header>
 
 <main>
-    <div class="tab-menu">
-        <div class="tab active" data-mode="SETORAN" onclick="switchMode('SETORAN')">💰 SETORAN</div>
-        <div class="tab" data-mode="LAPORAN" onclick="switchMode('LAPORAN')">📝 LAPORAN</div>
-        <div class="tab" data-mode="GUDANG" onclick="switchMode('GUDANG')">📦 GUDANG</div>
-    </div>
-
-    <div id="section-foto">
-        <label id="label-foto">Bukti Setoran</label>
+    <div id="section-media">
+        <label id="label-media">Bukti Foto</label>
         <div class="upload-box" onclick="document.getElementById('file-in').click()">
-            <span id="up-placeholder">📷 Ketuk untuk Upload Foto</span>
+            <div id="upload-placeholder">☁️<br><b>Upload Gambar</b></div>
+            <img id="preview" style="width:100%; display:none; border-radius:15px;">
             <input type="file" id="file-in" hidden accept="image/*">
-            <img id="preview-img">
         </div>
     </div>
 
-    <label id="label-nama">Nama Penyetor</label>
-    <input type="text" id="inp-nama" class="input-field" placeholder="Ketik di sini...">
+    <div class="input-group">
+        <label id="label-nama">Nama</label>
+        <input type="text" id="inp-nama" class="input-field" placeholder="Masukkan...">
+    </div>
 
     <div id="section-extra">
-        <label>Tanggal</label>
-        <input type="date" id="inp-tgl" class="input-field">
-
-        <label>Kirim Ke</label>
-        <div class="target-group">
-            <div class="target-card active" id="t-tati" onclick="setTarget('Bu Tati')">
-                <img src="https://cdn-icons-png.flaticon.com/512/4140/4140047.png"><p style="margin:0; font-size:12px;">Bu Tati</p>
-            </div>
-            <div class="target-card" id="t-ami" onclick="setTarget('Bu Ami')">
-                <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png"><p style="margin:0; font-size:12px;">Bu Ami</p>
-            </div>
+        <div class="input-group">
+            <label>Tanggal</label>
+            <input type="date" id="inp-tgl" class="input-field">
         </div>
+        <label>Penerima</label>
+        <select id="inp-target" class="input-field">
+            <option value="Bu Tati">Bu Tati</option>
+            <option value="Bu Ami">Bu Ami</option>
+        </select>
     </div>
 
     <div id="section-gudang" class="hidden">
-        <label>Tipe Barang</label>
-        <select id="inp-tipe" class="input-field">
-            <option value="Elektronik">Elektronik</option>
-            <option value="Mebel">Mebel</option>
-        </select>
-        <label>Jumlah Unit</label>
-        <input type="number" id="inp-qty" class="input-field" placeholder="0">
+        <div class="input-group">
+            <label>Tipe Barang</label>
+            <select id="inp-tipe" class="input-field">
+                <option value="Elektronik">Elektronik</option>
+                <option value="Mebel">Mebel</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label>Jumlah (Unit)</label>
+            <input type="number" id="inp-qty" class="input-field" placeholder="0">
+        </div>
     </div>
 
-    <label style="margin-top:20px;">Tanda Tangan <span style="float:right; color:red; cursor:pointer;" onclick="clearTTD()">Hapus</span></label>
-    <div class="sig-box">
-        <canvas id="canvas-sig"></canvas>
-    </div>
+    <label>Tanda Tangan <span style="float:right; color:red; cursor:pointer;" onclick="clearSig()">Hapus</span></label>
+    <canvas id="canvas-sig" class="sig-canvas"></canvas>
 
-    <div class="footer-fixed">
+    <div style="display:flex; gap:10px; margin-top:30px;">
         <button class="btn-print" onclick="window.print()">🖨️ Cetak</button>
-        <button class="btn-submit" id="btn-main" onclick="prosesSimpan()">➤ Kirim Data</button>
+        <button class="btn-send" id="btn-submit" onclick="submitData()">➤ Kirim Data</button>
     </div>
 </main>
 
 <script>
-    // --- KONFIGURASI DUAL FIREBASE ---
-    const configData = { // Database 1
+    // CONFIG 1: UNTUK SETORAN & LAPORAN
+    const config1 = {
         apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs",
         databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com"
     };
-    const configGudang = { // Database 2
+    // CONFIG 2: UNTUK GUDANG
+    const config2 = {
         apiKey: "AIzaSyDLlsp7eBXRtWXDdnww8TcBrD7iFyfVj-k",
         databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com"
     };
 
-    let currentMode = "SETORAN";
-    let target = "Bu Tati";
+    const urlParams = new URLSearchParams(window.location.search);
+    const mode = urlParams.get('mode') || 'SETORAN';
+    
+    // Inisialisasi Firebase berdasarkan mode
+    const app = firebase.initializeApp(mode === 'GUDANG' ? config2 : config1);
+    const db = firebase.database();
 
-    function switchMode(m) {
-        currentMode = m;
-        // Reset Firebase Instance
-        firebase.app().delete().then(() => {
-            firebase.initializeApp(m === 'GUDANG' ? configGudang : configData);
-        });
-
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelector(`[data-mode="${m}"]`).classList.add('active');
-
-        const btn = document.getElementById('btn-main');
-        const sFoto = document.getElementById('section-foto');
-        const sExtra = document.getElementById('section-extra');
-        const sGudang = document.getElementById('section-gudang');
-
-        btn.className = "btn-submit";
-        btn.innerText = "➤ Kirim " + m;
-
-        if(m === 'SETORAN') {
-            sFoto.classList.remove('hidden'); sExtra.classList.remove('hidden'); sGudang.classList.add('hidden');
-            document.getElementById('label-nama').innerText = "Nama Penyetor";
-        } else if(m === 'LAPORAN') {
-            btn.classList.add('pink');
-            sFoto.classList.remove('hidden'); sExtra.classList.remove('hidden'); sGudang.classList.add('hidden');
-            document.getElementById('label-nama').innerText = "Nama Pelapor";
-        } else {
-            btn.classList.add('dark');
-            sFoto.classList.add('hidden'); sExtra.classList.add('hidden'); sGudang.classList.remove('hidden');
-            document.getElementById('label-nama').innerText = "Nama Barang";
-        }
+    // Atur Tampilan Berdasarkan Mode
+    document.getElementById('page-title').innerText = "Kirim " + mode;
+    if(mode === 'GUDANG') {
+        document.getElementById('section-media').classList.add('hidden');
+        document.getElementById('section-extra').classList.add('hidden');
+        document.getElementById('section-gudang').classList.remove('hidden');
+        document.getElementById('label-nama').innerText = "Nama Barang";
     }
 
-    // Awal inisialisasi
-    firebase.initializeApp(configData);
-
-    // Canvas TTD
+    // Canvas Signature
     const canvas = document.getElementById('canvas-sig');
     const ctx = canvas.getContext('2d');
     let drawing = false;
-    function resize() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
-    window.onload = resize;
-
+    canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
     canvas.addEventListener('mousedown', () => drawing = true);
-    canvas.addEventListener('mousemove', (e) => {
-        if(!drawing) return;
-        const r = canvas.getBoundingClientRect();
-        ctx.lineTo(e.clientX - r.left, e.clientY - r.top);
-        ctx.lineWidth = 2; ctx.stroke();
-    });
+    canvas.addEventListener('mousemove', (e) => { if(drawing) ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); });
     canvas.addEventListener('mouseup', () => { drawing = false; ctx.beginPath(); });
-    function clearTTD() { ctx.clearRect(0,0,canvas.width,canvas.height); ctx.beginPath(); }
+    function clearSig() { ctx.clearRect(0,0,canvas.width,canvas.height); }
 
-    // Upload Preview
-    document.getElementById('file-in').onchange = function(e) {
+    // Foto Preview
+    document.getElementById('file-in').onchange = (e) => {
         const reader = new FileReader();
-        reader.onload = () => {
-            const img = document.getElementById('preview-img');
-            img.src = reader.result; img.style.display = 'block';
-            document.getElementById('up-placeholder').style.display = 'none';
-        }
+        reader.onload = () => { 
+            document.getElementById('preview').src = reader.result;
+            document.getElementById('preview').style.display = 'block';
+            document.getElementById('upload-placeholder').style.display = 'none';
+        };
         reader.readAsDataURL(e.target.files[0]);
-    }
+    };
 
-    function setTarget(n) {
-        target = n;
-        document.getElementById('t-tati').classList.toggle('active', n === 'Bu Tati');
-        document.getElementById('t-ami').classList.toggle('active', n === 'Bu Ami');
-    }
-
-    async function prosesSimpan() {
-        const nama = document.getElementById('inp-nama').value;
-        if(!nama) return alert("Isi nama dulu bos!");
-
-        const payload = {
-            nama: nama,
+    async function submitData() {
+        const data = {
+            nama: document.getElementById('inp-nama').value,
             ttd: canvas.toDataURL(),
-            timestamp: Date.now()
+            waktu: new Date().toISOString()
         };
 
-        if(currentMode === 'GUDANG') {
-            payload.tipe = document.getElementById('inp-tipe').value;
-            payload.qty = document.getElementById('inp-qty').value;
+        if(mode === 'GUDANG') {
+            data.tipe = document.getElementById('inp-tipe').value;
+            data.jumlah = document.getElementById('inp-qty').value;
         } else {
-            payload.tanggal = document.getElementById('inp-tgl').value;
-            payload.tujuan = target;
-            payload.foto = document.getElementById('preview-img').src;
+            data.tanggal = document.getElementById('inp-tgl').value;
+            data.target = document.getElementById('inp-target').value;
+            data.foto = document.getElementById('preview').src;
         }
 
         try {
-            await firebase.database().ref(currentMode.toLowerCase()).push(payload);
-            alert("✅ " + currentMode + " Berhasil Terkirim!");
-            location.reload();
-        } catch(e) { alert("Error: " + e.message); }
-    }
-
-    function downloadData() {
-        const blob = new Blob(["Laporan Gibran Hub"], {type: "text/plain"});
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = "Laporan.txt"; a.click();
+            await db.ref(mode.toLowerCase()).push(data);
+            alert("✅ Berhasil dikirim ke Database " + mode);
+            window.location.href = 'index.html';
+        } catch(e) { alert("Gagal!"); }
     }
 </script>
 </body>
