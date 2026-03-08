@@ -3,67 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gibran Hub | Master Dashboard</title>
+    <title>GIBRAN HUB | MASTER SYSTEM FULL</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
-    
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
     <style>
         :root { --blue: #00c3ff; --pink: #ff0088; --dark: #1a1c24; --orange: #ff6b22; --bg: #f8fbff; }
         body { margin: 0; font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #333; }
-        
-        header { 
-            background: white; padding: 15px 20px; display: flex; align-items: center; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 100;
-        }
-        .btn-head { font-size: 20px; cursor: pointer; border: none; background: none; color: #444; }
-        header h2 { margin: 0; font-size: 14px; flex: 1; text-align: center; font-family: 'Orbitron'; letter-spacing: 1px; }
+        header { background: white; padding: 15px 20px; display: flex; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 100; }
+        header h2 { margin: 0; font-size: 14px; flex: 1; text-align: center; font-family: 'Orbitron'; }
+        main { padding: 20px; max-width: 480px; margin: auto; padding-bottom: 120px; }
 
-        main { padding: 20px; max-width: 480px; margin: auto; padding-bottom: 100px; }
-
-        /* TAB MENU 4 ITEM */
-        .tab-menu { display: flex; gap: 5px; margin-bottom: 20px; }
-        .tab { 
-            flex: 1; padding: 10px 2px; border-radius: 10px; text-align: center; 
-            background: white; border: 1.5px solid #e1e9f0; cursor: pointer; 
-            font-weight: bold; font-family: 'Orbitron'; font-size: 8px; transition: 0.3s;
-        }
+        /* TAB MENU 4 BARIS */
+        .tab-menu { display: flex; gap: 5px; margin-bottom: 20px; overflow-x: auto; white-space: nowrap; padding-bottom: 5px; }
+        .tab { flex: 0 0 23%; padding: 12px 2px; border-radius: 12px; text-align: center; background: white; border: 1.5px solid #e1e9f0; cursor: pointer; font-family: 'Orbitron'; font-size: 8px; transition: 0.3s; }
         .tab.active[data-mode="SETORAN"] { border-color: var(--blue); color: var(--blue); background: #f0faff; }
         .tab.active[data-mode="LAPORAN"] { border-color: var(--pink); color: var(--pink); background: #fff0f7; }
         .tab.active[data-mode="GUDANG"] { border-color: var(--dark); color: var(--dark); background: #f0f0f0; }
         .tab.active[data-mode="PENGATURAN"] { border-color: var(--orange); color: var(--orange); background: #fff4ee; }
 
-        /* FORM BOX & CARDS */
-        .card-stats { background: #1a1c24; color: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; }
-        .total-laba { font-size: 24px; font-weight: bold; font-family: 'Orbitron'; margin: 10px 0; color: #4ade80; }
-        
+        /* FORM BOX */
         label { display: block; font-weight: 700; margin: 15px 0 8px; font-size: 12px; color: #666; text-transform: uppercase; }
         .input-field { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #e1e9f0; box-sizing: border-box; font-size: 14px; margin-bottom: 10px; }
-        
         .upload-box { border: 2px dashed #bde0fe; border-radius: 20px; padding: 25px; text-align: center; background: #f0f7ff; cursor: pointer; }
         #preview-img { width: 100%; border-radius: 15px; display: none; margin-top: 10px; }
 
+        /* TARGET PILIHAN */
+        .target-group { display: flex; gap: 10px; }
+        .target-card { flex: 1; border: 1.5px solid #e1e9f0; padding: 12px; border-radius: 15px; text-align: center; cursor: pointer; background: #fff; }
+        .target-card.active { border-color: var(--blue); background: #f0faff; }
+        .target-card img { width: 30px; margin-bottom: 5px; }
+
+        /* PENGATURAN CARDS */
+        .card-stats { background: #1a1c24; color: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; }
+        .total-laba { font-size: 24px; font-weight: bold; font-family: 'Orbitron'; color: #4ade80; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .mini-card { background: white; padding: 12px; border-radius: 15px; border: 1px solid #eee; }
+
         /* SIGNATURE */
-        .sig-box { border: 1px solid #e1e9f0; border-radius: 15px; background: white; height: 130px; }
+        .sig-box { border: 1px solid #e1e9f0; border-radius: 15px; background: white; height: 140px; }
         canvas { width: 100%; height: 100%; cursor: crosshair; }
 
-        /* BUTTONS */
-        .footer-fixed { position: fixed; bottom: 20px; left: 0; width: 100%; padding: 0 20px; box-sizing: border-box; display: flex; gap: 10px; }
-        .btn-submit { background: var(--blue); color: white; border: none; padding: 16px; border-radius: 15px; flex: 1; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .btn-submit.pink { background: var(--pink); }
-        .btn-submit.dark { background: var(--dark); }
-        .btn-submit.orange { background: var(--orange); }
-
+        .footer-fixed { position: fixed; bottom: 20px; left: 0; width: 100%; padding: 0 20px; box-sizing: border-box; display: flex; gap: 10px; z-index: 100; }
+        .btn-submit { background: var(--blue); color: white; border: none; padding: 16px; border-radius: 15px; flex: 1; font-weight: bold; font-size: 16px; cursor: pointer; }
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
 <header>
-    <button class="btn-head" onclick="history.back()">←</button>
+    <button style="border:none; background:none; font-size:20px;" onclick="history.back()">←</button>
     <h2 id="page-title">GIBRAN HUB</h2>
-    <button class="btn-head" onclick="window.print()">📥</button>
+    <button style="border:none; background:none; font-size:20px;" onclick="window.print()">📥</button>
 </header>
 
 <main>
@@ -85,12 +76,26 @@
         <input type="text" id="inp-nama" class="input-field" placeholder="Ketik nama...">
         <label>Tanggal</label>
         <input type="date" id="inp-tgl" class="input-field">
+        <label>Kirim Ke Siapa</label>
+        <div class="target-group">
+            <div class="target-card active" id="t-tati" onclick="setTarget('Bu Tati')">
+                <img src="https://cdn-icons-png.flaticon.com/512/4140/4140047.png"><p style="margin:0; font-size:11px;">Bu Tati</p>
+            </div>
+            <div class="target-card" id="t-ami" onclick="setTarget('Bu Ami')">
+                <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png"><p style="margin:0; font-size:11px;">Bu Ami</p>
+            </div>
+        </div>
     </div>
 
     <div id="view-gudang" class="hidden">
         <label>Nama Barang</label>
-        <input type="text" id="g-nama" class="input-field" placeholder="Contoh: Peyek Kacang">
-        <label>Jumlah (Bungkus/Unit)</label>
+        <input type="text" id="g-nama" class="input-field" placeholder="Nama Barang...">
+        <label>Tipe Barang</label>
+        <select id="g-tipe" class="input-field">
+            <option value="Elektronik">Elektronik</option>
+            <option value="Mebel">Mebel</option>
+        </select>
+        <label>Jumlah Unit</label>
         <input type="number" id="g-qty" class="input-field" placeholder="0">
     </div>
 
@@ -98,16 +103,24 @@
         <div class="card-stats">
             <p style="margin:0; font-size:11px; opacity:0.7;">ESTIMASI LABA BERSIH</p>
             <div class="total-laba">Rp 1.250.000</div>
-            <p style="margin:0; font-size:10px; color:#4ade80;">↗ +12% Bulan ini</p>
+            <p style="margin:0; font-size:10px; color:#4ade80;">↗ +12% dari bulan lalu</p>
         </div>
-        <label>Biaya Bahan Baku</label>
-        <input type="number" id="p-biaya" class="input-field" placeholder="Rp 0">
-        <label>Stok Kemasan</label>
-        <input type="text" id="p-kemasan" class="input-field" placeholder="Plastik / Stiker">
+        <label>🏠 Manajemen Operasional</label>
+        <div class="grid-2">
+            <div class="mini-card"><span>PEYEK (BKS)</span><input type="number" id="p-peyek" value="0" style="width:100%; border:none; font-weight:bold;"></div>
+            <div class="mini-card"><span>SLONDOK (BKS)</span><input type="number" id="p-slondok" value="0" style="width:100%; border:none; font-weight:bold;"></div>
+        </div>
+        <label>Belanja Bahan Baku</label>
+        <input type="text" id="p-bahan" class="input-field" placeholder="Tepung, Kacang, Cabai...">
+        <label>Kebutuhan Kemasan</label>
+        <div class="grid-2">
+            <input type="text" id="p-kemasan-tipe" class="input-field" placeholder="Plastik / Stiker">
+            <input type="number" id="p-kemasan-qty" class="input-field" placeholder="Qty">
+        </div>
     </div>
 
     <div id="view-ttd">
-        <label style="margin-top:20px;">Konfirmasi TTD <span style="float:right; color:red; cursor:pointer;" onclick="clearTTD()">Hapus</span></label>
+        <label style="margin-top:20px;">Tanda Tangan <span style="float:right; color:red; cursor:pointer;" onclick="clearTTD()">Hapus</span></label>
         <div class="sig-box">
             <canvas id="canvas-sig"></canvas>
         </div>
@@ -119,29 +132,24 @@
 </main>
 
 <script>
-    // --- 3 KONFIGURASI FIREBASE ---
     const configUtama = { apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs", databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com" };
     const configGudang = { apiKey: "AIzaSyDLlsp7eBXRtWXDdnww8TcBrD7iFyfVj-k", databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
     const configProfil = { apiKey: "AIzaSyDHZv0Ofds9O3Tyg0PJzjj326eG1hbDhug", databaseURL: "https://nama--profile-default-rtdb.firebaseio.com" };
 
     let currentMode = "SETORAN";
+    let targetPenerima = "Bu Tati";
     firebase.initializeApp(configUtama);
 
     function switchMode(m) {
         currentMode = m;
-        
-        // Update UI Tab
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         document.querySelector(`[data-mode="${m}"]`).classList.add('active');
-        document.getElementById('page-title').innerText = "DATA " + m;
-
-        // Reset & Pindah Firebase
+        
         firebase.app().delete().then(() => {
             let cfg = m === 'GUDANG' ? configGudang : (m === 'PENGATURAN' ? configProfil : configUtama);
             firebase.initializeApp(cfg);
         });
 
-        // Kontrol Tampilan Form
         const vStd = document.getElementById('view-standar');
         const vGdg = document.getElementById('view-gudang');
         const vSet = document.getElementById('view-pengaturan');
@@ -149,25 +157,24 @@
         const btn = document.getElementById('btn-main');
 
         vStd.classList.add('hidden'); vGdg.classList.add('hidden'); vSet.classList.add('hidden'); vTtd.classList.remove('hidden');
-        btn.className = "btn-submit";
 
         if(m === 'SETORAN' || m === 'LAPORAN') {
             vStd.classList.remove('hidden');
-            btn.classList.add(m === 'LAPORAN' ? 'pink' : '');
+            btn.style.background = m === 'LAPORAN' ? '#ff0088' : '#00c3ff';
             btn.innerText = "➤ Kirim " + m;
+            document.getElementById('label-foto').innerText = "Bukti " + m;
         } else if(m === 'GUDANG') {
             vGdg.classList.remove('hidden');
-            btn.classList.add('dark');
+            btn.style.background = '#1a1c24';
             btn.innerText = "➤ Simpan Stok";
         } else if(m === 'PENGATURAN') {
             vSet.classList.remove('hidden');
             vTtd.classList.add('hidden');
-            btn.classList.add('orange');
+            btn.style.background = '#ff6b22';
             btn.innerText = "➤ Simpan Pengaturan";
         }
     }
 
-    // Canvas TTD Logic
     const canvas = document.getElementById('canvas-sig');
     const ctx = canvas.getContext('2d');
     let drawing = false;
@@ -179,45 +186,55 @@
         if(!drawing) return;
         const r = canvas.getBoundingClientRect();
         ctx.lineTo(e.clientX - r.left, e.clientY - r.top);
-        ctx.lineWidth = 2; ctx.stroke();
+        ctx.stroke();
     });
     canvas.addEventListener('mouseup', () => { drawing = false; ctx.beginPath(); });
     function clearTTD() { ctx.clearRect(0,0,canvas.width,canvas.height); ctx.beginPath(); }
 
-    // Upload & Simpan
     document.getElementById('file-in').onchange = (e) => {
         const reader = new FileReader();
         reader.onload = () => {
-            const img = document.getElementById('preview-img');
-            img.src = reader.result; img.style.display = 'block';
+            document.getElementById('preview-img').src = reader.result;
+            document.getElementById('preview-img').style.display = 'block';
             document.getElementById('up-placeholder').style.display = 'none';
         }
         reader.readAsDataURL(e.target.files[0]);
     }
 
+    function setTarget(n) {
+        targetPenerima = n;
+        document.getElementById('t-tati').classList.toggle('active', n === 'Bu Tati');
+        document.getElementById('t-ami').classList.toggle('active', n === 'Bu Ami');
+    }
+
     async function prosesSimpan() {
         const db = firebase.database();
-        let data = { timestamp: Date.now() };
+        let payload = { waktu: new Date().toLocaleString() };
 
         if(currentMode === 'SETORAN' || currentMode === 'LAPORAN') {
-            data.nama = document.getElementById('inp-nama').value;
-            data.tgl = document.getElementById('inp-tgl').value;
-            data.foto = document.getElementById('preview-img').src;
-            data.ttd = canvas.toDataURL();
+            payload.nama = document.getElementById('inp-nama').value;
+            payload.tgl = document.getElementById('inp-tgl').value;
+            payload.kepada = targetPenerima;
+            payload.foto = document.getElementById('preview-img').src;
+            payload.ttd = canvas.toDataURL();
         } else if(currentMode === 'GUDANG') {
-            data.nama_barang = document.getElementById('g-nama').value;
-            data.qty = document.getElementById('g-qty').value;
-            data.ttd = canvas.toDataURL();
+            payload.nama_barang = document.getElementById('g-nama').value;
+            payload.tipe = document.getElementById('g-tipe').value;
+            payload.qty = document.getElementById('g-qty').value;
+            payload.ttd = canvas.toDataURL();
         } else {
-            data.biaya = document.getElementById('p-biaya').value;
-            data.kemasan = document.getElementById('p-kemasan').value;
+            payload.stok_peyek = document.getElementById('p-peyek').value;
+            payload.stok_slondok = document.getElementById('p-slondok').value;
+            payload.bahan_baku = document.getElementById('p-bahan').value;
+            payload.kemasan = document.getElementById('p-kemasan-tipe').value;
+            payload.kemasan_qty = document.getElementById('p-kemasan-qty').value;
         }
 
         try {
-            await db.ref(currentMode.toLowerCase()).push(data);
+            await db.ref(currentMode.toLowerCase()).push(payload);
             alert("✅ Berhasil Simpan ke Database " + currentMode);
             location.reload();
-        } catch(e) { alert("Error: " + e.message); }
+        } catch(e) { alert("Gagal!"); }
     }
 </script>
 </body>
