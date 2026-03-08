@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | MULTI-SISTEM</title>
+    <title>Gibran Hub | Dashboard System</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
@@ -11,18 +11,19 @@
 
     <style>
         :root { --blue: #00c3ff; --pink: #ff0088; --dark: #1a1c24; --bg: #f8fbff; }
-        body, html { margin: 0; padding: 0; background: var(--bg); font-family: 'Rajdhani', sans-serif; color: #333; }
-
+        body { margin: 0; font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #333; }
+        
+        /* HEADER */
         header { 
             background: white; padding: 15px 20px; display: flex; align-items: center; 
             box-shadow: 0 2px 10px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 100;
         }
-        .header-icon { font-size: 20px; cursor: pointer; border: none; background: none; color: #444; }
+        .btn-head { font-size: 20px; cursor: pointer; border: none; background: none; color: #444; }
         header h2 { margin: 0; font-size: 16px; flex: 1; text-align: center; font-family: 'Orbitron'; }
 
         main { padding: 20px; max-width: 480px; margin: auto; padding-bottom: 120px; }
 
-        /* TAB MENU 3 BARIS SEBELAHAN */
+        /* TAB MENU 3 BARIS */
         .tab-menu { display: flex; gap: 8px; margin-bottom: 25px; }
         .tab { 
             flex: 1; padding: 12px 5px; border-radius: 12px; text-align: center; 
@@ -33,64 +34,39 @@
         .tab.active[data-mode="LAPORAN"] { border-color: var(--pink); background: #fff0f7; color: var(--pink); }
         .tab.active[data-mode="GUDANG"] { border-color: var(--dark); background: #f0f0f0; color: var(--dark); }
 
-        /* FORM CONTAINER */
-        .form-section { background: white; border-radius: 20px; padding: 5px; }
-        .hidden { display: none; }
+        /* FORM BOX */
         label { display: block; font-weight: 700; margin: 15px 0 8px; font-size: 13px; color: #666; text-transform: uppercase; }
-
-        .upload-box {
-            border: 2px dashed #bde0fe; border-radius: 20px; padding: 30px 15px;
-            text-align: center; background: #f0f7ff; cursor: pointer;
-        }
+        .input-field { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #e1e9f0; box-sizing: border-box; font-size: 14px; }
+        
+        .upload-box { border: 2px dashed #bde0fe; border-radius: 20px; padding: 30px; text-align: center; background: #f0f7ff; cursor: pointer; }
         #preview-img { width: 100%; border-radius: 15px; display: none; margin-top: 10px; }
 
-        .input-field {
-            width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #e1e9f0;
-            background: #fff; box-sizing: border-box; outline: none; font-size: 14px;
-        }
-
-        /* TARGET SELECTION */
+        /* TARGET */
         .target-group { display: flex; gap: 10px; }
-        .target-card {
-            flex: 1; border: 1.5px solid #e1e9f0; padding: 12px; border-radius: 15px;
-            text-align: center; cursor: pointer; background: #fff;
-        }
+        .target-card { flex: 1; border: 1.5px solid #e1e9f0; padding: 12px; border-radius: 15px; text-align: center; cursor: pointer; background: #fff; }
         .target-card.active { border-color: var(--blue); background: #f0faff; }
         .target-card img { width: 30px; margin-bottom: 5px; }
 
         /* SIGNATURE */
-        .sig-box { border: 1px solid #e1e9f0; border-radius: 15px; background: #fff; height: 140px; position: relative; }
-        .sig-canvas { width: 100%; height: 100%; border-radius: 15px; }
+        .sig-box { border: 1px solid #e1e9f0; border-radius: 15px; background: white; height: 150px; }
+        canvas { width: 100%; height: 100%; cursor: crosshair; }
 
-        /* FOOTER ACTIONS */
-        .footer-fixed {
-            position: fixed; bottom: 80px; left: 0; width: 100%; padding: 0 20px; box-sizing: border-box;
-            display: flex; gap: 10px;
-        }
-        .btn-print {
-            background: #f1f4f9; color: #333; border: 1px solid #e1e9f0; padding: 15px;
-            border-radius: 15px; font-weight: bold; flex: 1; cursor: pointer; font-size: 14px;
-        }
-        .btn-submit {
-            background: var(--blue); color: white; border: none; padding: 15px;
-            border-radius: 15px; font-weight: bold; flex: 2; cursor: pointer; font-size: 15px;
-        }
+        /* FOOTER BUTTONS */
+        .footer-fixed { position: fixed; bottom: 80px; left: 0; width: 100%; padding: 0 20px; box-sizing: border-box; display: flex; gap: 10px; }
+        .btn-print { background: #f1f4f9; border: 1px solid #ddd; padding: 15px; border-radius: 15px; flex: 1; font-weight: bold; cursor: pointer; }
+        .btn-submit { background: var(--blue); color: white; border: none; padding: 15px; border-radius: 15px; flex: 2; font-weight: bold; font-size: 16px; cursor: pointer; }
         .btn-submit.pink { background: var(--pink); }
         .btn-submit.dark { background: var(--dark); }
 
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: white;
-            display: flex; justify-content: space-around; padding: 12px 0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.02);
-        }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
 <header>
-    <button class="header-icon" onclick="history.back()">←</button>
-    <h2 id="title-header">GIBRAN HUB</h2>
-    <button class="header-icon" onclick="downloadTXT()">📥</button>
+    <button class="btn-head" onclick="history.back()">←</button>
+    <h2 id="page-title">GIBRAN HUB</h2>
+    <button class="btn-head" onclick="downloadData()">📥</button>
 </header>
 
 <main>
@@ -100,144 +76,130 @@
         <div class="tab" data-mode="GUDANG" onclick="switchMode('GUDANG')">📦 GUDANG</div>
     </div>
 
-    <div id="form-content" class="form-section">
-        
-        <div id="upload-area">
-            <label id="label-foto">Bukti Setor</label>
-            <div class="upload-box" onclick="document.getElementById('file-in').click()">
-                <img src="https://cdn-icons-png.flaticon.com/512/338/338908.png" width="35" id="up-icon">
-                <div style="font-size: 13px; font-weight: bold; margin-top: 5px;">Pilih Gambar</div>
-                <input type="file" id="file-in" hidden accept="image/*">
-                <img id="preview-img">
+    <div id="section-foto">
+        <label id="label-foto">Bukti Setoran</label>
+        <div class="upload-box" onclick="document.getElementById('file-in').click()">
+            <span id="up-placeholder">📷 Ketuk untuk Upload Foto</span>
+            <input type="file" id="file-in" hidden accept="image/*">
+            <img id="preview-img">
+        </div>
+    </div>
+
+    <label id="label-nama">Nama Penyetor</label>
+    <input type="text" id="inp-nama" class="input-field" placeholder="Ketik di sini...">
+
+    <div id="section-extra">
+        <label>Tanggal</label>
+        <input type="date" id="inp-tgl" class="input-field">
+
+        <label>Kirim Ke</label>
+        <div class="target-group">
+            <div class="target-card active" id="t-tati" onclick="setTarget('Bu Tati')">
+                <img src="https://cdn-icons-png.flaticon.com/512/4140/4140047.png"><p style="margin:0; font-size:12px;">Bu Tati</p>
+            </div>
+            <div class="target-card" id="t-ami" onclick="setTarget('Bu Ami')">
+                <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png"><p style="margin:0; font-size:12px;">Bu Ami</p>
             </div>
         </div>
+    </div>
 
-        <label id="label-nama">Nama Penyetor</label>
-        <input type="text" id="inp-nama" class="input-field" placeholder="Masukkan nama...">
+    <div id="section-gudang" class="hidden">
+        <label>Tipe Barang</label>
+        <select id="inp-tipe" class="input-field">
+            <option value="Elektronik">Elektronik</option>
+            <option value="Mebel">Mebel</option>
+        </select>
+        <label>Jumlah Unit</label>
+        <input type="number" id="inp-qty" class="input-field" placeholder="0">
+    </div>
 
-        <div id="area-tambahan">
-            <label id="label-tgl">Tanggal Setor</label>
-            <input type="date" id="inp-tgl" class="input-field">
-
-            <div id="pilih-penerima">
-                <label>Kirim Ke Siapa</label>
-                <div class="target-group">
-                    <div class="target-card active" id="t-tati" onclick="setTarget('Bu Tati')">
-                        <img src="https://cdn-icons-png.flaticon.com/512/4140/4140047.png"><p style="margin:0;font-size:11px;">Bu Tati</p>
-                    </div>
-                    <div class="target-card" id="t-ami" onclick="setTarget('Bu Ami')">
-                        <img src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png"><p style="margin:0;font-size:11px;">Bu Ami</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="area-gudang" class="hidden">
-            <label>Tipe Barang</label>
-            <select id="g-tipe" class="input-field">
-                <option value="">Pilih tipe barang</option>
-                <option value="Elektronik">Elektronik</option>
-                <option value="Mebel">Mebel</option>
-            </select>
-            <label>Jumlah Barang</label>
-            <input type="number" id="g-qty" class="input-field" placeholder="0">
-        </div>
-
-        <div id="area-ttd">
-            <label style="margin-top:20px;">Tanda Tangan <span style="float:right; color:red; cursor:pointer;" onclick="clearTTD()">Hapus</span></label>
-            <div class="sig-box">
-                <canvas id="canvas-sig" class="sig-canvas"></canvas>
-            </div>
-        </div>
+    <label style="margin-top:20px;">Tanda Tangan <span style="float:right; color:red; cursor:pointer;" onclick="clearTTD()">Hapus</span></label>
+    <div class="sig-box">
+        <canvas id="canvas-sig"></canvas>
     </div>
 
     <div class="footer-fixed">
         <button class="btn-print" onclick="window.print()">🖨️ Cetak</button>
-        <button class="btn-submit" id="btn-main" onclick="simpanData()">➤ Kirim Setoran</button>
+        <button class="btn-submit" id="btn-main" onclick="prosesSimpan()">➤ Kirim Data</button>
     </div>
 </main>
 
-<nav class="bottom-nav">
-    <div style="font-size:10px; color:#aaa;">🏠 BERANDA</div>
-    <div style="font-size:10px; color:var(--blue); font-weight:bold;">📋 INPUT</div>
-    <div style="font-size:10px; color:#aaa;">👤 PROFIL</div>
-</nav>
-
 <script>
-    // KONFIGURASI FIREBASE LO
-    const firebaseConfig = {
+    // --- KONFIGURASI DUAL FIREBASE ---
+    const configData = { // Database 1
+        apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs",
+        databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com"
+    };
+    const configGudang = { // Database 2
         apiKey: "AIzaSyDLlsp7eBXRtWXDdnww8TcBrD7iFyfVj-k",
         databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com"
     };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
 
-    let mode = "SETORAN";
+    let currentMode = "SETORAN";
     let target = "Bu Tati";
 
     function switchMode(m) {
-        mode = m;
+        currentMode = m;
+        // Reset Firebase Instance
+        firebase.app().delete().then(() => {
+            firebase.initializeApp(m === 'GUDANG' ? configGudang : configData);
+        });
+
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelector(`.tab[data-mode="${m}"]`).classList.add('active');
-        
+        document.querySelector(`[data-mode="${m}"]`).classList.add('active');
+
         const btn = document.getElementById('btn-main');
-        const gudangArea = document.getElementById('area-gudang');
-        const normalArea = document.getElementById('area-tambahan');
-        const uploadArea = document.getElementById('upload-area');
-        
-        btn.className = "btn-submit"; 
-        btn.innerText = `➤ Kirim ${m}`;
-        
+        const sFoto = document.getElementById('section-foto');
+        const sExtra = document.getElementById('section-extra');
+        const sGudang = document.getElementById('section-gudang');
+
+        btn.className = "btn-submit";
+        btn.innerText = "➤ Kirim " + m;
+
         if(m === 'SETORAN') {
-            document.getElementById('label-foto').innerText = "Bukti Setor";
+            sFoto.classList.remove('hidden'); sExtra.classList.remove('hidden'); sGudang.classList.add('hidden');
             document.getElementById('label-nama').innerText = "Nama Penyetor";
-            gudangArea.classList.add('hidden');
-            normalArea.classList.remove('hidden');
-            uploadArea.classList.remove('hidden');
         } else if(m === 'LAPORAN') {
             btn.classList.add('pink');
-            document.getElementById('label-foto').innerText = "Bukti Laporan";
+            sFoto.classList.remove('hidden'); sExtra.classList.remove('hidden'); sGudang.classList.add('hidden');
             document.getElementById('label-nama').innerText = "Nama Pelapor";
-            gudangArea.classList.add('hidden');
-            normalArea.classList.remove('hidden');
-            uploadArea.classList.remove('hidden');
         } else {
             btn.classList.add('dark');
+            sFoto.classList.add('hidden'); sExtra.classList.add('hidden'); sGudang.classList.remove('hidden');
             document.getElementById('label-nama').innerText = "Nama Barang";
-            gudangArea.classList.remove('hidden');
-            normalArea.classList.add('hidden');
-            uploadArea.classList.add('hidden');
-            btn.innerText = "➤ Simpan Inventaris";
         }
     }
+
+    // Awal inisialisasi
+    firebase.initializeApp(configData);
 
     // Canvas TTD
     const canvas = document.getElementById('canvas-sig');
     const ctx = canvas.getContext('2d');
-    let draw = false;
+    let drawing = false;
+    function resize() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
+    window.onload = resize;
 
-    function initCanvas() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; }
-    window.onload = initCanvas;
-
-    canvas.addEventListener('mousedown', () => draw = true);
+    canvas.addEventListener('mousedown', () => drawing = true);
     canvas.addEventListener('mousemove', (e) => {
-        if(!draw) return;
+        if(!drawing) return;
         const r = canvas.getBoundingClientRect();
         ctx.lineTo(e.clientX - r.left, e.clientY - r.top);
-        ctx.stroke();
+        ctx.lineWidth = 2; ctx.stroke();
     });
-    canvas.addEventListener('mouseup', () => { draw = false; ctx.beginPath(); });
+    canvas.addEventListener('mouseup', () => { drawing = false; ctx.beginPath(); });
     function clearTTD() { ctx.clearRect(0,0,canvas.width,canvas.height); ctx.beginPath(); }
 
+    // Upload Preview
     document.getElementById('file-in').onchange = function(e) {
         const reader = new FileReader();
-        reader.onload = () => { 
+        reader.onload = () => {
             const img = document.getElementById('preview-img');
             img.src = reader.result; img.style.display = 'block';
-            document.getElementById('up-icon').style.display = 'none';
+            document.getElementById('up-placeholder').style.display = 'none';
         }
         reader.readAsDataURL(e.target.files[0]);
-    };
+    }
 
     function setTarget(n) {
         target = n;
@@ -245,19 +207,19 @@
         document.getElementById('t-ami').classList.toggle('active', n === 'Bu Ami');
     }
 
-    async function simpanData() {
+    async function prosesSimpan() {
         const nama = document.getElementById('inp-nama').value;
-        if(!nama) return alert("Mohon isi Nama!");
+        if(!nama) return alert("Isi nama dulu bos!");
 
         const payload = {
             nama: nama,
-            waktu: new Date().toLocaleString(),
-            ttd: canvas.toDataURL()
+            ttd: canvas.toDataURL(),
+            timestamp: Date.now()
         };
 
-        if(mode === 'GUDANG') {
-            payload.tipe = document.getElementById('g-tipe').value;
-            payload.jumlah = document.getElementById('g-qty').value;
+        if(currentMode === 'GUDANG') {
+            payload.tipe = document.getElementById('inp-tipe').value;
+            payload.qty = document.getElementById('inp-qty').value;
         } else {
             payload.tanggal = document.getElementById('inp-tgl').value;
             payload.tujuan = target;
@@ -265,19 +227,17 @@
         }
 
         try {
-            await db.ref(mode.toLowerCase()).push(payload);
-            alert("✅ Berhasil disimpan ke " + mode);
+            await firebase.database().ref(currentMode.toLowerCase()).push(payload);
+            alert("✅ " + currentMode + " Berhasil Terkirim!");
             location.reload();
-        } catch(e) { alert("Gagal Simpan!"); }
+        } catch(e) { alert("Error: " + e.message); }
     }
 
-    function downloadTXT() {
-        const text = `LAPORAN GIBRAN HUB\nMode: ${mode}\nWaktu: ${new Date().toLocaleString()}`;
-        const blob = new Blob([text], {type: 'text/plain'});
+    function downloadData() {
+        const blob = new Blob(["Laporan Gibran Hub"], {type: "text/plain"});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = `Laporan_${mode}.txt`;
-        a.click();
+        a.download = "Laporan.txt"; a.click();
     }
 </script>
 </body>
