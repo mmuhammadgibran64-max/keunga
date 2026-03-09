@@ -3,122 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | GOOGLE STITCH VER</title>
+    <title>GIBRAN HUB | COMPLETE VERSION</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <style>
-        :root { --blue: #3b82f6; --pink: #ff0088; --dark: #0f172a; --bg: #f1f5f9; }
-        body { margin: 0; font-family: 'Rajdhani', sans-serif; background: var(--bg); padding-bottom: 100px; }
+        :root { --blue: #00c3ff; --pink: #ff0088; --dark: #1a1c24; --bg: #f4f7fa; }
+        body { margin: 0; font-family: 'Rajdhani', sans-serif; background: var(--bg); padding-bottom: 110px; }
         
-        /* HEADER */
-        header { background: white; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100; }
-        .header-title { font-family: 'Orbitron'; font-size: 14px; margin: 0; color: var(--dark); }
+        /* HEADER (Style Screen 4/5) */
+        header { background: white; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 100; }
+        .header-title { font-family: 'Orbitron'; font-size: 13px; margin: 0; flex: 1; text-align: center; }
 
         main { padding: 15px; max-width: 500px; margin: auto; }
-        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
 
-        /* INPUTS */
-        label { display: block; font-size: 11px; font-weight: 700; color: #64748b; margin-bottom: 6px; text-transform: uppercase; }
-        .input-pro { width: 100%; padding: 12px; border-radius: 12px; border: 1.5px solid #e2e8f0; background: #f8fafc; font-family: 'Rajdhani'; font-weight: 600; font-size: 14px; margin-bottom: 12px; box-sizing: border-box; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        /* DASHBOARD RINGKASAN (Screen 2 Style) */
+        .grid-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+        .stat-box { padding: 15px; border-radius: 18px; color: white; position: relative; overflow: hidden; }
+        .stat-blue { background: linear-gradient(135deg, #00c3ff, #0084ff); }
+        .stat-pink { background: linear-gradient(135deg, #ff0088, #d40071); }
+        .stat-box h5 { margin: 0; font-size: 10px; opacity: 0.8; text-transform: uppercase; }
+        .stat-box h2 { margin: 5px 0 0; font-size: 18px; font-family: 'Orbitron'; }
 
-        /* DASHBOARD LABA (Sesuai Stitch) */
-        .laba-box { background: linear-gradient(135deg, #1e293b, #0f172a); color: white; padding: 20px; border-radius: 24px; margin-bottom: 20px; }
-        .laba-val { font-family: 'Orbitron'; font-size: 28px; color: #4ade80; margin: 10px 0; }
+        /* INPUTS (Screen 5 Style) */
+        label { display: block; font-size: 11px; font-weight: 700; color: #888; margin-bottom: 6px; text-transform: uppercase; }
+        .input-pro { width: 100%; padding: 12px; border-radius: 12px; border: 1.5px solid #eee; background: #f9f9f9; font-family: 'Rajdhani'; font-weight: 600; font-size: 14px; margin-bottom: 12px; box-sizing: border-box; }
 
-        /* NAVIGASI BAWAH */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #e2e8f0; z-index: 1000; }
-        .nav-item { text-align: center; cursor: pointer; color: #94a3b8; font-size: 10px; font-weight: 700; flex: 1; transition: 0.3s; }
+        /* NAVIGASI BAWAH (Screen 1 Style) */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #eee; z-index: 1000; box-shadow: 0 -4px 15px rgba(0,0,0,0.05); }
+        .nav-item { text-align: center; cursor: pointer; color: #ccc; font-size: 10px; font-weight: 700; flex: 1; }
         .nav-item.active { color: var(--blue); }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
 
-        .btn-main { width: 100%; padding: 16px; border-radius: 16px; border: none; background: var(--blue); color: white; font-weight: 800; font-size: 16px; cursor: pointer; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+        .btn-main { width: 100%; padding: 16px; border-radius: 16px; border: none; background: var(--blue); color: white; font-weight: 800; font-size: 16px; cursor: pointer; }
         .hidden { display: none; }
-        #canvas-sig { border: 1.5px dashed #cbd5e1; border-radius: 12px; background: white; width: 100%; height: 130px; }
+        canvas { border: 1.5px dashed #ccc; border-radius: 12px; width: 100%; height: 130px; background: white; }
     </style>
 </head>
 <body>
 
 <header>
     <button style="border:none; background:none; font-size:20px;" onclick="history.back()">←</button>
-    <h3 id="header-text" class="header-title">SETORAN</h3>
-    <span style="color:var(--blue); font-size:20px;">🔔</span>
+    <h3 id="header-text" class="header-title">BERANDA</h3>
+    <span>🔔</span>
 </header>
 
 <main>
+    <div id="sec-dashboard" class="content-sec">
+        <div class="grid-stats">
+            <div class="stat-box stat-blue">
+                <h5>Total Setoran</h5>
+                <h2 id="sum-setoran">Rp 0</h2>
+            </div>
+            <div class="stat-box stat-pink">
+                <h5>Barang Gudang</h5>
+                <h2 id="sum-gudang">0 Item</h2>
+            </div>
+        </div>
+    </div>
+
     <div id="sec-setoran" class="content-sec">
         <div class="card">
-            <label>Penyetor</label>
+            <label>Nama Pengirim</label>
             <input type="text" id="s-nama" class="input-pro" placeholder="Nama Lengkap">
-            <div class="grid-2">
-                <div><label>Tanggal</label><input type="date" id="s-tgl" class="input-pro"></div>
-                <div><label>Metode</label>
-                    <select id="s-metode" class="input-pro"><option>Cash / Tunai</option><option>Transfer</option></select>
-                </div>
-            </div>
-            <label>Nominal Setoran</label>
-            <input type="number" id="s-nominal" class="input-pro" placeholder="Rp 0">
+            <label>Nominal (Rp)</label>
+            <input type="number" id="s-nominal" class="input-pro" placeholder="0">
             <label>Tanda Tangan</label>
             <canvas id="canvas-sig"></canvas>
-            <p style="text-align:right; color:red; font-size:10px; cursor:pointer;" onclick="clearTTD()">Bersihkan TTD</p>
+            <p style="text-align:right; color:red; font-size:10px; cursor:pointer;" onclick="clearTTD()">Hapus TTD</p>
         </div>
-        <button class="btn-main" onclick="save('setoran')">KIRIM SETORAN</button>
+        <button class="btn-main" onclick="save('setoran')">KIRIM DATA</button>
     </div>
 
     <div id="sec-laporan" class="content-sec hidden">
         <div class="card">
-            <h4 style="margin:0 0 15px; font-family:'Orbitron'; font-size:12px;">DAFTAR TRANSAKSI TERAKHIR</h4>
-            <div id="laporan-list">
-                <p style="text-align:center; color:#999;">Menghubungkan ke database...</p>
+            <h4 style="margin:0 0 15px; font-family:'Orbitron'; font-size:11px;">HISTORI TRANSAKSI</h4>
+            <div id="list-histori">
+                <p style="text-align:center; color:#999;">Memuat data...</p>
             </div>
         </div>
-        <button class="btn-main" style="background:var(--pink);" onclick="getLaporan()">MUAT ULANG DATA</button>
+        <button class="btn-main" style="background:var(--pink);" onclick="getLaporan()">REFRESH LAPORAN</button>
     </div>
 
     <div id="sec-gudang" class="content-sec hidden">
         <div class="card">
-            <label>Nama Barang / Produk</label>
-            <input type="text" id="g-nama" class="input-pro" placeholder="Contoh: Peyek Kacang">
-            <div class="grid-2">
-                <div><label>Kategori</label>
-                    <select id="g-kat" class="input-pro"><option>Makanan</option><option>Minuman</option><option>Lainnya</option></select>
-                </div>
-                <div><label>Stok Saat Ini</label><input type="number" id="g-qty" class="input-pro" placeholder="0"></div>
+            <label>Nama Produk</label>
+            <input type="text" id="g-nama" class="input-pro">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div><label>Stok</label><input type="number" id="g-qty" class="input-pro"></div>
+                <div><label>Harga Jual</label><input type="number" id="g-jual" class="input-pro"></div>
             </div>
-            <div class="grid-2">
-                <div><label>Harga Beli</label><input type="number" id="g-beli" class="input-pro" placeholder="Rp 0"></div>
-                <div><label>Harga Jual</label><input type="number" id="g-jual" class="input-pro" placeholder="Rp 0"></div>
-            </div>
-            <label>Supplier / Vendor</label>
-            <input type="text" id="g-vendor" class="input-pro" placeholder="Nama Supplier">
+            <label>Supplier</label>
+            <input type="text" id="g-vendor" class="input-pro">
         </div>
-        <button class="btn-main" style="background:var(--dark);" onclick="save('gudang')">SIMPAN KE INVENTARIS</button>
+        <button class="btn-main" style="background:var(--dark);" onclick="save('gudang')">UPDATE STOK</button>
     </div>
 
     <div id="sec-pengaturan" class="content-sec hidden">
-        <div class="laba-box">
-            <p style="font-size:10px; opacity:0.8; margin:0;">ESTIMASI LABA BERSIH</p>
-            <h2 class="laba-val" id="disp-laba">Rp 0</h2>
-            <div class="grid-2" style="border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
-                <div><label style="color:#94a3b8;">Penjualan</label><p id="disp-jual" style="margin:0; font-weight:700;">Rp 0</p></div>
-                <div><label style="color:#94a3b8;">HPP</label><p id="disp-hpp" style="margin:0; font-weight:700;">Rp 0</p></div>
-            </div>
+        <div class="card" style="text-align:center; background: var(--dark); color: white;">
+            <p style="font-size:10px; opacity:0.6; margin:0;">SALDO USAHA</p>
+            <h1 id="total-saldo" style="font-family:'Orbitron'; color:var(--blue);">Rp 0</h1>
         </div>
         <div class="card">
             <label>Nama Usaha</label>
             <input type="text" id="p-usaha" class="input-pro" placeholder="Gibran Hub">
-            <label>Nomor WA Admin</label>
+            <label>WhatsApp Admin</label>
             <input type="text" id="p-wa" class="input-pro" value="+62">
-            <button class="btn-main" style="background:var(--orange);" onclick="save('profil')">SIMPAN PERUBAHAN</button>
+            <button class="btn-main" style="background:var(--orange);" onclick="save('profil')">SIMPAN SETTING</button>
         </div>
     </div>
 </main>
 
 <nav class="bottom-nav">
-    <div class="nav-item active" onclick="tab('setoran', this)">💰<br>SETORAN</div>
-    <div class="nav-item" onclick="tab('laporan', this)">📊<br>LAPORAN</div>
-    <div class="nav-item" onclick="tab('gudang', this)">📦<br>GUDANG</div>
-    <div class="nav-item" onclick="tab('pengaturan', this)">⚙️<br>SETTING</div>
+    <div class="nav-item active" onclick="tab('setoran', this)"><i>💰</i>SETORAN</div>
+    <div class="nav-item" onclick="tab('laporan', this)"><i>📊</i>LAPORAN</div>
+    <div class="nav-item" onclick="tab('gudang', this)"><i>📦</i>GUDANG</div>
+    <div class="nav-item" onclick="tab('pengaturan', this)"><i>⚙️</i>SETTING</div>
 </nav>
 
 <script>
@@ -132,34 +133,47 @@
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         el.classList.add('active');
         document.getElementById('header-text').innerText = m.toUpperCase();
+        
+        // Hide all
         document.querySelectorAll('.content-sec').forEach(s => s.classList.add('hidden'));
+        
+        // Logic Tampil (Dashboard Screen 2 muncul pas di Laporan)
+        if(m === 'laporan' || m === 'setoran') document.getElementById('sec-dashboard').classList.remove('hidden');
         document.getElementById('sec-' + m).classList.remove('hidden');
 
         firebase.app().delete().then(() => {
             let c = (m === 'gudang') ? cfgG : (m === 'pengaturan' ? cfgP : cfgS);
             firebase.initializeApp(c);
+            updateStats();
             if(m === 'laporan') getLaporan();
         });
     }
 
-    // FUNGSI LAPORAN AGAR TIDAK KOSONG
+    function updateStats() {
+        // Ambil Ringkasan Angka
+        firebase.database().ref('setoran').once('value', snap => {
+            let total = 0; snap.forEach(c => { total += Number(c.val().nominal || 0); });
+            document.getElementById('sum-setoran').innerText = "Rp " + total.toLocaleString();
+            document.getElementById('total-saldo').innerText = "Rp " + total.toLocaleString();
+        });
+    }
+
     function getLaporan() {
-        const list = document.getElementById('laporan-list');
-        list.innerHTML = "<p style='text-align:center;'>Memuat histori...</p>";
-        firebase.database().ref('setoran').limitToLast(15).once('value', (snap) => {
+        const list = document.getElementById('list-histori');
+        list.innerHTML = "Loading...";
+        firebase.database().ref('setoran').limitToLast(10).once('value', snap => {
             list.innerHTML = "";
-            if(!snap.exists()) { list.innerHTML = "Belum ada transaksi."; return; }
-            snap.forEach((c) => {
+            snap.forEach(c => {
                 const v = c.val();
-                list.innerHTML += `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #eee;">
-                    <span><b>${v.nama || 'User'}</b><br><small>${v.metode || 'Cash'}</small></span>
+                list.innerHTML += `<div style="display:flex; justify-content:space-between; padding:12px; border-bottom:1px solid #eee;">
+                    <span><b>${v.nama}</b><br><small>${new Date(v.time).toLocaleTimeString()}</small></span>
                     <span style="font-weight:bold; color:green;">Rp ${Number(v.nominal).toLocaleString()}</span>
                 </div>`;
             });
         });
     }
 
-    // TTD
+    // TTD Canvas
     const canvas = document.getElementById('canvas-sig');
     const ctx = canvas.getContext('2d');
     let ok = false;
@@ -168,8 +182,7 @@
     canvas.addEventListener('mousemove', (e) => {
         if(!ok) return;
         const r = canvas.getBoundingClientRect();
-        ctx.lineTo(e.clientX - r.left, e.clientY - r.top);
-        ctx.stroke();
+        ctx.lineTo(e.clientX - r.left, e.clientY - r.top); ctx.stroke();
     });
     canvas.addEventListener('mouseup', () => { ok = false; ctx.beginPath(); });
     function clearTTD() { ctx.clearRect(0,0,canvas.width,canvas.height); ctx.beginPath(); }
@@ -180,23 +193,18 @@
         if(type === 'setoran') {
             payload.nama = document.getElementById('s-nama').value;
             payload.nominal = document.getElementById('s-nominal').value;
-            payload.metode = document.getElementById('s-metode').value;
             payload.ttd = canvas.toDataURL();
         } else if(type === 'gudang') {
             payload.nama = document.getElementById('g-nama').value;
             payload.qty = document.getElementById('g-qty').value;
-            payload.beli = document.getElementById('g-beli').value;
-            payload.jual = document.getElementById('g-jual').value;
-        } else if(type === 'profil') {
-            payload.usaha = document.getElementById('p-usaha').value;
-            payload.wa = document.getElementById('p-wa').value;
         }
         try {
             await db.ref(type).push(payload);
-            alert("✅ Sukses!");
-            if(type === 'setoran') location.reload();
+            alert("✅ Berhasil!");
+            location.reload();
         } catch(e) { alert("Error!"); }
     }
+    updateStats(); // Jalankan saat start
 </script>
 </body>
 </html>
