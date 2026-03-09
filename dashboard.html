@@ -1,173 +1,198 @@
-<!DOCTYPE html>
-<html lang="id">
+ <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analytics Pro - Business Intelligence</title>
+    <title>Gibran Hub - Triple System</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        :root { --purple-main: #7c3aed; --bg-dark: #0f0a19; --card-dark: #1a1425; --text-muted: #94a3b8; }
-        body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark); color: white; padding-bottom: 90px; }
+        :root { --purple: #8b5cf6; --dark-bg: #0f0a19; --card-bg: #1a1425; --text: #ffffff; }
+        body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--dark-bg); color: var(--text); padding-bottom: 90px; }
         
-        .header { padding: 25px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .brand { display: flex; align-items: center; gap: 10px; }
-        .logo-box { background: #7c3aed; padding: 8px; border-radius: 10px; }
+        .header { display: flex; align-items: center; padding: 20px; background: #150e21; border-bottom: 1px solid #251b36; position: sticky; top: 0; z-index: 100; }
+        .header h3 { flex: 1; text-align: center; margin: 0; font-size: 16px; font-weight: 800; }
 
-        .container { padding: 0 20px; max-width: 600px; margin: auto; }
-        
-        /* ACTION BUTTONS (Screen 9) */
-        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
-        .btn-opt { background: var(--card-dark); border: 1.5px solid #2d243d; padding: 18px; border-radius: 20px; color: white; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 700; cursor: pointer; font-size: 14px; }
-        .btn-opt.primary { background: #6d28d9; border: none; }
+        .container { padding: 20px; max-width: 500px; margin: auto; }
+        .title-large { color: #c084fc; font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+        .subtitle { color: #94a3b8; font-size: 12px; margin-bottom: 20px; }
 
-        /* OVERVIEW CARDS */
-        .main-card { background: linear-gradient(135deg, #6d28d9, #4c1d95); border-radius: 24px; padding: 25px; margin-bottom: 15px; position: relative; overflow: hidden; }
-        .main-card::after { content: '💵'; position: absolute; right: 20px; top: 20px; opacity: 0.2; font-size: 40px; }
-        
-        .stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
-        .mini-card { background: var(--card-dark); padding: 20px; border-radius: 24px; border: 1.5px solid #2d243d; }
+        label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 10px; color: #cbd5e1; }
 
-        /* CHARTS SECTION */
-        .chart-box { background: var(--card-dark); border-radius: 24px; padding: 20px; border: 1.5px solid #2d243d; margin-bottom: 15px; }
-        .chart-title { font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; color: #cbd5e1; }
+        /* UPLOAD BOX (Screen 6 & 7) */
+        .upload-card { border: 2px dashed #4c1d95; border-radius: 20px; padding: 30px 20px; text-align: center; background: rgba(139, 92, 246, 0.05); margin-bottom: 20px; }
+        .btn-pilih { background: #7c3aed; color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; }
 
-        /* INVENTORY ALERT (Screen 9 bottom) */
-        .alert-box { background: #1a1425; border: 1px solid #2d243d; padding: 20px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; }
+        /* INPUTS */
+        .input-pro { width: 100%; padding: 16px; border-radius: 14px; border: 1.5px solid #2d243d; background: #1a1425; color: white; font-family: inherit; box-sizing: border-box; font-size: 14px; margin-bottom: 15px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-        /* NAVIGASI (Sesuai Screen 9) */
-        .nav { position: fixed; bottom: 0; width: 100%; background: #150e21; display: flex; border-top: 1px solid #251b36; padding: 15px 0; z-index: 1000; }
+        /* TARGET ITEM */
+        .target-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .target-item { padding: 15px; border-radius: 12px; border: 1.5px solid #2d243d; text-align: center; background: #1a1425; cursor: pointer; font-weight: 700; color: #64748b; }
+        .target-item.active { border-color: var(--purple); background: rgba(139, 92, 246, 0.1); color: white; }
+
+        /* CANVAS */
+        .canvas-box { background: #1a1425; border-radius: 18px; border: 1.5px solid #2d243d; margin-bottom: 5px; }
+        #canvas { width: 100%; height: 160px; touch-action: none; }
+        .clear-btn { text-align: right; color: #f43f5e; font-size: 11px; font-weight: 800; cursor: pointer; margin-bottom: 20px; }
+
+        .btn-action { width: 100%; padding: 18px; border-radius: 16px; border: none; background: #7c3aed; color: white; font-weight: 800; font-size: 15px; cursor: pointer; }
+
+        /* NAVIGASI BAWAH (3 Menu) */
+        .nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #150e21; display: flex; border-top: 1px solid #251b36; padding: 15px 0; }
         .nav-item { flex: 1; text-align: center; font-size: 10px; font-weight: 700; color: #4b5563; cursor: pointer; }
-        .nav-item.active { color: #a78bfa; }
-        .nav-item b { font-size: 20px; display: block; margin-bottom: 4px; }
+        .nav-item.active { color: var(--purple); }
+        .nav-item b { font-size: 18px; display: block; margin-bottom: 2px; }
 
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <div class="brand">
-        <div class="logo-box">📊</div>
-        <div>
-            <div style="font-weight: 800; font-size: 14px;">Analytics Pro</div>
-            <div style="font-size: 10px; color: var(--purple-main); font-weight: 700;">BUSINESS INTELLIGENCE</div>
+<header class="header">
+    <div onclick="location.reload()">←</div>
+    <h3 id="head-label">KIRIM SETORAN</h3>
+    <div style="font-size: 18px;">🔔</div>
+</header>
+
+<div class="container">
+    
+    <div id="view-setoran">
+        <h1 class="title-large">Unggah Setoran</h1>
+        <p class="subtitle">Pastikan data setoran Anda sudah benar.</p>
+        <label>Bukti Setor</label>
+        <div class="upload-card">
+            <span style="font-size: 30px; display: block; margin-bottom: 10px;">☁️</span>
+            <button class="btn-pilih">Pilih File Bukti</button>
         </div>
-    </div>
-    <div style="background: #1a1425; padding: 10px; border-radius: 50%;">🔔</div>
-</div>
-
-<div class="container" id="view-home">
-    <h1 style="font-size: 28px; font-weight: 800; margin: 0 0 5px;">Overview</h1>
-    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 25px;">Real-time performance metrics</p>
-
-    <div class="action-grid">
-        <div class="btn-opt primary">🖨️ Cetak Laporan</div>
-        <div class="btn-opt">📥 Download Data</div>
-    </div>
-
-    <div class="main-card">
-        <div style="font-size: 12px; font-weight: 700; color: #e9d5ff;">Total Setoran</div>
-        <div style="font-size: 32px; font-weight: 800; margin: 8px 0;" id="val-setoran">Rp 0</div>
-        <div style="background: rgba(255,255,255,0.1); display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 11px;">+0% vs last month</div>
-    </div>
-
-    <div class="stat-row">
-        <div class="mini-card">
-            <div style="color: var(--text-muted); font-size: 11px; font-weight: 700;">Total Laporan 📄</div>
-            <div style="font-size: 24px; font-weight: 800; margin: 5px 0;" id="val-laporan">0</div>
-            <div style="font-size: 10px; color: #94a3b8;">Laporan baru hari ini</div>
-        </div>
-        <div class="mini-card">
-            <div style="color: var(--text-muted); font-size: 11px; font-weight: 700;">Stok Gudang 📦</div>
-            <div style="font-size: 24px; font-weight: 800; margin: 5px 0;" id="val-gudang">0</div>
-            <div style="font-size: 10px; color: #94a3b8;">Total item tersedia</div>
+        <label>Nama Penyetor</label>
+        <input type="text" id="s-nama" class="input-pro" placeholder="Nama Lengkap">
+        <label>Setor Ke Siapa</label>
+        <div class="target-grid">
+            <div class="target-item active" onclick="setTarget(this, 'Bu Tati')">Bu Tati</div>
+            <div class="target-item" onclick="setTarget(this, 'Bu Ami')">Bu Ami</div>
         </div>
     </div>
 
-    <div class="chart-box">
-        <div class="chart-title">Setoran Volume (Last 7 Days)</div>
-        <canvas id="chartSetoran" style="height: 150px;"></canvas>
-    </div>
-
-    <div class="chart-box">
-        <div class="chart-title">Laporan Activity</div>
-        <div style="text-align: center; color: #4b5563; padding: 40px 0; font-size: 12px;">Waiting for data...</div>
-    </div>
-
-    <div class="alert-box">
-        <div>
-            <div style="font-weight: 800; font-size: 14px;">Inventory Alert</div>
-            <div style="font-size: 12px; color: #94a3b8;">0 items need restocking soon</div>
+    <div id="view-laporan" class="hidden">
+        <h1 class="title-large">Kirim Laporan</h1>
+        <p class="subtitle">Laporkan kejadian harian di sini.</p>
+        <label>Bukti Laporan</label>
+        <div class="upload-card">
+            <span style="font-size: 30px; display: block; margin-bottom: 10px;">📸</span>
+            <button class="btn-pilih">Pilih Foto Laporan</button>
         </div>
-        <div style="background: #1a1425; padding: 12px; border-radius: 50%; border: 1px solid #2d243d;">🔔</div>
+        <label>Nama Pelapor</label>
+        <input type="text" id="l-nama" class="input-pro" placeholder="Nama Pelapor">
+        <label>Lapor Ke Siapa</label>
+        <div class="target-grid">
+            <div class="target-item active" onclick="setTarget(this, 'Bu Tati')">Bu Tati</div>
+            <div class="target-item" onclick="setTarget(this, 'Bu Ami')">Bu Ami</div>
+        </div>
     </div>
+
+    <div id="view-gudang" class="hidden">
+        <h1 class="title-large">Tambah Data Barang</h1>
+        <p class="subtitle">Input stok inventaris baru.</p>
+        <label>Nama Barang</label>
+        <input type="text" id="g-nama" class="input-pro" placeholder="Contoh: Laptop Pro X15">
+        <div class="grid-2">
+            <div><label>Jenis Barang</label>
+                <select id="g-jenis" class="input-pro"><option>Elektronik</option><option>Bahan Baku</option></select>
+            </div>
+            <div><label>Tipe Barang</label>
+                <select id="g-tipe" class="input-pro"><option>Premium</option><option>Standar</option></select>
+            </div>
+        </div>
+        <div class="grid-2">
+            <div><label>Jumlah Barang</label><input type="number" id="g-jumlah" class="input-pro" value="0"></div>
+            <div><label>Stok Barang</label><input type="number" id="g-stok" class="input-pro" value="0"></div>
+        </div>
+    </div>
+
+    <label>Tanda Tangan Digital</label>
+    <div class="canvas-box"><canvas id="canvas"></canvas></div>
+    <div class="clear-btn" onclick="clearSign()">HAPUS TANDA TANGAN</div>
+
+    <button class="btn-action" onclick="sendData()">Simpan & Kirim Sekarang ➔</button>
 </div>
 
 <nav class="nav">
-    <div class="nav-item active"><b>🏠</b>Home</div>
-    <div class="nav-item"><b>💰</b>Setoran</div>
-    <div class="nav-item"><b>📄</b>Laporan</div>
-    <div class="nav-item"><b>📦</b>Inventory</div>
-    <div class="nav-item" onclick="alert('Buka app_input.html untuk Setting')"><b>⚙️</b>Settings</div>
+    <div class="nav-item active" onclick="switchMode('setoran', this)"><b>💰</b>SETORAN</div>
+    <div class="nav-item" onclick="switchMode('laporan', this)"><b>📝</b>LAPORAN</div>
+    <div class="nav-item" onclick="switchMode('gudang', this)"><b>📦</b>GUDANG</div>
 </nav>
 
 <script>
-    // FIREBASE CONFIG (Tetap pakai yang tadi supaya data sinkron)
+    // CONFIG FIREBASE BARU DARI USER
     const firebaseConfig = {
-        apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs",
-        databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com"
+        apiKey: "AIzaSyDLlsp7eBXRtWXDdnww8TcBrD7iFyfVj-k",
+        databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com"
     };
-
-    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // Fungsi Update Angka Real-time
-    function fetchData() {
-        // 1. Ambil Total Setoran
-        db.ref('db_gibran/setoran').on('value', snap => {
-            let total = 0;
-            snap.forEach(c => { total += Number(c.val().nominal || 0); });
-            document.getElementById('val-setoran').innerText = "Rp " + total.toLocaleString('id-ID');
-        });
+    let mode = 'setoran';
+    let targetPerson = 'Bu Tati';
 
-        // 2. Ambil Count Laporan
-        db.ref('db_gibran/laporan').on('value', snap => {
-            document.getElementById('val-laporan').innerText = snap.numChildren();
-        });
-
-        // 3. Ambil Count Gudang
-        db.ref('db_gibran/gudang').on('value', snap => {
-            document.getElementById('val-gudang').innerText = snap.numChildren();
-        });
+    function switchMode(m, el) {
+        mode = m;
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+        
+        document.getElementById('view-setoran').classList.add('hidden');
+        document.getElementById('view-laporan').classList.add('hidden');
+        document.getElementById('view-gudang').classList.add('hidden');
+        
+        document.getElementById('view-' + m).classList.remove('hidden');
+        document.getElementById('head-label').innerText = 'KIRIM ' + m.toUpperCase();
     }
 
-    // Chart.js (Grafik Batang Screen 9)
-    const ctx = document.getElementById('chartSetoran').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Today'],
-            datasets: [{
-                data: [12, 19, 13, 17, 14, 25, 8],
-                backgroundColor: '#7c3aed',
-                borderRadius: 8,
-                barThickness: 15
-            }]
-        },
-        options: {
-            plugins: { legend: { display: false } },
-            scales: {
-                y: { display: false },
-                x: { grid: { display: false }, ticks: { color: '#64748b' } }
-            }
-        }
-    });
+    function setTarget(el, name) {
+        document.querySelectorAll('.target-item').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        targetPerson = name;
+    }
 
-    fetchData();
+    // Canvas Logic
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+    canvas.width = canvas.offsetWidth;
+    canvas.height = 160;
+
+    canvas.addEventListener('mousedown', () => drawing = true);
+    canvas.addEventListener('mousemove', (e) => {
+        if(!drawing) return;
+        const r = canvas.getBoundingClientRect();
+        ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.strokeStyle = '#c084fc';
+        ctx.lineTo(e.clientX - r.left, e.clientY - r.top); ctx.stroke();
+    });
+    canvas.addEventListener('mouseup', () => { drawing = false; ctx.beginPath(); });
+    function clearSign() { ctx.clearRect(0,0,canvas.width,canvas.height); ctx.beginPath(); }
+
+    async function sendData() {
+        let payload = { time: Date.now(), sign: canvas.toDataURL() };
+        
+        if(mode === 'setoran') {
+            payload.nama = document.getElementById('s-nama').value;
+            payload.target = targetPerson;
+        } else if(mode === 'laporan') {
+            payload.nama = document.getElementById('l-nama').value;
+            payload.target = targetPerson;
+        } else {
+            payload.barang = document.getElementById('g-nama').value;
+            payload.stok = document.getElementById('g-stok').value;
+        }
+
+        try {
+            await db.ref('data_' + mode).push(payload);
+            alert('✅ Data ' + mode + ' Berhasil Disimpan!');
+            location.reload();
+        } catch(e) { alert('Gagal!'); }
+    }
 </script>
 </body>
-</html>
