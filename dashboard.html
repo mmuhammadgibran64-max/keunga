@@ -3,172 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | FULL SYSTEM</title>
+    <title>GIBRAN HUB | FULL VERSION</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <style>
-        :root { --blue: #3b82f6; --pink: #ff0088; --orange: #ff6b22; --dark: #0f172a; --bg: #f8fafc; }
-        body { margin: 0; font-family: 'Rajdhani', sans-serif; background: var(--bg); padding-bottom: 90px; }
+        :root { --blue: #00c3ff; --pink: #ff0088; --dark: #1a1c24; --bg: #f4f7fa; }
+        body { margin: 0; font-family: 'Rajdhani', sans-serif; background: var(--bg); padding-bottom: 100px; }
+        header { background: white; padding: 15px 20px; display: flex; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        header h2 { margin: 0; font-size: 14px; flex: 1; text-align: center; font-family: 'Orbitron'; }
         
-        header { background: white; padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0; position: sticky; top: 0; z-index: 100; }
+        main { padding: 20px; max-width: 480px; margin: auto; }
+        .card { background: white; border-radius: 20px; padding: 18px; margin-bottom: 15px; border: 1px solid #eee; }
         
+        /* INPUT STYLE */
+        label { display: block; font-weight: 700; font-size: 11px; color: #888; margin-bottom: 5px; text-transform: uppercase; }
+        .input-pro { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #eee; background: #f9f9f9; font-size: 14px; margin-bottom: 12px; box-sizing: border-box; font-family: 'Rajdhani'; font-weight: 600; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
         /* NAVIGASI BAWAH */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #e2e8f0; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 1000; }
-        .nav-item { text-align: center; cursor: pointer; color: #94a3b8; font-size: 10px; font-weight: 700; flex: 1; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; }
+        .nav-item { text-align: center; cursor: pointer; color: #bbb; font-size: 10px; font-weight: 700; flex: 1; }
         .nav-item.active { color: var(--blue); }
 
-        main { padding: 20px; max-width: 500px; margin: auto; }
-        .card { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #f1f5f9; }
-
-        /* INPUTS */
-        label { display: block; font-size: 11px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase; }
-        .input-pro { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; background: #f8fafc; font-size: 14px; margin-bottom: 15px; box-sizing: border-box; font-family: 'Rajdhani'; font-weight: 600; }
-        
-        /* LIST LAPORAN */
-        .list-item { border-bottom: 1px solid #eee; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; }
-        .list-item:last-child { border: none; }
-
-        .btn-main { width: 100%; padding: 16px; border-radius: 16px; border: none; background: var(--blue); color: white; font-weight: 800; font-size: 16px; cursor: pointer; }
+        .btn-kirim { width: 100%; padding: 16px; border-radius: 15px; border: none; background: var(--blue); color: white; font-weight: bold; font-size: 16px; cursor: pointer; }
         .hidden { display: none; }
+        #canvas-sig { border: 1px dashed #ccc; background: white; width: 100%; height: 120px; border-radius: 10px; }
     </style>
 </head>
 <body>
 
 <header>
     <button style="border:none; background:none; font-size:20px;" onclick="history.back()">←</button>
-    <h3 id="title-header" style="margin:0; font-family:'Orbitron'; font-size:14px;">SETORAN</h3>
-    <span style="color:var(--blue);">🔔</span>
+    <h2 id="header-title">INPUT SETORAN</h2>
+    <span>🔔</span>
 </header>
 
 <main>
     <div id="sec-setoran" class="content-sec">
         <div class="card">
-            <label>Penyetor</label>
-            <input type="text" id="s-nama" class="input-pro" placeholder="Nama Anda">
-            <label>Jumlah (IDR)</label>
-            <input type="number" id="s-jumlah" class="input-pro" placeholder="Rp 0">
-            <label>Tanda Tangan</label>
-            <div style="border:1px dashed #ccc; border-radius:12px; height:120px; background:#fff;">
-                <canvas id="canvas-ttd" style="width:100%; height:100%;"></canvas>
+            <label>Foto Bukti Nota/Uang</label>
+            <input type="file" id="s-foto" class="input-pro" accept="image/*">
+            
+            <label>Nama Penyetor</label>
+            <input type="text" id="s-nama" class="input-pro" placeholder="Nama Lengkap">
+            
+            <div class="grid-2">
+                <div><label>Tanggal</label><input type="date" id="s-tgl" class="input-pro"></div>
+                <div><label>Jam</label><input type="time" id="s-jam" class="input-pro"></div>
             </div>
-            <p style="text-align:right; color:red; font-size:10px; cursor:pointer;" onclick="clearTTD()">Hapus TTD</p>
-        </div>
-        <button class="btn-main" onclick="saveData('setoran')">KIRIM SETORAN</button>
-    </div>
 
-    <div id="sec-laporan" class="content-sec hidden">
-        <div class="card">
-            <h4 style="margin-top:0;">Histori Aktivitas</h4>
-            <div id="list-laporan">
-                <p style="color:#999; text-align:center;">Memuat data...</p>
-            </div>
+            <label>Jumlah Nominal (Rp)</label>
+            <input type="number" id="s-nominal" class="input-pro" placeholder="0">
+            
+            <label>Metode Pembayaran</label>
+            <select id="s-metode" class="input-pro">
+                <option>Tunai / Cash</option>
+                <option>Transfer Bank</option>
+            </select>
+
+            <label>Konfirmasi Tanda Tangan</label>
+            <canvas id="canvas-sig"></canvas>
+            <p style="text-align:right; color:red; font-size:10px; cursor:pointer;" onclick="clearTTD()">Hapus Tanda Tangan</p>
         </div>
-        <button class="btn-main" style="background:var(--pink);" onclick="loadLaporan()">REFRESH DATA</button>
+        <button class="btn-kirim" onclick="saveSemua('setoran')">KIRIM SETORAN SEKARANG</button>
     </div>
 
     <div id="sec-gudang" class="content-sec hidden">
         <div class="card">
-            <label>Nama Barang</label>
-            <input type="text" id="g-nama" class="input-pro">
-            <label>Stok</label>
-            <input type="number" id="g-qty" class="input-pro">
+            <label>Nama Barang / Produk</label>
+            <input type="text" id="g-nama" class="input-pro" placeholder="Nama Produk">
+            
+            <div class="grid-2">
+                <div><label>Kode Barang</label><input type="text" id="g-kode" class="input-pro" placeholder="SKU-001"></div>
+                <div><label>Kategori</label>
+                    <select id="g-kat" class="input-pro">
+                        <option>Elektronik</option><option>Mebel</option><option>Snack</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div><label>Jumlah Stok</label><input type="number" id="g-qty" class="input-pro" placeholder="0"></div>
+                <div><label>Satuan</label><input type="text" id="g-unit" class="input-pro" placeholder="Pcs/Bks"></div>
+            </div>
+
+            <label>Harga Beli (Modal)</label>
+            <input type="number" id="g-beli" class="input-pro" placeholder="Rp">
+            
+            <label>Harga Jual</label>
+            <input type="number" id="g-jual" class="input-pro" placeholder="Rp">
+
+            <label>Nama Supplier / Vendor</label>
+            <input type="text" id="g-vendor" class="input-pro" placeholder="Nama Supplier">
+            
+            <label>Lokasi Rak / Gudang</label>
+            <input type="text" id="g-rak" class="input-pro" placeholder="Contoh: Rak A-1">
         </div>
-        <button class="btn-main" style="background:var(--dark);" onclick="saveData('gudang')">SIMPAN KE GUDANG</button>
+        <button class="btn-kirim" style="background:var(--dark);" onclick="saveSemua('gudang')">SIMPAN KE DATA GUDANG</button>
     </div>
 
     <div id="sec-pengaturan" class="content-sec hidden">
         <div class="card" style="text-align:center;">
-            <div style="width:80px; height:80px; border-radius:50%; background:#eee; margin:0 auto 10px; border:2px solid var(--blue); overflow:hidden;">
-                <img id="p-img" src="https://ui-avatars.com/api/?name=Admin" style="width:100%;">
+            <div style="width:80px; height:80px; border-radius:50%; margin:0 auto 10px; border:3px solid var(--blue); overflow:hidden;">
+                <img id="p-img-prev" src="https://ui-avatars.com/api/?name=Admin" style="width:100%;">
             </div>
-            <label>Nama Bisnis</label>
-            <input type="text" id="p-toko" class="input-pro" placeholder="Gibran Hub">
-            <label>WhatsApp</label>
+            <input type="file" id="p-foto-up" class="input-pro">
+            
+            <label>Nama Toko / Usaha</label>
+            <input type="text" id="p-nama-toko" class="input-pro" placeholder="Gibran Hub">
+            
+            <label>Alamat Lengkap</label>
+            <textarea id="p-alamat" class="input-pro" style="height:60px;"></textarea>
+            
+            <label>Nomor WhatsApp Admin</label>
             <input type="text" id="p-wa" class="input-pro" value="+62">
-            <button class="btn-main" style="background:var(--orange);" onclick="saveData('profil')">UPDATE PROFIL</button>
+            
+            <div class="grid-2">
+                <div><label>Target Bulanan</label><input type="number" id="p-target" class="input-pro" placeholder="Rp"></div>
+                <div><label>Mata Uang</label><input type="text" id="p-curr" class="input-pro" value="IDR"></div>
+            </div>
         </div>
+        <button class="btn-kirim" style="background:var(--pink);" onclick="saveSemua('profil')">SIMPAN PENGATURAN</button>
     </div>
 </main>
 
 <nav class="bottom-nav">
-    <div class="nav-item active" onclick="switchTab('setoran', this)">💰<br>SETORAN</div>
-    <div class="nav-item" onclick="switchTab('laporan', this)">📊<br>LAPORAN</div>
-    <div class="nav-item" onclick="switchTab('gudang', this)">📦<br>GUDANG</div>
-    <div class="nav-item" onclick="switchTab('pengaturan', this)">⚙️<br>SETTING</div>
+    <div class="nav-item active" onclick="pindah('setoran', this)">💰<br>SETORAN</div>
+    <div class="nav-item" onclick="pindah('laporan', this)">📊<br>LAPORAN</div>
+    <div class="nav-item" onclick="pindah('gudang', this)">📦<br>GUDANG</div>
+    <div class="nav-item" onclick="pindah('pengaturan', this)">⚙️<br>SETTING</div>
 </nav>
 
 <script>
-    const cfgUtama = { apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs", databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com" };
-    const cfgGudang = { apiKey: "AIzaSyDLlsp7eBXRtWXDdnww8TcBrD7iFyfVj-k", databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
-    const cfgProfil = { apiKey: "AIzaSyDHZv0Ofds9O3Tyg0PJzjj326eG1hbDhug", databaseURL: "https://nama--profile-default-rtdb.firebaseio.com" };
+    const cfg1 = { apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs", databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com" };
+    const cfg2 = { apiKey: "AIzaSyDLlsp7eBXRtWXDdnww8TcBrD7iFyfVj-k", databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
+    const cfg3 = { apiKey: "AIzaSyDHZv0Ofds9O3Tyg0PJzjj326eG1hbDhug", databaseURL: "https://nama--profile-default-rtdb.firebaseio.com" };
 
-    firebase.initializeApp(cfgUtama);
+    firebase.initializeApp(cfg1);
 
-    function switchTab(mode, el) {
+    function pindah(mode, el) {
         document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
         el.classList.add('active');
-        document.getElementById('title-header').innerText = mode.toUpperCase();
+        document.getElementById('header-title').innerText = "INPUT " + mode.toUpperCase();
 
         document.querySelectorAll('.content-sec').forEach(s => s.classList.add('hidden'));
         document.getElementById('sec-' + mode).classList.remove('hidden');
 
         firebase.app().delete().then(() => {
-            let c = (mode === 'gudang') ? cfgGudang : (mode === 'pengaturan' ? cfgProfil : cfgUtama);
-            firebase.initializeApp(c);
-            if(mode === 'laporan') loadLaporan();
+            let config = (mode === 'gudang') ? cfg2 : (mode === 'pengaturan' ? cfg3 : cfg1);
+            firebase.initializeApp(config);
         });
     }
 
-    // TTD
-    const canvas = document.getElementById('canvas-ttd');
+    // TTD Canvas
+    const canvas = document.getElementById('canvas-sig');
     const ctx = canvas.getContext('2d');
-    let draw = false;
+    let drawing = false;
     canvas.width = canvas.offsetWidth; canvas.height = 120;
-    canvas.addEventListener('mousedown', () => draw = true);
+    canvas.addEventListener('mousedown', () => drawing = true);
     canvas.addEventListener('mousemove', (e) => {
-        if(!draw) return;
-        const r = canvas.getBoundingClientRect();
-        ctx.lineTo(e.clientX - r.left, e.clientY - r.top);
+        if(!drawing) return;
+        const rect = canvas.getBoundingClientRect();
+        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
         ctx.stroke();
     });
-    canvas.addEventListener('mouseup', () => { draw = false; ctx.beginPath(); });
+    canvas.addEventListener('mouseup', () => { drawing = false; ctx.beginPath(); });
     function clearTTD() { ctx.clearRect(0,0,canvas.width,canvas.height); ctx.beginPath(); }
 
-    // LOAD DATA LAPORAN
-    function loadLaporan() {
-        const list = document.getElementById('list-laporan');
-        list.innerHTML = "Memuat data...";
-        firebase.database().ref('setoran').limitToLast(10).once('value', (snap) => {
-            list.innerHTML = "";
-            snap.forEach((child) => {
-                const val = child.val();
-                list.innerHTML += `<div class="list-item">
-                    <span><b>${val.nama || 'User'}</b><br><small>${val.timestamp ? new Date(val.timestamp).toLocaleDateString() : ''}</small></span>
-                    <span style="color:green; font-weight:bold;">Rp ${val.jumlah || 0}</span>
-                </div>`;
-            });
-        });
-    }
-
-    async function saveData(type) {
+    async function saveSemua(type) {
         const db = firebase.database();
-        let d = { timestamp: Date.now() };
+        let payload = { timestamp: Date.now() };
+
         if(type === 'setoran') {
-            d.nama = document.getElementById('s-nama').value;
-            d.jumlah = document.getElementById('s-jumlah').value;
-            d.ttd = canvas.toDataURL();
+            payload.nama = document.getElementById('s-nama').value;
+            payload.nominal = document.getElementById('s-nominal').value;
+            payload.ttd = canvas.toDataURL();
         } else if(type === 'gudang') {
-            d.barang = document.getElementById('g-nama').value;
-            d.qty = document.getElementById('g-qty').value;
+            payload.barang = document.getElementById('g-nama').value;
+            payload.kode = document.getElementById('g-kode').value;
+            payload.stok = document.getElementById('g-qty').value;
+            payload.harga_beli = document.getElementById('g-beli').value;
+            payload.harga_jual = document.getElementById('g-jual').value;
+            payload.supplier = document.getElementById('g-vendor').value;
         } else if(type === 'profil') {
-            d.toko = document.getElementById('p-toko').value;
-            d.wa = document.getElementById('p-wa').value;
+            payload.toko = document.getElementById('p-nama-toko').value;
+            payload.wa = document.getElementById('p-wa').value;
+            payload.alamat = document.getElementById('p-alamat').value;
         }
+
         try {
-            await db.ref(type).push(d);
-            alert("✅ Berhasil!");
-        } catch(e) { alert("Gagal!"); }
+            await db.ref(type).push(payload);
+            alert("✅ BERHASIL! Data Lengkap Tersimpan.");
+        } catch(e) { alert("❌ GAGAL!"); }
     }
 </script>
 </body>
