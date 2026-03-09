@@ -1,189 +1,198 @@
-<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Dashboard | Gibran Hub</title>
+    <title>Gibran Hub - Triple System</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        :root { --purple: #7c3aed; --bg: #0f0a19; --card: #1a1425; --text-muted: #94a3b8; }
-        body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: white; padding: 20px; padding-bottom: 100px; }
+        :root { --purple: #8b5cf6; --dark-bg: #0f0a19; --card-bg: #1a1425; --text: #ffffff; }
+        body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--dark-bg); color: var(--text); padding-bottom: 90px; }
         
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .btn-group { display: flex; gap: 10px; }
-        
-        /* Button Style */
-        .btn { padding: 12px 20px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 8px; }
-        .btn-print { background: var(--purple); color: white; }
-        .btn-dl { background: #2d243d; color: white; border: 1px solid #4c1d95; }
+        .header { display: flex; align-items: center; padding: 20px; background: #150e21; border-bottom: 1px solid #251b36; position: sticky; top: 0; z-index: 100; }
+        .header h3 { flex: 1; text-align: center; margin: 0; font-size: 16px; font-weight: 800; }
 
-        /* Stat Cards */
-        .grid-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
-        .stat-card { background: var(--card); padding: 20px; border-radius: 20px; border: 1px solid #2d243d; }
-        .stat-card h2 { font-size: 24px; margin: 10px 0 0; color: #a78bfa; }
+        .container { padding: 20px; max-width: 500px; margin: auto; }
+        .title-large { color: #c084fc; font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+        .subtitle { color: #94a3b8; font-size: 12px; margin-bottom: 20px; }
 
-        /* Chart Section */
-        .chart-box { background: var(--card); padding: 20px; border-radius: 24px; border: 1px solid #2d243d; margin-bottom: 20px; }
+        label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 10px; color: #cbd5e1; }
 
-        /* Table Section */
-        .section-title { font-size: 16px; font-weight: 800; margin: 25px 0 15px; display: flex; align-items: center; gap: 10px; }
-        .table-wrapper { background: var(--card); border-radius: 20px; border: 1px solid #2d243d; overflow: hidden; margin-bottom: 20px; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; }
-        th { background: #150e21; padding: 15px; text-align: left; color: var(--text-muted); }
-        td { padding: 15px; border-top: 1px solid #251b36; }
+        /* UPLOAD BOX (Screen 6 & 7) */
+        .upload-card { border: 2px dashed #4c1d95; border-radius: 20px; padding: 30px 20px; text-align: center; background: rgba(139, 92, 246, 0.05); margin-bottom: 20px; }
+        .btn-pilih { background: #7c3aed; color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; }
 
-        /* Badge & Image */
-        .badge { padding: 4px 8px; border-radius: 6px; font-weight: 800; font-size: 10px; }
-        .bg-purple { background: rgba(124, 58, 237, 0.1); color: #a78bfa; }
-        .img-ttd { width: 45px; height: 25px; background: white; border-radius: 4px; object-fit: contain; }
+        /* INPUTS */
+        .input-pro { width: 100%; padding: 16px; border-radius: 14px; border: 1.5px solid #2d243d; background: #1a1425; color: white; font-family: inherit; box-sizing: border-box; font-size: 14px; margin-bottom: 15px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-        /* Navigation Bawah */
-        .nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #150e21; display: flex; border-top: 1px solid #251b36; padding: 15px 0; z-index: 1000; }
-        .nav-item { flex: 1; text-align: center; color: #4b5563; text-decoration: none; font-size: 10px; font-weight: 700; }
+        /* TARGET ITEM */
+        .target-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .target-item { padding: 15px; border-radius: 12px; border: 1.5px solid #2d243d; text-align: center; background: #1a1425; cursor: pointer; font-weight: 700; color: #64748b; }
+        .target-item.active { border-color: var(--purple); background: rgba(139, 92, 246, 0.1); color: white; }
+
+        /* CANVAS */
+        .canvas-box { background: #1a1425; border-radius: 18px; border: 1.5px solid #2d243d; margin-bottom: 5px; }
+        #canvas { width: 100%; height: 160px; touch-action: none; }
+        .clear-btn { text-align: right; color: #f43f5e; font-size: 11px; font-weight: 800; cursor: pointer; margin-bottom: 20px; }
+
+        .btn-action { width: 100%; padding: 18px; border-radius: 16px; border: none; background: #7c3aed; color: white; font-weight: 800; font-size: 15px; cursor: pointer; }
+
+        /* NAVIGASI BAWAH (3 Menu) */
+        .nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #150e21; display: flex; border-top: 1px solid #251b36; padding: 15px 0; }
+        .nav-item { flex: 1; text-align: center; font-size: 10px; font-weight: 700; color: #4b5563; cursor: pointer; }
         .nav-item.active { color: var(--purple); }
-        .nav-item b { display: block; font-size: 20px; }
+        .nav-item b { font-size: 18px; display: block; margin-bottom: 2px; }
 
-        /* Print Mode */
-        @media print { .btn-group, .nav { display: none; } body { background: white; color: black; } .stat-card, .chart-box, .table-wrapper { border: 1px solid #ddd; } }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <div>
-        <h1 style="font-size: 22px; margin: 0;">Analytics <span style="color:var(--purple)">Pro</span></h1>
-        <p style="font-size: 11px; color: var(--text-muted); margin: 5px 0 0;">Monitoring Dua Database Aktif</p>
-    </div>
-    <div class="btn-group">
-        <button class="btn btn-print" onclick="window.print()">🖨️ Print</button>
-        <button class="btn btn-dl" onclick="exportData()">📥 Export</button>
-    </div>
-</div>
+<header class="header">
+    <div onclick="location.reload()">←</div>
+    <h3 id="head-label">KIRIM SETORAN</h3>
+    <div style="font-size: 18px;">🔔</div>
+</header>
 
-<div class="grid-stats">
-    <div class="stat-card">
-        <small style="color:var(--text-muted)">TOTAL SETORAN</small>
-        <h2 id="total-setoran">Rp 0</h2>
+<div class="container">
+    
+    <div id="view-setoran">
+        <h1 class="title-large">Unggah Setoran</h1>
+        <p class="subtitle">Pastikan data setoran Anda sudah benar.</p>
+        <label>Bukti Setor</label>
+        <div class="upload-card">
+            <span style="font-size: 30px; display: block; margin-bottom: 10px;">☁️</span>
+            <button class="btn-pilih">Pilih File Bukti</button>
+        </div>
+        <label>Nama Penyetor</label>
+        <input type="text" id="s-nama" class="input-pro" placeholder="Nama Lengkap">
+        <label>Setor Ke Siapa</label>
+        <div class="target-grid">
+            <div class="target-item active" onclick="setTarget(this, 'Bu Tati')">Bu Tati</div>
+            <div class="target-item" onclick="setTarget(this, 'Bu Ami')">Bu Ami</div>
+        </div>
     </div>
-    <div class="stat-card">
-        <small style="color:var(--text-muted)">ITEM GUDANG</small>
-        <h2 id="total-item">0 Items</h2>
+
+    <div id="view-laporan" class="hidden">
+        <h1 class="title-large">Kirim Laporan</h1>
+        <p class="subtitle">Laporkan kejadian harian di sini.</p>
+        <label>Bukti Laporan</label>
+        <div class="upload-card">
+            <span style="font-size: 30px; display: block; margin-bottom: 10px;">📸</span>
+            <button class="btn-pilih">Pilih Foto Laporan</button>
+        </div>
+        <label>Nama Pelapor</label>
+        <input type="text" id="l-nama" class="input-pro" placeholder="Nama Pelapor">
+        <label>Lapor Ke Siapa</label>
+        <div class="target-grid">
+            <div class="target-item active" onclick="setTarget(this, 'Bu Tati')">Bu Tati</div>
+            <div class="target-item" onclick="setTarget(this, 'Bu Ami')">Bu Ami</div>
+        </div>
     </div>
-</div>
 
-<div class="chart-box">
-    <p style="font-size: 13px; font-weight: 800; margin-bottom: 15px;">PERFORMANCE TRENDS</p>
-    <canvas id="mainChart" style="height: 180px;"></canvas>
-</div>
+    <div id="view-gudang" class="hidden">
+        <h1 class="title-large">Tambah Data Barang</h1>
+        <p class="subtitle">Input stok inventaris baru.</p>
+        <label>Nama Barang</label>
+        <input type="text" id="g-nama" class="input-pro" placeholder="Contoh: Laptop Pro X15">
+        <div class="grid-2">
+            <div><label>Jenis Barang</label>
+                <select id="g-jenis" class="input-pro"><option>Elektronik</option><option>Bahan Baku</option></select>
+            </div>
+            <div><label>Tipe Barang</label>
+                <select id="g-tipe" class="input-pro"><option>Premium</option><option>Standar</option></select>
+            </div>
+        </div>
+        <div class="grid-2">
+            <div><label>Jumlah Barang</label><input type="number" id="g-jumlah" class="input-pro" value="0"></div>
+            <div><label>Stok Barang</label><input type="number" id="g-stok" class="input-pro" value="0"></div>
+        </div>
+    </div>
 
-<div class="section-title">💰 Aktivitas Keuangan (DB 1)</div>
-<div class="table-wrapper">
-    <table>
-        <thead>
-            <tr>
-                <th>NAMA</th>
-                <th>TARGET</th>
-                <th>NOMINAL</th>
-                <th>TTD</th>
-            </tr>
-        </thead>
-        <tbody id="table-keuangan"></tbody>
-    </table>
-</div>
+    <label>Tanda Tangan Digital</label>
+    <div class="canvas-box"><canvas id="canvas"></canvas></div>
+    <div class="clear-btn" onclick="clearSign()">HAPUS TANDA TANGAN</div>
 
-<div class="section-title">📦 Inventaris Gudang (DB 2)</div>
-<div class="table-wrapper">
-    <table>
-        <thead>
-            <tr>
-                <th>BARANG</th>
-                <th>TYPE</th>
-                <th>STOK</th>
-                <th>STATUS</th>
-            </tr>
-        </thead>
-        <tbody id="table-gudang"></tbody>
-    </table>
+    <button class="btn-action" onclick="sendData()">Simpan & Kirim Sekarang ➔</button>
 </div>
 
 <nav class="nav">
-    <a href="#" class="nav-item active"><b>🏠</b>Home</a>
-    <a href="#" class="nav-item"><b>💰</b>Setoran</a>
-    <a href="#" class="nav-item"><b>📄</b>Laporan</a>
-    <a href="#" class="nav-item"><b>📦</b>Gudang</a>
-    <a href="#" class="nav-item"><b>⚙️</b>Settings</a>
+    <div class="nav-item active" onclick="switchMode('setoran', this)"><b>💰</b>SETORAN</div>
+    <div class="nav-item" onclick="switchMode('laporan', this)"><b>📝</b>LAPORAN</div>
+    <div class="nav-item" onclick="switchMode('gudang', this)"><b>📦</b>GUDANG</div>
 </nav>
 
 <script>
-    // CONFIG 1: TEMPAT MASUK DATA
-    const conf1 = { databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com" };
-    const app1 = firebase.initializeApp(conf1, "app1");
-    const db1 = firebase.database(app1);
+    // CONFIG FIREBASE BARU DARI USER
+    const firebaseConfig = {
+        apiKey: "AIzaSyDLlsp7eBXRtWXDdnww8TcBrD7iFyfVj-k",
+        databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-    // CONFIG 2: GUDANG BARANG
-    const conf2 = { databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
-    const app2 = firebase.initializeApp(conf2, "app2");
-    const db2 = firebase.database(app2);
+    let mode = 'setoran';
+    let targetPerson = 'Bu Tati';
 
-    // 1. Ambil Data Keuangan
-    db1.ref('db_gibran/setoran').on('value', snap => {
-        const list = document.getElementById('table-keuangan');
-        list.innerHTML = "";
-        let total = 0;
-        snap.forEach(c => {
-            const d = c.val();
-            total += Number(d.nominal || 0);
-            list.innerHTML += `<tr>
-                <td><b>${d.nama}</b></td>
-                <td><span class="badge bg-purple">${d.target}</span></td>
-                <td>Rp ${Number(d.nominal).toLocaleString()}</td>
-                <td><img src="${d.ttd}" class="img-ttd"></td>
-            </tr>`;
-        });
-        document.getElementById('total-setoran').innerText = "Rp " + total.toLocaleString();
+    function switchMode(m, el) {
+        mode = m;
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+        
+        document.getElementById('view-setoran').classList.add('hidden');
+        document.getElementById('view-laporan').classList.add('hidden');
+        document.getElementById('view-gudang').classList.add('hidden');
+        
+        document.getElementById('view-' + m).classList.remove('hidden');
+        document.getElementById('head-label').innerText = 'KIRIM ' + m.toUpperCase();
+    }
+
+    function setTarget(el, name) {
+        document.querySelectorAll('.target-item').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        targetPerson = name;
+    }
+
+    // Canvas Logic
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+    canvas.width = canvas.offsetWidth;
+    canvas.height = 160;
+
+    canvas.addEventListener('mousedown', () => drawing = true);
+    canvas.addEventListener('mousemove', (e) => {
+        if(!drawing) return;
+        const r = canvas.getBoundingClientRect();
+        ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.strokeStyle = '#c084fc';
+        ctx.lineTo(e.clientX - r.left, e.clientY - r.top); ctx.stroke();
     });
+    canvas.addEventListener('mouseup', () => { drawing = false; ctx.beginPath(); });
+    function clearSign() { ctx.clearRect(0,0,canvas.width,canvas.height); ctx.beginPath(); }
 
-    // 2. Ambil Data Gudang
-    db2.ref('stok_gudang').on('value', snap => {
-        const list = document.getElementById('table-gudang');
-        list.innerHTML = "";
-        document.getElementById('total-item').innerText = snap.numChildren() + " Items";
-        snap.forEach(c => {
-            const d = c.val();
-            list.innerHTML += `<tr>
-                <td><b>${d.nama}</b></td>
-                <td>${d.jenis} / ${d.tipe}</td>
-                <td>${d.stok} Qty</td>
-                <td><span class="badge bg-purple">Active</span></td>
-            </tr>`;
-        });
-    });
+    async function sendData() {
+        let payload = { time: Date.now(), sign: canvas.toDataURL() };
+        
+        if(mode === 'setoran') {
+            payload.nama = document.getElementById('s-nama').value;
+            payload.target = targetPerson;
+        } else if(mode === 'laporan') {
+            payload.nama = document.getElementById('l-nama').value;
+            payload.target = targetPerson;
+        } else {
+            payload.barang = document.getElementById('g-nama').value;
+            payload.stok = document.getElementById('g-stok').value;
+        }
 
-    // 3. Setup Chart (Bar)
-    const ctx = document.getElementById('mainChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
-            datasets: [{ data: [10, 25, 15, 30, 20, 45, 35], backgroundColor: '#7c3aed', borderRadius: 6 }]
-        },
-        options: { plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { grid: { display: false } } } }
-    });
-
-    // 4. Fitur Export ke File Manager
-    function exportData() {
-        const data = { report_date: new Date().toLocaleString(), status: "Success" };
-        const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'Laporan_GibranHub.json';
-        a.click();
+        try {
+            await db.ref('data_' + mode).push(payload);
+            alert('✅ Data ' + mode + ' Berhasil Disimpan!');
+            location.reload();
+        } catch(e) { alert('Gagal!'); }
     }
 </script>
 </body>
-</html>
