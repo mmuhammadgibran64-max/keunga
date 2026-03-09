@@ -3,52 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gibran Hub | Master Dashboard v2</title>
+    <title>GIBRAN HUB | PRO DASHBOARD</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
-    
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-
     <style>
-        :root { --blue: #00c3ff; --pink: #ff0088; --orange: #ff6b22; --dark: #1a1c24; --bg: #f4f7fa; --text: #2d3436; }
-        body { margin: 0; font-family: 'Rajdhani', sans-serif; background: var(--bg); color: var(--text); }
-        
-        header { background: white; padding: 15px 20px; display: flex; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; }
-        header h2 { margin: 0; font-size: 16px; flex: 1; text-align: center; font-family: 'Orbitron'; color: var(--dark); }
-
-        main { padding: 20px; max-width: 480px; margin: auto; padding-bottom: 100px; }
+        :root { --blue: #00c3ff; --pink: #ff0088; --orange: #ff6b22; --dark: #1a1c24; --bg: #f4f7fa; }
+        body { margin: 0; font-family: 'Rajdhani', sans-serif; background: var(--bg); padding-bottom: 100px; }
+        header { background: white; padding: 15px 20px; display: flex; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        header h2 { margin: 0; font-size: 14px; flex: 1; text-align: center; font-family: 'Orbitron'; }
+        main { padding: 20px; max-width: 480px; margin: auto; }
 
         /* TAB MENU */
-        .tab-menu { display: flex; gap: 6px; margin-bottom: 20px; overflow-x: auto; padding: 5px 0; }
-        .tab { flex: 0 0 23%; padding: 12px 5px; border-radius: 12px; text-align: center; background: white; border: 1px solid #ddd; cursor: pointer; font-family: 'Orbitron'; font-size: 8px; transition: 0.3s; }
-        .tab.active { border-color: var(--blue); color: var(--blue); background: #f0faff; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .tab-menu { display: flex; gap: 5px; margin-bottom: 20px; overflow-x: auto; }
+        .tab { flex: 0 0 23%; padding: 12px 5px; border-radius: 12px; text-align: center; background: white; border: 1.5px solid #eee; cursor: pointer; font-family: 'Orbitron'; font-size: 8px; }
+        .tab.active { border-color: var(--blue); color: var(--blue); background: #f0faff; }
 
-        /* SECTIONS */
-        .card { background: white; border-radius: 20px; padding: 18px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; }
-        h3 { font-size: 14px; margin-top: 0; display: flex; align-items: center; gap: 8px; color: var(--dark); }
-        
-        label { display: block; font-weight: 700; font-size: 10px; margin-bottom: 6px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; }
-        .input-field { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #eee; background: #f9f9f9; font-size: 14px; margin-bottom: 12px; box-sizing: border-box; font-family: 'Rajdhani'; font-weight: 600; }
-        
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-        
-        /* KHUSUS PENGATURAN STYLE (MIRIP SCREEN 4) */
-        .profile-header { text-align: center; margin-bottom: 20px; }
-        .avatar-box { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--blue); margin: 0 auto 10px; overflow: hidden; position: relative; }
-        .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .laba-card { background: linear-gradient(135deg, #0f172a, #1e293b); color: white; padding: 20px; border-radius: 24px; }
-        .laba-card .amount { font-family: 'Orbitron'; font-size: 28px; margin: 10px 0; }
-        .badge-plus { background: rgba(74, 222, 128, 0.2); color: #4ade80; padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: bold; }
+        /* PROFILE UPLOAD */
+        .profile-section { text-align: center; margin-bottom: 25px; position: relative; }
+        .avatar-wrapper { width: 100px; height: 100px; margin: 0 auto 10px; position: relative; cursor: pointer; }
+        #profile-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--blue); background: #eee; }
+        .cam-icon { position: absolute; bottom: 5px; right: 5px; background: var(--blue); color: white; border-radius: 50%; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 2px solid white; }
 
-        .mini-stat { background: #f8fbff; border: 1px solid #eef2f7; padding: 12px; border-radius: 15px; }
-        .mini-stat span { font-size: 9px; color: #999; font-weight: 800; }
-        .mini-stat div { font-size: 16px; font-weight: bold; color: var(--dark); }
+        /* CARDS & INPUTS */
+        .card { background: white; border-radius: 20px; padding: 18px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        h3 { font-size: 14px; margin: 0 0 15px; display: flex; align-items: center; gap: 8px; color: var(--dark); border-left: 4px solid var(--blue); padding-left: 10px; }
+        label { display: block; font-weight: 700; font-size: 10px; color: #888; margin-bottom: 5px; text-transform: uppercase; }
+        .input-field { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #eee; background: #f9f9f9; font-size: 14px; margin-bottom: 12px; box-sizing: border-box; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
-        /* BUTTONS */
-        .footer-fixed { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px 20px; box-sizing: border-box; display: flex; gap: 10px; border-top: 1px solid #eee; }
-        .btn-main { flex: 1; padding: 16px; border-radius: 15px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; color: white; background: var(--blue); font-family: 'Rajdhani'; }
+        /* LABA CARD */
+        .laba-card { background: #1a1c24; color: white; padding: 20px; border-radius: 20px; margin-bottom: 20px; }
+        .laba-card .val { font-family: 'Orbitron'; font-size: 24px; color: #4ade80; margin: 5px 0; }
 
+        .footer-fixed { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px 20px; box-sizing: border-box; border-top: 1px solid #eee; }
+        .btn-save { width: 100%; padding: 16px; border-radius: 15px; border: none; background: var(--blue); color: white; font-weight: bold; font-size: 16px; cursor: pointer; }
         .hidden { display: none; }
     </style>
 </head>
@@ -56,173 +45,131 @@
 
 <header>
     <button style="border:none; background:none; font-size:20px;" onclick="history.back()">←</button>
-    <h2 id="page-title">GIBRAN HUB</h2>
-    <span style="font-size: 20px;">🔔</span>
+    <h2 id="page-title">PENGATURAN PROFIL</h2>
+    <span>⚙️</span>
 </header>
 
 <main>
     <div class="tab-menu">
-        <div class="tab" data-mode="SETORAN" onclick="switchMode('SETORAN')">💰 SETORAN</div>
-        <div class="tab" data-mode="LAPORAN" onclick="switchMode('LAPORAN')">📊 LAPORAN</div>
-        <div class="tab" data-mode="GUDANG" onclick="switchMode('GUDANG')">📦 GUDANG</div>
-        <div class="tab active" data-mode="PENGATURAN" onclick="switchMode('PENGATURAN')">⚙️ SETTING</div>
-    </div>
-
-    <div id="view-standar" class="hidden">
-        <div class="card">
-            <label id="label-foto">Bukti Foto</label>
-            <input type="file" id="file-in" class="input-field">
-            <label>Nama Lengkap</label>
-            <input type="text" id="inp-nama" class="input-field" placeholder="Masukkan nama...">
-            <label>Tanggal</label>
-            <input type="date" id="inp-tgl" class="input-field">
-            <label>Tujuan</label>
-            <select id="inp-tujuan" class="input-field">
-                <option value="Bu Tati">Bu Tati</option>
-                <option value="Bu Ami">Bu Ami</option>
-            </select>
-        </div>
-    </div>
-
-    <div id="view-gudang" class="hidden">
-        <div class="card">
-            <h3>📦 Input Barang Baru</h3>
-            <label>Nama Barang</label>
-            <input type="text" id="g-nama" class="input-field" placeholder="Contoh: Meja Jati">
-            <label>Tipe Barang</label>
-            <select id="g-tipe" class="input-field">
-                <option value="Mebel">Mebel</option>
-                <option value="Elektronik">Elektronik</option>
-            </select>
-            <label>Jumlah Barang</label>
-            <input type="number" id="g-qty" class="input-field" placeholder="0">
-        </div>
+        <div class="tab" onclick="switchMode('SETORAN')">💰 SETORAN</div>
+        <div class="tab" onclick="switchMode('LAPORAN')">📊 LAPORAN</div>
+        <div class="tab" onclick="switchMode('GUDANG')">📦 GUDANG</div>
+        <div class="tab active" onclick="switchMode('PENGATURAN')">⚙️ SETTING</div>
     </div>
 
     <div id="view-pengaturan">
-        <div class="profile-header">
-            <div class="avatar-box"><img src="https://i.pravatar.cc/150?u=gibran" alt="profile"></div>
-            <h3 style="justify-content: center; margin-bottom: 2px;">Kelola Profil</h3>
-            <p style="font-size: 11px; color: #888; margin: 0;">Update identitas usaha Anda</p>
-        </div>
-
-        <div class="card">
-            <label>Nama Pemilik / Bisnis</label>
-            <input type="text" id="p-owner" class="input-field" placeholder="Nama Bisnis">
-            <label>Nomor WhatsApp</label>
-            <input type="text" id="p-wa" class="input-field" value="+62">
-            <button class="btn-main" style="width: 100%; padding: 12px; font-size: 13px;" onclick="alert('Profil Diupdate!')">Simpan Perubahan</button>
-        </div>
-
-        <h3>🏪 Manajemen Operasional</h3>
-        <div class="card">
-            <label>Catatan Pemasukan Harian</label>
-            <div class="grid-2">
-                <div class="mini-stat"><span>PEYEK (BKS)</span><input type="number" id="p-peyek" class="input-field" value="0" style="margin:0; border:none; padding:5px 0;"></div>
-                <div class="mini-stat"><span>SLONDOK (BKS)</span><input type="number" id="p-slondok" class="input-field" value="0" style="margin:0; border:none; padding:5px 0;"></div>
+        <div class="profile-section">
+            <div class="avatar-wrapper" onclick="document.getElementById('upload-avatar').click()">
+                <img id="profile-img" src="https://ui-avatars.com/api/?name=User&background=00c3ff&color=fff" alt="Avatar">
+                <div class="cam-icon">📷</div>
             </div>
-            <label>Belanja Bahan Baku</label>
+            <input type="file" id="upload-avatar" hidden accept="image/*">
+            <h4 style="margin:0;">Kelola Identitas Usaha</h4>
+        </div>
+
+        <div class="card">
+            <h3>🏢 Info Bisnis & Toko</h3>
+            <label>Nama Usaha / Toko</label>
+            <input type="text" id="p-toko" class="input-field" placeholder="Contoh: Gibran Snack">
+            <label>Alamat Lengkap</label>
+            <textarea id="p-alamat" class="input-field" style="height:60px;"></textarea>
+            <div class="grid-2">
+                <div><label>Jam Buka</label><input type="time" id="p-buka" class="input-field"></div>
+                <div><label>Jam Tutup</label><input type="time" id="p-tutup" class="input-field"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🏪 Manajemen Operasional</h3>
+            <label>Stok Ready Hari Ini</label>
+            <div class="grid-2">
+                <input type="number" id="p-peyek" class="input-field" placeholder="Peyek (Bks)">
+                <input type="number" id="p-slondok" class="input-field" placeholder="Slondok (Bks)">
+            </div>
+            <label>Belanja Bahan Baku (Item)</label>
             <input type="text" id="p-bahan" class="input-field" placeholder="Tepung, Kacang, Minyak...">
-            <label>Biaya Operasional (LPG / Listrik / Bensin)</label>
+            <label>Total Biaya Belanja</label>
+            <input type="number" id="p-biaya-bahan" class="input-field" placeholder="Rp 0">
+        </div>
+
+        <div class="card">
+            <h3>💸 Biaya Rutin & QC</h3>
             <div class="grid-2">
-                <input type="number" id="p-operasional" class="input-field" placeholder="Rp">
-                <select class="input-field"><option>LPG</option><option>Listrik</option><option>Bensin</option></select>
+                <div><label>Listrik/LPG</label><input type="number" id="p-listrik" class="input-field" placeholder="Rp"></div>
+                <div><label>Bensin/Transport</label><input type="number" id="p-bensin" class="input-field" placeholder="Rp"></div>
             </div>
+            <label>Barang Rusak / Retur (Pcs)</label>
+            <input type="number" id="p-rusak" class="input-field" placeholder="Jumlah rusak">
         </div>
 
-        <h3>📊 Laporan & Stok</h3>
         <div class="laba-card">
-            <p style="margin:0; font-size:10px; opacity:0.6;">ESTIMASI LABA BERSIH</p>
-            <div class="amount">Rp 0 <span class="badge-plus">+12%</span></div>
-            <hr style="opacity:0.1;">
-            <div class="grid-2" style="margin-top:15px;">
-                <div><label style="color:white; opacity:0.6;">PENJUALAN</label><div style="font-weight:bold;">Rp 0</div></div>
-                <div><label style="color:white; opacity:0.6;">BEBAN</label><div style="font-weight:bold;">Rp 0</div></div>
-            </div>
-        </div>
-
-        <h3 style="margin-top:20px;">Quality Control & Retur</h3>
-        <div class="grid-2">
-            <div class="card" style="text-align:center; margin-bottom:0; border-bottom: 3px solid var(--pink);">
-                <label style="color:var(--pink);">Rusak/Remuk</label>
-                <input type="number" value="0" style="width:100%; border:none; text-align:center; font-size:24px; font-weight:bold; outline:none;">
-            </div>
-            <div class="card" style="text-align:center; margin-bottom:0; border-bottom: 3px solid var(--orange);">
-                <label style="color:var(--orange);">Kadaluwarsa</label>
-                <input type="number" value="0" style="width:100%; border:none; text-align:center; font-size:24px; font-weight:bold; outline:none;">
-            </div>
+            <p style="margin:0; font-size:10px; opacity:0.7;">ESTIMASI LABA BERSIH</p>
+            <div class="val" id="disp-laba">Rp 0</div>
+            <div style="font-size: 11px; color:#4ade80;">↗ Automatis dikalkulasi sistem</div>
         </div>
     </div>
 </main>
 
 <div class="footer-fixed">
-    <button class="btn-main" id="btn-action" onclick="simpanData()">➤ Simpan Data</button>
+    <button class="btn-save" onclick="simpanProfil()">➤ Simpan Semua Pengaturan</button>
 </div>
 
 <script>
-    // --- FIREBASE CONFIGS ---
-    const configUtama = { apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs", databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com" };
-    const configGudang = { apiKey: "AIzaSyDLlsp7eBXRtWXDdnww8TcBrD7iFyfVj-k", databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
-    
-    // CONFIG PENGATURAN TERBARU (Sesuai Link Lo)
     const configProfil = {
         apiKey: "AIzaSyDHZv0Ofds9O3Tyg0PJzjj326eG1hbDhug",
-        authDomain: "nama--profile.firebaseapp.com",
-        databaseURL: "https://nama--profile-default-rtdb.firebaseio.com",
-        projectId: "nama--profile",
-        storageBucket: "nama--profile.firebasestorage.app",
-        messagingSenderId: "341046321280",
-        appId: "1:341046321280:web:29f9e0ea8dc7ae64198665",
-        measurementId: "G-MNDTQ3X5XJ"
+        databaseURL: "https://nama--profile-default-rtdb.firebaseio.com"
     };
 
-    let currentMode = "PENGATURAN";
-    firebase.initializeApp(configProfil); // Start with Settings
+    firebase.initializeApp(configProfil);
+    const db = firebase.database();
 
-    function switchMode(m) {
-        currentMode = m;
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelector(`[data-mode="${m}"]`).classList.add('active');
-
-        // Toggle Views
-        document.getElementById('view-standar').classList.add('hidden');
-        document.getElementById('view-gudang').classList.add('hidden');
-        document.getElementById('view-pengaturan').classList.add('hidden');
-
-        const btn = document.getElementById('btn-action');
-        if(m === 'SETORAN' || m === 'LAPORAN') {
-            document.getElementById('view-standar').classList.remove('hidden');
-            btn.style.background = m === 'LAPORAN' ? 'var(--pink)' : 'var(--blue)';
-        } else if(m === 'GUDANG') {
-            document.getElementById('view-gudang').classList.remove('hidden');
-            btn.style.background = 'var(--dark)';
-        } else {
-            document.getElementById('view-pengaturan').classList.remove('hidden');
-            btn.style.background = 'var(--orange)';
+    // LOGIKA UPLOAD FOTO PROFIL
+    document.getElementById('upload-avatar').onchange = function(e) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            document.getElementById('profile-img').src = reader.result;
         }
+        reader.readAsDataURL(e.target.files[0]);
+    };
 
-        // Firebase Switch
-        if (firebase.apps.length) firebase.app().delete();
-        let cfg = m === 'GUDANG' ? configGudang : (m === 'PENGATURAN' ? configProfil : configUtama);
-        firebase.initializeApp(cfg);
-    }
-
-    async function simpanData() {
-        const db = firebase.database();
-        let payload = { timestamp: Date.now(), tanggal_input: new Date().toLocaleString() };
+    async function simpanProfil() {
+        const btn = document.querySelector('.btn-save');
+        btn.innerText = "⏳ Sedang Menyimpan...";
+        
+        const data = {
+            foto_profil: document.getElementById('profile-img').src,
+            nama_toko: document.getElementById('p-toko').value,
+            alamat: document.getElementById('p-alamat').value,
+            jam_kerja: document.getElementById('p-buka').value + " - " + document.getElementById('p-tutup').value,
+            stok: {
+                peyek: document.getElementById('p-peyek').value,
+                slondok: document.getElementById('p-slondok').value
+            },
+            biaya: {
+                belanja: document.getElementById('p-biaya-bahan').value,
+                listrik_lpg: document.getElementById('p-listrik').value,
+                bensin: document.getElementById('p-bensin').value
+            },
+            qc_rusak: document.getElementById('p-rusak').value,
+            last_update: new Date().toLocaleString()
+        };
 
         try {
-            if(currentMode === 'PENGATURAN') {
-                payload.peyek = document.getElementById('p-peyek').value;
-                payload.slondok = document.getElementById('p-slondok').value;
-                payload.bahan = document.getElementById('p-bahan').value;
-                await db.ref('pengaturan_bisnis').set(payload);
-            } else {
-                // ... logic simpan setoran/gudang ...
-                await db.ref(currentMode.toLowerCase()).push({ info: "Data Terkirim" });
-            }
-            alert("✅ Berhasil disimpan ke Database!");
-        } catch(e) { alert("Gagal: " + e.message); }
+            await db.ref('profil_bisnis').set(data);
+            alert("✅ Pengaturan Berhasil Disimpan ke Firebase!");
+            btn.innerText = "➤ Simpan Semua Pengaturan";
+        } catch(e) {
+            alert("Gagal Simpan: " + e.message);
+            btn.innerText = "➤ Simpan Semua Pengaturan";
+        }
+    }
+
+    function switchMode(m) {
+        // Karena user minta fokus di Pengaturan, gue bikin fungsi navigasi sederhana
+        if(m !== 'PENGATURAN') {
+            alert("Halaman " + m + " menggunakan database utama. Pindah sekarang?");
+            window.location.href = "dashboard.html?mode=" + m;
+        }
     }
 </script>
 </body>
