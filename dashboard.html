@@ -3,107 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Setoran - Gibran Hub</title>
+    <title>Gibran Hub - Dual System</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <style>
-        :root { --purple: #6d28d9; --dark-bg: #120d1d; --card-bg: #1e162e; --text: #ffffff; }
-        body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--dark-bg); color: var(--text); padding-bottom: 40px; }
+        :root { --purple: #8b5cf6; --dark-bg: #0f0a19; --card-bg: #1a1425; --text: #ffffff; }
+        body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--dark-bg); color: var(--text); padding-bottom: 80px; }
         
+        .header { display: flex; align-items: center; padding: 20px; background: #150e21; border-bottom: 1px solid #251b36; position: sticky; top: 0; z-index: 100; }
+        .header h3 { flex: 1; text-align: center; margin: 0; font-size: 16px; font-weight: 800; letter-spacing: 0.5px; }
+
         .container { padding: 20px; max-width: 500px; margin: auto; }
-        .header { display: flex; align-items: center; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .header h3 { flex: 1; text-align: center; margin: 0; font-size: 18px; }
+        .title-large { color: #c084fc; font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+        .subtitle { color: #94a3b8; font-size: 13px; margin-bottom: 25px; line-height: 1.5; }
 
-        h1.title { color: #a855f7; font-size: 24px; margin-bottom: 5px; }
-        p.subtitle { color: #94a3b8; font-size: 14px; margin-bottom: 25px; }
+        label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 10px; color: #cbd5e1; }
 
-        label { display: block; font-size: 14px; font-weight: 700; margin-bottom: 10px; color: #e2e8f0; }
-
-        /* Upload Box (Screen 6/7) */
-        .upload-area { 
-            border: 2px dashed var(--purple); border-radius: 20px; 
-            padding: 40px 20px; text-align: center; 
-            background: rgba(109, 40, 217, 0.05); margin-bottom: 20px;
-            cursor: pointer; position: relative;
+        /* UPLOAD BOX (Screen 6 & 7) */
+        .upload-card { 
+            border: 2px dashed #4c1d95; border-radius: 20px; 
+            padding: 35px 20px; text-align: center; 
+            background: rgba(139, 92, 246, 0.05); margin-bottom: 20px;
         }
-        .upload-area span { display: block; font-size: 14px; font-weight: 700; color: #a855f7; margin-top: 10px; }
+        .upload-card .icon-up { font-size: 30px; margin-bottom: 10px; display: block; }
+        .btn-pilih { background: #7c3aed; color: white; border: none; padding: 10px 25px; border-radius: 10px; font-weight: 700; cursor: pointer; margin-top: 10px; }
 
-        /* Form Inputs */
-        .input-group { position: relative; margin-bottom: 20px; }
-        .input-group input, .input-group select {
-            width: 100%; padding: 16px; border-radius: 12px; border: 1px solid #332a44;
-            background: #1e162e; color: white; font-family: inherit; box-sizing: border-box; font-size: 15px;
+        /* INPUTS */
+        .input-pro {
+            width: 100%; padding: 16px; border-radius: 14px; border: 1.5px solid #2d243d;
+            background: #1a1425; color: white; font-family: inherit; box-sizing: border-box; font-size: 14px; margin-bottom: 20px;
         }
 
-        /* Pilih Penerima (Screen 6) */
-        .grid-penerima { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .opt-penerima { 
-            padding: 16px; border-radius: 12px; border: 1px solid #332a44; 
-            text-align: center; background: #1e162e; cursor: pointer; font-weight: 700;
+        /* PILIHAN TARGET (Bu Tati / Bu Ami) */
+        .target-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .target-item { 
+            padding: 16px; border-radius: 14px; border: 1.5px solid #2d243d; 
+            text-align: center; background: #1a1425; cursor: pointer; font-weight: 700; color: #64748b;
         }
-        .opt-penerima.active { border-color: var(--purple); background: rgba(109, 40, 217, 0.2); color: #c084fc; }
+        .target-item.active { border-color: var(--purple); background: rgba(139, 92, 246, 0.1); color: white; position: relative; }
+        .target-item.active::after { content: '✓'; position: absolute; right: 12px; top: 12px; font-size: 12px; color: var(--purple); }
 
-        /* Tanda Tangan (Screen 6) */
-        .canvas-container { background: #1e162e; border-radius: 16px; margin-bottom: 10px; position: relative; border: 1px solid #332a44; }
-        #signature-pad { width: 100%; height: 200px; touch-action: none; border-radius: 16px; }
-        .clear-btn { text-align: right; color: #f43f5e; font-size: 12px; font-weight: 700; cursor: pointer; margin-bottom: 20px; }
+        /* CANVAS TTD */
+        .canvas-box { background: #1a1425; border-radius: 18px; border: 1.5px solid #2d243d; margin-bottom: 8px; overflow: hidden; }
+        #canvas { width: 100%; height: 180px; touch-action: none; cursor: crosshair; }
+        .canvas-tools { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .canvas-tools span { font-size: 11px; color: #64748b; font-weight: 600; }
+        .btn-clear { color: #f43f5e; font-size: 11px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
 
-        .btn-submit { 
+        .btn-action { 
             width: 100%; padding: 18px; border-radius: 16px; border: none; 
-            background: var(--purple); color: white; font-weight: 800; font-size: 16px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+            background: #7c3aed; color: white; font-weight: 800; font-size: 15px;
+            cursor: pointer; box-shadow: 0 10px 25px rgba(124, 58, 237, 0.3);
         }
+
+        /* BOTTOM NAV */
+        .nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #150e21; display: flex; border-top: 1px solid #251b36; padding: 12px 0; }
+        .nav-item { flex: 1; text-align: center; font-size: 10px; font-weight: 700; color: #4b5563; cursor: pointer; }
+        .nav-item.active { color: var(--purple); }
+        .nav-item b { font-size: 20px; display: block; margin-bottom: 2px; }
+
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <div onclick="history.back()">←</div>
-    <h3>Kirim Setoran</h3>
-</div>
+<header class="header">
+    <div style="cursor:pointer" onclick="location.reload()">←</div>
+    <h3 id="head-label">KIRIM SETORAN</h3>
+    <div style="opacity:0">→</div>
+</header>
 
 <div class="container">
-    <h1 class="title">Unggah Setoran</h1>
-    <p class="subtitle">Pastikan semua data yang Anda masukkan sudah benar.</p>
-
-    <label>Bukti Setor</label>
-    <div class="upload-area" onclick="document.getElementById('file-input').click()">
-        <img src="https://cdn-icons-png.flaticon.com/512/3097/3097412.png" width="40" style="filter: invert(1);">
-        <span>Unggah Bukti Setor</span>
-        <small style="color: #64748b; font-size: 10px;">JPG, PNG atau PDF (Maks 5MB)</small>
-        <input type="file" id="file-input" hidden>
+    <div id="view-setoran">
+        <h1 class="title-large">Unggah Setoran</h1>
+        <p class="subtitle">Pastikan data setoran tunai/transfer Anda sudah sesuai sebelum dikirim.</p>
+        
+        <label>Bukti Setor</label>
+        <div class="upload-card">
+            <span class="icon-up">☁️</span>
+            <span style="font-size:14px; font-weight:700; display:block">Unggah Bukti Setor</span>
+            <p style="font-size:10px; color:#64748b">Format JPG, PNG atau PDF (Maks 5MB)</p>
+            <button class="btn-pilih">Pilih File</button>
+        </div>
     </div>
 
-    <label>Nama Penyetor</label>
-    <div class="input-group">
-        <input type="text" id="nama" placeholder="Masukkan nama lengkap Anda">
+    <div id="view-laporan" class="hidden">
+        <h1 class="title-large">Kirim Laporan</h1>
+        <p class="subtitle">Laporkan rincian operasional atau kejadian harian di sini.</p>
+        
+        <label>Bukti Laporan</label>
+        <div class="upload-card">
+            <span class="icon-up">📸</span>
+            <span style="font-size:14px; font-weight:700; display:block">Upload Bukti</span>
+            <p style="font-size:10px; color:#64748b">Ketuk untuk mengambil foto dari galeri</p>
+            <button class="btn-pilih">Pilih Foto</button>
+        </div>
     </div>
 
-    <label>Tanggal Setor</label>
-    <div class="input-group">
-        <input type="date" id="tanggal">
-    </div>
+    <label id="lbl-nama">Nama Penyetor</label>
+    <input type="text" id="inp-nama" class="input-pro" placeholder="Masukkan nama lengkap Anda">
 
-    <label>Setor Ke Siapa</label>
-    <div class="grid-penerima">
-        <div class="opt-penerima active" onclick="setPenerima(this, 'Bu Tati')">Bu Tati</div>
-        <div class="opt-penerima" onclick="setPenerima(this, 'Bu Ami')">Bu Ami</div>
+    <label>Tanggal</label>
+    <input type="date" id="inp-tgl" class="input-pro">
+
+    <label id="lbl-target">Setor Ke Siapa</label>
+    <div class="target-grid">
+        <div class="target-item active" onclick="setTarget(this, 'Bu Tati')">Bu Tati</div>
+        <div class="target-item" onclick="setTarget(this, 'Bu Ami')">Bu Ami</div>
     </div>
 
     <label>Tanda Tangan Digital</label>
-    <div class="canvas-container">
-        <canvas id="signature-pad"></canvas>
+    <div class="canvas-box">
+        <canvas id="canvas"></canvas>
     </div>
-    <div class="clear-btn" onclick="clearCanvas()">Hapus Tanda Tangan</div>
+    <div class="canvas-tools">
+        <span>Tanda tangan di atas kotak yang tersedia</span>
+        <div class="btn-clear" onclick="clearSign()">Hapus</div>
+    </div>
 
-    <button class="btn-submit" onclick="submitData()">Kirim Setoran ➤</button>
+    <button class="btn-action" id="btn-submit" onclick="sendData()">Kirim Data Sekarang ➔</button>
+    <p style="text-align:center; font-size:10px; color:#4b5563; margin-top:15px;">Sistem enkripsi 256-bit mengamankan data Anda</p>
 </div>
 
+<nav class="nav">
+    <div class="nav-item active" onclick="switchMode('setoran', this)"><b>💰</b>SETORAN</div>
+    <div class="nav-item" onclick="switchMode('laporan', this)"><b>📝</b>LAPORAN</div>
+    <div class="nav-item"><b>👤</b>PROFIL</div>
+</nav>
+
 <script>
-    // FIREBASE CONFIG SESUAI LINK LO
+    // FIREBASE CONFIG MILIK LO
     const firebaseConfig = {
         apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs",
         authDomain: "tempat-masuk-nya-data.firebaseapp.com",
@@ -115,63 +147,87 @@
     };
 
     firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
+    const db = firebase.database();
 
-    let selectedPenerima = "Bu Tati";
+    let currentMode = 'setoran';
+    let targetPerson = 'Bu Tati';
 
-    function setPenerima(el, name) {
-        document.querySelectorAll('.opt-penerima').forEach(opt => opt.classList.remove('active'));
+    function switchMode(mode, el) {
+        currentMode = mode;
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
         el.classList.add('active');
-        selectedPenerima = name;
+
+        if(mode === 'setoran') {
+            document.getElementById('view-setoran').classList.remove('hidden');
+            document.getElementById('view-laporan').classList.add('hidden');
+            document.getElementById('head-label').innerText = 'KIRIM SETORAN';
+            document.getElementById('lbl-nama').innerText = 'Nama Penyetor';
+            document.getElementById('lbl-target').innerText = 'Setor Ke Siapa';
+            document.getElementById('btn-submit').innerText = 'Kirim Setoran Sekarang ➔';
+        } else {
+            document.getElementById('view-laporan').classList.remove('hidden');
+            document.getElementById('view-setoran').classList.add('hidden');
+            document.getElementById('head-label').innerText = 'KIRIM LAPORAN';
+            document.getElementById('lbl-nama').innerText = 'Nama Pelapor';
+            document.getElementById('lbl-target').innerText = 'Lapor Ke Siapa';
+            document.getElementById('btn-submit').innerText = 'Kirim Laporan Sekarang ➔';
+        }
     }
 
-    // Canvas Logic (TTD)
-    const canvas = document.getElementById('signature-pad');
+    function setTarget(el, name) {
+        document.querySelectorAll('.target-item').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        targetPerson = name;
+    }
+
+    // Canvas Signature
+    const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     let drawing = false;
 
     canvas.width = canvas.offsetWidth;
-    canvas.height = 200;
+    canvas.height = 180;
 
     canvas.addEventListener('mousedown', () => drawing = true);
-    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mousemove', (e) => {
+        if(!drawing) return;
+        const r = canvas.getBoundingClientRect();
+        ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.strokeStyle = '#c084fc';
+        ctx.lineTo(e.clientX - r.left, e.clientY - r.top); ctx.stroke();
+    });
     canvas.addEventListener('mouseup', () => { drawing = false; ctx.beginPath(); });
     canvas.addEventListener('touchstart', (e) => { drawing = true; e.preventDefault(); });
-    canvas.addEventListener('touchmove', (e) => { draw(e.touches[0]); e.preventDefault(); });
+    canvas.addEventListener('touchmove', (e) => { 
+        const r = canvas.getBoundingClientRect();
+        const t = e.touches[0];
+        ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.strokeStyle = '#c084fc';
+        ctx.lineTo(t.clientX - r.left, t.clientY - r.top); ctx.stroke();
+        e.preventDefault(); 
+    });
     canvas.addEventListener('touchend', () => { drawing = false; ctx.beginPath(); });
 
-    function draw(e) {
-        if (!drawing) return;
-        const rect = canvas.getBoundingClientRect();
-        ctx.lineWidth = 3;
-        ctx.lineCap = 'round';
-        ctx.strokeStyle = '#a855f7';
-        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-        ctx.stroke();
-    }
+    function clearSign() { ctx.clearRect(0,0,canvas.width,canvas.height); ctx.beginPath(); }
 
-    function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+    async function sendData() {
+        const name = document.getElementById('inp-nama').value;
+        const date = document.getElementById('inp-tgl').value;
+        const sign = canvas.toDataURL();
 
-    async function submitData() {
-        const nama = document.getElementById('nama').value;
-        const tgl = document.getElementById('tanggal').value;
-        const ttd = canvas.toDataURL();
+        if(!name || !date) return alert('Lengkapi data dulu, Bos!');
 
-        if(!nama || !tgl) { alert("Isi nama dan tanggal dulu, Bro!"); return; }
-
+        const folder = currentMode === 'setoran' ? 'data_setoran' : 'data_laporan';
+        
         try {
-            await database.ref('setoran_data').push({
-                nama: nama,
-                tanggal: tgl,
-                penerima: selectedPenerima,
-                tanda_tangan: ttd,
-                waktu_simpan: Date.now()
+            await db.ref(folder).push({
+                nama: name,
+                tanggal: date,
+                target: targetPerson,
+                tanda_tangan: sign,
+                timestamp: Date.now()
             });
-            alert("✅ Berhasil! Data Setoran dikirim ke " + selectedPenerima);
+            alert('✅ Berhasil Terkirim!');
             location.reload();
-        } catch (e) {
-            alert("Gagal kirim data: " + e.message);
-        }
+        } catch(e) { alert('Gagal: ' + e.message); }
     }
 </script>
 </body>
