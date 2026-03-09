@@ -1,206 +1,198 @@
-<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gibran Hub - Fix Version</title>
+    <title>Gibran Hub - Triple System</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
     <style>
-        :root { --purple: #a855f7; --dark: #0f172a; --card: #1e293b; }
-        body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: white; padding-bottom: 100px; }
+        :root { --purple: #8b5cf6; --dark-bg: #0f0a19; --card-bg: #1a1425; --text: #ffffff; }
+        body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--dark-bg); color: var(--text); padding-bottom: 90px; }
         
-        header { background: #0f172a; padding: 20px; text-align: center; border-bottom: 1px solid #1e293b; position: sticky; top: 0; z-index: 100; }
-        .container { padding: 20px; max-width: 500px; margin: auto; }
+        .header { display: flex; align-items: center; padding: 20px; background: #150e21; border-bottom: 1px solid #251b36; position: sticky; top: 0; z-index: 100; }
+        .header h3 { flex: 1; text-align: center; margin: 0; font-size: 16px; font-weight: 800; }
 
-        /* CARDS */
-        .card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid #334155; }
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .container { padding: 20px; max-width: 500px; margin: auto; }
+        .title-large { color: #c084fc; font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+        .subtitle { color: #94a3b8; font-size: 12px; margin-bottom: 20px; }
+
+        label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 10px; color: #cbd5e1; }
+
+        /* UPLOAD BOX (Screen 6 & 7) */
+        .upload-card { border: 2px dashed #4c1d95; border-radius: 20px; padding: 30px 20px; text-align: center; background: rgba(139, 92, 246, 0.05); margin-bottom: 20px; }
+        .btn-pilih { background: #7c3aed; color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; }
 
         /* INPUTS */
-        label { display: block; font-size: 12px; font-weight: 700; color: #94a3b8; margin-bottom: 8px; text-transform: uppercase; }
-        .input-pro { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #334155; background: #0f172a; color: white; margin-bottom: 15px; box-sizing: border-box; }
+        .input-pro { width: 100%; padding: 16px; border-radius: 14px; border: 1.5px solid #2d243d; background: #1a1425; color: white; font-family: inherit; box-sizing: border-box; font-size: 14px; margin-bottom: 15px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-        /* NAVIGASI */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #0f172a; display: flex; padding: 15px 0; border-top: 1px solid #1e293b; }
-        .nav-item { flex: 1; text-align: center; font-size: 10px; color: #64748b; cursor: pointer; }
-        .nav-item.active { color: var(--purple); font-weight: 800; }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 5px; font-style: normal; }
+        /* TARGET ITEM */
+        .target-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .target-item { padding: 15px; border-radius: 12px; border: 1.5px solid #2d243d; text-align: center; background: #1a1425; cursor: pointer; font-weight: 700; color: #64748b; }
+        .target-item.active { border-color: var(--purple); background: rgba(139, 92, 246, 0.1); color: white; }
 
-        /* TTD */
-        canvas { background: #020617; border-radius: 15px; width: 100%; height: 150px; border: 1px dashed #475569; touch-action: none; }
-        .btn-main { width: 100%; padding: 18px; border-radius: 15px; border: none; background: var(--purple); color: white; font-weight: 800; cursor: pointer; }
-        
+        /* CANVAS */
+        .canvas-box { background: #1a1425; border-radius: 18px; border: 1.5px solid #2d243d; margin-bottom: 5px; }
+        #canvas { width: 100%; height: 160px; touch-action: none; }
+        .clear-btn { text-align: right; color: #f43f5e; font-size: 11px; font-weight: 800; cursor: pointer; margin-bottom: 20px; }
+
+        .btn-action { width: 100%; padding: 18px; border-radius: 16px; border: none; background: #7c3aed; color: white; font-weight: 800; font-size: 15px; cursor: pointer; }
+
+        /* NAVIGASI BAWAH (3 Menu) */
+        .nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #150e21; display: flex; border-top: 1px solid #251b36; padding: 15px 0; }
+        .nav-item { flex: 1; text-align: center; font-size: 10px; font-weight: 700; color: #4b5563; cursor: pointer; }
+        .nav-item.active { color: var(--purple); }
+        .nav-item b { font-size: 18px; display: block; margin-bottom: 2px; }
+
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
-<header>
-    <h3 id="page-title" style="margin:0; font-size:16px; letter-spacing:1px;">HOME DASHBOARD</h3>
+<header class="header">
+    <div onclick="location.reload()">←</div>
+    <h3 id="head-label">KIRIM SETORAN</h3>
+    <div style="font-size: 18px;">🔔</div>
 </header>
 
 <div class="container">
-    <div id="v-home">
-        <div class="card" style="background: linear-gradient(135deg, #6d28d9, #4c1d95);">
-            <label style="color:rgba(255,255,255,0.7)">Total Saldo Setoran</label>
-            <h2 id="total-val" style="font-size:32px; margin:10px 0;">Rp 0</h2>
+    
+    <div id="view-setoran">
+        <h1 class="title-large">Unggah Setoran</h1>
+        <p class="subtitle">Pastikan data setoran Anda sudah benar.</p>
+        <label>Bukti Setor</label>
+        <div class="upload-card">
+            <span style="font-size: 30px; display: block; margin-bottom: 10px;">☁️</span>
+            <button class="btn-pilih">Pilih File Bukti</button>
         </div>
-        <div class="stat-grid">
-            <div class="card">
-                <label>Laporan</label>
-                <h3 id="count-laporan">0</h3>
-            </div>
-            <div class="card">
-                <label>Barang</label>
-                <h3 id="count-gudang">0</h3>
-            </div>
+        <label>Nama Penyetor</label>
+        <input type="text" id="s-nama" class="input-pro" placeholder="Nama Lengkap">
+        <label>Setor Ke Siapa</label>
+        <div class="target-grid">
+            <div class="target-item active" onclick="setTarget(this, 'Bu Tati')">Bu Tati</div>
+            <div class="target-item" onclick="setTarget(this, 'Bu Ami')">Bu Ami</div>
         </div>
     </div>
 
-    <div id="v-setoran" class="hidden">
-        <div class="card">
-            <label>Nama Penyetor</label>
-            <input type="text" id="s-nama" class="input-pro" placeholder="Nama Anda">
-            <label>Jumlah Uang (Rp)</label>
-            <input type="number" id="s-nominal" class="input-pro" placeholder="0">
-            <label>Tanda Tangan</label>
-            <canvas id="can-setoran"></canvas>
-            <p onclick="clearCanvas('can-setoran')" style="text-align:right; color:red; font-size:11px; cursor:pointer;">Hapus TTD</p>
+    <div id="view-laporan" class="hidden">
+        <h1 class="title-large">Kirim Laporan</h1>
+        <p class="subtitle">Laporkan kejadian harian di sini.</p>
+        <label>Bukti Laporan</label>
+        <div class="upload-card">
+            <span style="font-size: 30px; display: block; margin-bottom: 10px;">📸</span>
+            <button class="btn-pilih">Pilih Foto Laporan</button>
         </div>
-        <button class="btn-main" onclick="simpan('setoran')">KIRIM SETORAN</button>
+        <label>Nama Pelapor</label>
+        <input type="text" id="l-nama" class="input-pro" placeholder="Nama Pelapor">
+        <label>Lapor Ke Siapa</label>
+        <div class="target-grid">
+            <div class="target-item active" onclick="setTarget(this, 'Bu Tati')">Bu Tati</div>
+            <div class="target-item" onclick="setTarget(this, 'Bu Ami')">Bu Ami</div>
+        </div>
     </div>
 
-    <div id="v-laporan" class="hidden">
-        <div class="card">
-            <label>Detail Kejadian/Laporan</label>
-            <textarea id="l-teks" class="input-pro" style="height:100px;"></textarea>
-            <label>Tanda Tangan Pelapor</label>
-            <canvas id="can-laporan"></canvas>
-        </div>
-        <button class="btn-main" onclick="simpan('laporan')">KIRIM LAPORAN</button>
-    </div>
-
-    <div id="v-gudang" class="hidden">
-        <div class="card">
-            <label>Nama Barang</label>
-            <input type="text" id="g-item" class="input-pro">
-            <div class="stat-grid">
-                <div><label>Stok</label><input type="number" id="g-stok" class="input-pro"></div>
-                <div><label>Harga</label><input type="number" id="g-harga" class="input-pro"></div>
+    <div id="view-gudang" class="hidden">
+        <h1 class="title-large">Tambah Data Barang</h1>
+        <p class="subtitle">Input stok inventaris baru.</p>
+        <label>Nama Barang</label>
+        <input type="text" id="g-nama" class="input-pro" placeholder="Contoh: Laptop Pro X15">
+        <div class="grid-2">
+            <div><label>Jenis Barang</label>
+                <select id="g-jenis" class="input-pro"><option>Elektronik</option><option>Bahan Baku</option></select>
+            </div>
+            <div><label>Tipe Barang</label>
+                <select id="g-tipe" class="input-pro"><option>Premium</option><option>Standar</option></select>
             </div>
         </div>
-        <button class="btn-main" onclick="simpan('gudang')">UPDATE GUDANG</button>
+        <div class="grid-2">
+            <div><label>Jumlah Barang</label><input type="number" id="g-jumlah" class="input-pro" value="0"></div>
+            <div><label>Stok Barang</label><input type="number" id="g-stok" class="input-pro" value="0"></div>
+        </div>
     </div>
+
+    <label>Tanda Tangan Digital</label>
+    <div class="canvas-box"><canvas id="canvas"></canvas></div>
+    <div class="clear-btn" onclick="clearSign()">HAPUS TANDA TANGAN</div>
+
+    <button class="btn-action" onclick="sendData()">Simpan & Kirim Sekarang ➔</button>
 </div>
 
-<nav class="bottom-nav">
-    <div class="nav-item active" onclick="tab('home', this)"><i>🏠</i>HOME</div>
-    <div class="nav-item" onclick="tab('setoran', this)"><i>💰</i>SETORAN</div>
-    <div class="nav-item" onclick="tab('laporan', this)"><i>📄</i>LAPORAN</div>
-    <div class="nav-item" onclick="tab('gudang', this)"><i>📦</i>GUDANG</div>
+<nav class="nav">
+    <div class="nav-item active" onclick="switchMode('setoran', this)"><b>💰</b>SETORAN</div>
+    <div class="nav-item" onclick="switchMode('laporan', this)"><b>📝</b>LAPORAN</div>
+    <div class="nav-item" onclick="switchMode('gudang', this)"><b>📦</b>GUDANG</div>
 </nav>
 
 <script>
-    // CONFIG TERBARU LO
+    // CONFIG FIREBASE BARU DARI USER
     const firebaseConfig = {
-        apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs",
-        databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com"
+        apiKey: "AIzaSyDLlsp7eBXRtWXDdnww8TcBrD7iFyfVj-k",
+        databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com"
     };
-
-    // Inisialisasi Tunggal (Anti-Error)
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
+    firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // Navigasi Tab
-    function tab(name, el) {
+    let mode = 'setoran';
+    let targetPerson = 'Bu Tati';
+
+    function switchMode(m, el) {
+        mode = m;
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
         el.classList.add('active');
         
-        ['home', 'setoran', 'laporan', 'gudang'].forEach(v => {
-            document.getElementById('v-' + v).classList.add('hidden');
-        });
-        document.getElementById('v-' + name).classList.remove('hidden');
-        document.getElementById('page-title').innerText = name.toUpperCase() + " VIEW";
+        document.getElementById('view-setoran').classList.add('hidden');
+        document.getElementById('view-laporan').classList.add('hidden');
+        document.getElementById('view-gudang').classList.add('hidden');
         
-        if(name === 'home') updateStats();
+        document.getElementById('view-' + m).classList.remove('hidden');
+        document.getElementById('head-label').innerText = 'KIRIM ' + m.toUpperCase();
     }
 
-    // TTD Handler
-    function initCanvas(id) {
-        const cvs = document.getElementById(id);
-        const ctx = cvs.getContext('2d');
-        let draw = false;
-        cvs.width = cvs.offsetWidth; cvs.height = 150;
-
-        cvs.addEventListener('mousedown', () => draw = true);
-        cvs.addEventListener('mousemove', (e) => {
-            if(!draw) return;
-            const r = cvs.getBoundingClientRect();
-            ctx.lineWidth = 3; ctx.strokeStyle = '#a855f7';
-            ctx.lineTo(e.clientX - r.left, e.clientY - r.top); ctx.stroke();
-        });
-        cvs.addEventListener('mouseup', () => { draw = false; ctx.beginPath(); });
-        // Touch for Mobile
-        cvs.addEventListener('touchstart', (e) => { draw = true; e.preventDefault(); });
-        cvs.addEventListener('touchmove', (e) => {
-            const r = cvs.getBoundingClientRect();
-            const t = e.touches[0];
-            ctx.lineTo(t.clientX - r.left, t.clientY - r.top); ctx.stroke();
-            e.preventDefault();
-        });
+    function setTarget(el, name) {
+        document.querySelectorAll('.target-item').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        targetPerson = name;
     }
 
-    function clearCanvas(id) {
-        const cvs = document.getElementById(id);
-        cvs.getContext('2d').clearRect(0,0,cvs.width,cvs.height);
-        cvs.getContext('2d').beginPath();
-    }
+    // Canvas Logic
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+    canvas.width = canvas.offsetWidth;
+    canvas.height = 160;
 
-    initCanvas('can-setoran');
-    initCanvas('can-laporan');
+    canvas.addEventListener('mousedown', () => drawing = true);
+    canvas.addEventListener('mousemove', (e) => {
+        if(!drawing) return;
+        const r = canvas.getBoundingClientRect();
+        ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.strokeStyle = '#c084fc';
+        ctx.lineTo(e.clientX - r.left, e.clientY - r.top); ctx.stroke();
+    });
+    canvas.addEventListener('mouseup', () => { drawing = false; ctx.beginPath(); });
+    function clearSign() { ctx.clearRect(0,0,canvas.width,canvas.height); ctx.beginPath(); }
 
-    // Simpan Data
-    async function simpan(type) {
-        let data = { tgl: Date.now() };
-        if(type === 'setoran') {
-            data.nama = document.getElementById('s-nama').value;
-            data.nominal = document.getElementById('s-nominal').value;
-            data.ttd = document.getElementById('can-setoran').toDataURL();
-        } else if(type === 'laporan') {
-            data.teks = document.getElementById('l-teks').value;
-            data.ttd = document.getElementById('can-laporan').toDataURL();
-        } else if(type === 'gudang') {
-            data.item = document.getElementById('g-item').value;
-            data.stok = document.getElementById('g-stok').value;
+    async function sendData() {
+        let payload = { time: Date.now(), sign: canvas.toDataURL() };
+        
+        if(mode === 'setoran') {
+            payload.nama = document.getElementById('s-nama').value;
+            payload.target = targetPerson;
+        } else if(mode === 'laporan') {
+            payload.nama = document.getElementById('l-nama').value;
+            payload.target = targetPerson;
+        } else {
+            payload.barang = document.getElementById('g-nama').value;
+            payload.stok = document.getElementById('g-stok').value;
         }
 
         try {
-            await db.ref('db_gibran/' + type).push(data);
-            alert("✅ Berhasil dikirim!");
+            await db.ref('data_' + mode).push(payload);
+            alert('✅ Data ' + mode + ' Berhasil Disimpan!');
             location.reload();
-        } catch(e) { alert("Gagal: " + e.message); }
+        } catch(e) { alert('Gagal!'); }
     }
-
-    // Update Dashboard
-    function updateStats() {
-        db.ref('db_gibran/setoran').on('value', snap => {
-            let total = 0; snap.forEach(c => { total += Number(c.val().nominal || 0); });
-            document.getElementById('total-val').innerText = "Rp " + total.toLocaleString();
-        });
-        db.ref('db_gibran/laporan').on('value', snap => {
-            document.getElementById('count-laporan').innerText = snap.numChildren();
-        });
-        db.ref('db_gibran/gudang').on('value', snap => {
-            document.getElementById('count-gudang').innerText = snap.numChildren();
-        });
-    }
-    updateStats();
 </script>
 </body>
-</html>
