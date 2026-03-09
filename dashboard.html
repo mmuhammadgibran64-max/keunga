@@ -3,56 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBRAN HUB | MASTER SYSTEM</title>
+    <title>GIBRAN HUB | FIXED SYSTEM</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <style>
-        :root { --blue: #3b82f6; --pink: #ff0088; --dark: #1a1c24; --orange: #ff6b22; --bg: #f8fbff; --card-bg: #ffffff; }
-        body { margin: 0; font-family: 'Rajdhani', sans-serif; background: var(--bg); padding-bottom: 100px; }
-        header { background: white; padding: 15px 20px; display: flex; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 100; }
-        header h2 { margin: 0; font-size: 14px; flex: 1; text-align: center; font-family: 'Orbitron'; }
-        main { padding: 20px; max-width: 480px; margin: auto; }
-
-        /* TAB MENU UTAMA */
-        .tab-menu { display: flex; gap: 5px; margin-bottom: 20px; overflow-x: auto; }
-        .tab { flex: 0 0 23%; padding: 12px 2px; border-radius: 12px; text-align: center; background: white; border: 1.5px solid #e1e9f0; cursor: pointer; font-family: 'Orbitron'; font-size: 8px; }
-        .tab.active[data-mode="SETORAN"] { border-color: #00c3ff; color: #00c3ff; background: #f0faff; }
-        .tab.active[data-mode="LAPORAN"] { border-color: var(--pink); color: var(--pink); background: #fff0f7; }
-        .tab.active[data-mode="GUDANG"] { border-color: var(--dark); color: var(--dark); background: #f0f0f0; }
-        .tab.active[data-mode="PENGATURAN"] { border-color: var(--blue); color: var(--blue); background: #eff6ff; }
-
-        /* --- STYLE PENGATURAN (IKUT FOTO SCREEN4) --- */
-        .setting-section { text-align: center; margin-bottom: 25px; }
-        .profile-img-container { width: 90px; height: 90px; margin: 0 auto 10px; position: relative; }
-        #profile-pic { width: 100%; height: 100%; border-radius: 50%; border: 3px solid var(--blue); object-fit: cover; }
-        .cam-btn { position: absolute; bottom: 0; right: 0; background: var(--blue); border: 2px solid white; color: white; border-radius: 50%; width: 28px; height: 28px; font-size: 12px; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+        :root { --blue: #00c3ff; --pink: #ff0088; --dark: #1a1c24; --orange: #ff6b22; --bg: #f8fbff; }
+        body { margin: 0; font-family: 'Rajdhani', sans-serif; background: var(--bg); padding-bottom: 110px; }
         
-        .sub-title { font-family: 'Orbitron'; font-size: 14px; margin: 15px 0 10px; display: flex; align-items: center; gap: 8px; color: #334155; }
-        .card-setting { background: white; border-radius: 16px; padding: 15px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-        .label-small { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 6px; display: block; }
-        .input-pro { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; background: #f8fafc; font-family: 'Rajdhani'; font-weight: 600; font-size: 14px; margin-bottom: 10px; box-sizing: border-box; }
+        /* HEADER & NAV */
+        header { background: white; padding: 15px 20px; display: flex; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 999; }
+        header h2 { margin: 0; font-size: 14px; flex: 1; text-align: center; font-family: 'Orbitron'; color: var(--dark); }
         
-        /* Dashboard Laba & Stok */
-        .laba-box { background: linear-gradient(135deg, #0f172a, #1e293b); color: white; padding: 20px; border-radius: 20px; }
-        .laba-val { font-family: 'Orbitron'; font-size: 26px; color: #4ade80; margin: 8px 0; }
-        .mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .box-input { background: #f1f5f9; padding: 10px; border-radius: 12px; border: 1px solid #e2e8f0; }
+        /* NAVIGASI 4 MENU JEJER */
+        .nav-container { display: flex; gap: 4px; padding: 15px; background: white; margin-bottom: 10px; justify-content: space-between; }
+        .nav-btn { flex: 1; padding: 12px 2px; border-radius: 10px; border: 1.5px solid #eee; background: white; font-family: 'Orbitron'; font-size: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; text-align: center; }
+        .nav-btn.active { border-color: var(--blue); color: var(--blue); background: #f0faff; box-shadow: 0 4px 10px rgba(0,195,255,0.1); }
 
-        /* QC Section */
-        .qc-card { text-align: center; border: 1px solid #fee2e2; border-radius: 16px; padding: 15px; }
-        .qc-val { font-size: 28px; font-weight: 800; color: #1e293b; margin: 5px 0; }
+        main { padding: 0 15px; max-width: 480px; margin: auto; }
 
-        /* --- STYLE LAMA (SETORAN/LAPORAN/GUDANG) --- */
-        .upload-box { border: 2px dashed #bde0fe; border-radius: 20px; padding: 25px; text-align: center; background: #f0f7ff; cursor: pointer; }
-        #preview-img { width: 100%; border-radius: 15px; display: none; margin-top: 10px; }
-        .target-card { flex: 1; border: 1.5px solid #e1e9f0; padding: 12px; border-radius: 15px; text-align: center; cursor: pointer; background: #fff; }
-        .target-card.active { border-color: #00c3ff; background: #f0faff; }
-        .sig-box { border: 1px solid #e1e9f0; border-radius: 15px; background: white; height: 140px; }
-        canvas { width: 100%; height: 100%; cursor: crosshair; }
+        /* BOX DESAIN */
+        .card { background: white; border-radius: 18px; padding: 18px; margin-bottom: 15px; border: 1px solid #eee; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        label { display: block; font-weight: 700; font-size: 10px; color: #888; text-transform: uppercase; margin-bottom: 6px; }
+        .input-field { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #eee; background: #f9f9f9; font-family: 'Rajdhani'; font-weight: 600; font-size: 14px; margin-bottom: 12px; box-sizing: border-box; }
 
-        .footer-fixed { position: fixed; bottom: 20px; left: 0; width: 100%; padding: 0 20px; box-sizing: border-box; }
-        .btn-submit { background: #00c3ff; color: white; border: none; padding: 16px; border-radius: 15px; width: 100%; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        /* TARGET CARD (BU TATI/AMI) */
+        .target-box { display: flex; gap: 10px; margin-bottom: 15px; }
+        .target-item { flex: 1; border: 1.5px solid #eee; padding: 12px; border-radius: 15px; text-align: center; cursor: pointer; background: white; }
+        .target-item.active { border-color: var(--blue); background: #f0faff; }
+
+        /* PENGATURAN SPECIAL */
+        .avatar-circle { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--blue); margin: 0 auto 10px; overflow: hidden; position: relative; cursor: pointer; }
+        .avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
+        .laba-hitam { background: #1a1c24; color: white; padding: 20px; border-radius: 20px; margin-bottom: 15px; }
+        .laba-hitam h4 { font-family: 'Orbitron'; font-size: 24px; color: #4ade80; margin: 5px 0; }
+
+        /* FOOTER */
+        .footer { position: fixed; bottom: 0; left: 0; width: 100%; padding: 20px; background: white; border-top: 1px solid #eee; box-sizing: border-box; z-index: 999; }
+        .btn-kirim { width: 100%; padding: 16px; border-radius: 15px; border: none; background: var(--blue); color: white; font-weight: bold; font-size: 16px; cursor: pointer; font-family: 'Rajdhani'; }
+
         .hidden { display: none; }
     </style>
 </head>
@@ -60,172 +49,177 @@
 
 <header>
     <button style="border:none; background:none; font-size:20px;" onclick="history.back()">←</button>
-    <h2 id="page-title">GIBRAN HUB</h2>
-    <span style="color:var(--blue); font-size: 20px;">🔔</span>
+    <h2 id="header-title">DASHBOARD UTAMA</h2>
+    <span>🔔</span>
 </header>
 
+<div class="nav-container">
+    <div class="nav-btn active" id="tab-setoran" onclick="pindahMode('SETORAN')">💰 SETORAN</div>
+    <div class="nav-btn" id="tab-laporan" onclick="pindahMode('LAPORAN')">📊 LAPORAN</div>
+    <div class="nav-btn" id="tab-gudang" onclick="pindahMode('GUDANG')">📦 GUDANG</div>
+    <div class="nav-btn" id="tab-pengaturan" onclick="pindahMode('PENGATURAN')">⚙️ SETTING</div>
+</div>
+
 <main>
-    <div class="tab-menu">
-        <div class="tab active" data-mode="SETORAN" onclick="switchMode('SETORAN')">💰 SETORAN</div>
-        <div class="tab" data-mode="LAPORAN" onclick="switchMode('LAPORAN')">📊 LAPORAN</div>
-        <div class="tab" data-mode="GUDANG" onclick="switchMode('GUDANG')">📦 GUDANG</div>
-        <div class="tab" data-mode="PENGATURAN" onclick="switchMode('PENGATURAN')">⚙️ SETTING</div>
-    </div>
-
-    <div id="view-standar">
-        <label class="label-small">Bukti Foto</label>
-        <div class="upload-box" onclick="document.getElementById('file-in').click()">
-            <span id="up-placeholder">📷 Ambil Foto Bukti</span>
-            <input type="file" id="file-in" hidden accept="image/*">
-            <img id="preview-img">
-        </div>
-        <label class="label-small">Nama Lengkap</label>
-        <input type="text" id="inp-nama" class="input-pro" placeholder="Ketik nama...">
-        <label class="label-small">Tanggal</label>
-        <input type="date" id="inp-tgl" class="input-pro">
-        <div style="display:flex; gap:10px; margin-top:10px;">
-            <div class="target-card active" id="t-tati" onclick="setTarget('Bu Tati')"><p>Bu Tati</p></div>
-            <div class="target-card" id="t-ami" onclick="setTarget('Bu Ami')"><p>Bu Ami</p></div>
+    <div id="box-setlap">
+        <div class="card">
+            <label id="txt-foto">Foto Bukti</label>
+            <input type="file" id="inp-foto" class="input-field" accept="image/*">
+            <img id="prev-img" class="hidden" style="width:100%; border-radius:10px; margin-bottom:10px;">
+            
+            <label>Nama Pengirim</label>
+            <input type="text" id="inp-nama-user" class="input-field" placeholder="Masukkan nama...">
+            
+            <label>Tujuan Setoran</label>
+            <div class="target-box">
+                <div class="target-item active" id="pilih-tati" onclick="setKe('Bu Tati')">Bu Tati</div>
+                <div class="target-item" id="pilih-ami" onclick="setKe('Bu Ami')">Bu Ami</div>
+            </div>
+            
+            <label>Tanggal</label>
+            <input type="date" id="inp-tanggal" class="input-field">
         </div>
     </div>
 
-    <div id="view-gudang" class="hidden">
-        <label class="label-small">Nama Barang</label>
-        <input type="text" id="g-nama" class="input-pro" placeholder="Nama Barang...">
-        <label class="label-small">Tipe Barang</label>
-        <select id="g-tipe" class="input-pro"><option>Elektronik</option><option>Mebel</option></select>
-        <label class="label-small">Jumlah Unit</label>
-        <input type="number" id="g-qty" class="input-pro" placeholder="0">
-    </div>
-
-    <div id="view-pengaturan" class="hidden">
-        <div class="setting-section">
-            <div class="profile-img-container" onclick="document.getElementById('up-profil').click()">
-                <img id="profile-pic" src="https://ui-avatars.com/api/?name=Admin">
-                <div class="cam-btn">📷</div>
-            </div>
-            <input type="file" id="up-profil" hidden accept="image/*">
-            <p style="font-weight:700; margin:5px 0 0;">Kelola Profil</p>
-            <p style="font-size:11px; color:#64748b; margin:0;">Update identitas usaha Anda</p>
-        </div>
-
-        <div class="card-setting">
-            <label class="label-small">Nama Pemilik / Bisnis</label>
-            <input type="text" id="p-nama" class="input-pro" placeholder="Gibran Hub">
-            <label class="label-small">Nomor WhatsApp</label>
-            <input type="text" id="p-wa" class="input-pro" value="+62">
-            <button class="btn-submit" style="font-size:13px; padding:10px;" onclick="simpanConfig()">Simpan Perubahan</button>
-        </div>
-
-        <div class="sub-title">🏪 Manajemen Operasional</div>
-        <div class="card-setting">
-            <label class="label-small">Catatan Pemasukan Harian</label>
-            <div class="mini-grid">
-                <div class="box-input"><label class="label-small" style="color:var(--blue)">Peyek (BKS)</label><input type="number" id="p-stok-peyek" value="0" style="width:100%; border:none; background:none; font-weight:700;"></div>
-                <div class="box-input"><label class="label-small" style="color:var(--blue)">Slondok (BKS)</label><input type="number" id="p-stok-slondok" value="0" style="width:100%; border:none; background:none; font-weight:700;"></div>
-            </div>
-            <label class="label-small" style="margin-top:10px;">Belanja Bahan Baku</label>
-            <input type="text" id="p-belanja" class="input-pro" placeholder="Tepung, Kacang, dll...">
-            <label class="label-small">Biaya Operasional (Listrik/LPG/Bensin)</label>
-            <input type="number" id="p-operasional" class="input-pro" placeholder="Rp 0">
-        </div>
-
-        <div class="sub-title">📊 Laporan & Stok</div>
-        <div class="laba-box">
-            <p style="margin:0; font-size:10px; opacity:0.8;">ESTIMASI LABA BERSIH</p>
-            <div class="laba-val">Rp 0 <span style="font-size:10px; color:#4ade80;">+12%</span></div>
-            <div class="mini-grid" style="margin-top:10px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
-                <div><label class="label-small" style="color:white; opacity:0.6;">Penjualan</label><p style="margin:0; font-weight:700;">Rp 0</p></div>
-                <div><label class="label-small" style="color:white; opacity:0.6;">Beban</label><p style="margin:0; font-weight:700;">Rp 0</p></div>
-            </div>
-        </div>
-
-        <div class="sub-title">Quality Control & Retur</div>
-        <div class="mini-grid">
-            <div class="card-setting qc-card" style="border-left: 4px solid #ef4444;">
-                <label class="label-small" style="color:#ef4444;">Rusak / Remuk</label>
-                <input type="number" id="p-rusak" class="qc-val" value="0" style="width:100%; border:none; text-align:center; background:none;">
-            </div>
-            <div class="card-setting qc-card" style="border-left: 4px solid #f59e0b;">
-                <label class="label-small" style="color:#f59e0b;">Kadaluwarsa</label>
-                <input type="number" id="p-expired" class="qc-val" value="0" style="width:100%; border:none; text-align:center; background:none;">
-            </div>
+    <div id="box-gudang" class="hidden">
+        <div class="card">
+            <label>Nama Barang Baru</label>
+            <input type="text" id="g-nama-barang" class="input-field" placeholder="Nama barang...">
+            <label>Kategori</label>
+            <select id="g-kategori" class="input-field">
+                <option>Elektronik</option>
+                <option>Mebel</option>
+            </select>
+            <label>Jumlah Stok</label>
+            <input type="number" id="g-stok" class="input-field" placeholder="0">
         </div>
     </div>
 
-    <div id="section-ttd">
-        <label class="label-small" style="margin-top:20px;">Tanda Tangan <span style="float:right; color:red;" onclick="clearTTD()">Hapus</span></label>
-        <div class="sig-box"><canvas id="canvas-sig"></canvas></div>
+    <div id="box-setting" class="hidden">
+        <div class="avatar-circle" onclick="document.getElementById('up-avatar').click()">
+            <img id="img-avatar" src="https://ui-avatars.com/api/?name=Admin&background=00c3ff&color=fff">
+            <input type="file" id="up-avatar" hidden>
+        </div>
+        <p style="text-align:center; font-weight:bold; margin-bottom:20px;">Kelola Profil & Operasional</p>
+
+        <div class="card">
+            <label>Nama Pemilik</label>
+            <input type="text" id="set-nama" class="input-field" placeholder="Gibran Hub">
+            <label>WhatsApp</label>
+            <input type="text" id="set-wa" class="input-field" value="+62">
+        </div>
+
+        <div class="laba-hitam">
+            <p style="font-size:10px; margin:0; opacity:0.7;">ESTIMASI LABA BERSIH</p>
+            <h4 id="disp-laba">Rp 0</h4>
+        </div>
+
+        <div class="card">
+            <label>Pemasukan Produk</label>
+            <div style="display:flex; gap:10px;">
+                <input type="number" id="set-peyek" class="input-field" placeholder="Peyek">
+                <input type="number" id="set-slondok" class="input-field" placeholder="Slondok">
+            </div>
+            <label>Biaya Operasional (Listrik/Bensin)</label>
+            <input type="number" id="set-biaya" class="input-field" placeholder="Rp 0">
+        </div>
     </div>
 
-    <div class="footer-fixed">
-        <button class="btn-submit" id="btn-main" onclick="prosesSimpan()">➤ Kirim Data</button>
+    <div id="box-ttd">
+        <label>Tanda Tangan <span style="float:right; color:red;" onclick="hapusTTD()">Hapus</span></label>
+        <div style="border:1px solid #eee; background:white; height:150px; border-radius:15px;">
+            <canvas id="canv"></canvas>
+        </div>
     </div>
 </main>
 
+<div class="footer">
+    <button class="btn-kirim" id="btn-master" onclick="simpanSemua()">➤ SIMPAN DATA SEKARANG</button>
+</div>
+
 <script>
-    // 3 CONFIGS
-    const configUtama = { apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs", databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com" };
-    const configGudang = { apiKey: "AIzaSyDLlsp7eBXRtWXDdnww8TcBrD7iFyfVj-k", databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
-    const configProfil = { 
-        apiKey: "AIzaSyDHZv0Ofds9O3Tyg0PJzjj326eG1hbDhug", 
-        databaseURL: "https://nama--profile-default-rtdb.firebaseio.com" 
-    };
+    // --- KONFIGURASI 3 FIREBASE (TETAP SAMA) ---
+    const cfg1 = { apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs", databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com" };
+    const cfg2 = { apiKey: "AIzaSyDLlsp7eBXRtWXDdnww8TcBrD7iFyfVj-k", databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com" };
+    const cfg3 = { apiKey: "AIzaSyDHZv0Ofds9O3Tyg0PJzjj326eG1hbDhug", databaseURL: "https://nama--profile-default-rtdb.firebaseio.com" };
 
-    let currentMode = "SETORAN"; let target = "Bu Tati";
-    firebase.initializeApp(configUtama);
+    let mode = "SETORAN";
+    let kepada = "Bu Tati";
+    firebase.initializeApp(cfg1);
 
-    function switchMode(m) {
-        currentMode = m;
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelector(`[data-mode="${m}"]`).classList.add('active');
-        
+    function pindahMode(m) {
+        mode = m;
+        // Update Tombol Navigasi
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('tab-' + m.toLowerCase()).classList.add('active');
+        document.getElementById('header-title').innerText = "MENU " + m;
+
+        // Tampilkan/Sembunyikan Box
+        document.getElementById('box-setlap').classList.toggle('hidden', m !== 'SETORAN' && m !== 'LAPORAN');
+        document.getElementById('box-gudang').classList.toggle('hidden', m !== 'GUDANG');
+        document.getElementById('box-setting').classList.toggle('hidden', m !== 'PENGATURAN');
+        document.getElementById('box-ttd').classList.toggle('hidden', m === 'PENGATURAN');
+
+        // Ganti Link Firebase
         firebase.app().delete().then(() => {
-            let cfg = m === 'GUDANG' ? configGudang : (m === 'PENGATURAN' ? configProfil : configUtama);
-            firebase.initializeApp(cfg);
+            let selectedCfg = (m === 'GUDANG') ? cfg2 : (m === 'PENGATURAN' ? cfg3 : cfg1);
+            firebase.initializeApp(selectedCfg);
         });
 
-        document.getElementById('view-standar').classList.toggle('hidden', m !== 'SETORAN' && m !== 'LAPORAN');
-        document.getElementById('view-gudang').classList.toggle('hidden', m !== 'GUDANG');
-        document.getElementById('view-pengaturan').classList.toggle('hidden', m !== 'PENGATURAN');
-        document.getElementById('section-ttd').classList.toggle('hidden', m === 'PENGATURAN');
-
-        const btn = document.getElementById('btn-main');
-        btn.innerText = (m === 'PENGATURAN') ? "➤ Simpan Pengaturan" : "➤ Kirim " + m;
-        btn.style.background = m === 'PENGATURAN' ? '#3b82f6' : (m === 'LAPORAN' ? '#ff0088' : '#00c3ff');
+        // Ganti Warna Tombol
+        const btn = document.getElementById('btn-master');
+        if(m === 'LAPORAN') btn.style.background = '#ff0088';
+        else if(m === 'GUDANG') btn.style.background = '#1a1c24';
+        else if(m === 'PENGATURAN') btn.style.background = '#ff6b22';
+        else btn.style.background = '#00c3ff';
     }
 
-    // TTD Canvas
-    const canvas = document.getElementById('canvas-sig'); const ctx = canvas.getContext('2d'); let draw = false;
-    window.onload = () => { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; };
-    canvas.addEventListener('mousedown', () => draw = true);
-    canvas.addEventListener('mousemove', (e) => { if(!draw) return; const r = canvas.getBoundingClientRect(); ctx.lineTo(e.clientX - r.left, e.clientY - r.top); ctx.stroke(); });
-    canvas.addEventListener('mouseup', () => { draw = false; ctx.beginPath(); });
-    function clearTTD() { ctx.clearRect(0,0,canvas.width,canvas.height); ctx.beginPath(); }
+    // --- LOGIKA TANDA TANGAN ---
+    const canv = document.getElementById('canv'); const ctx = canv.getContext('2d'); let aktif = false;
+    canv.width = canv.offsetWidth; canv.height = 150;
+    canv.addEventListener('mousedown', () => aktif = true);
+    canv.addEventListener('mousemove', (e) => { if(!aktif) return; const r = canv.getBoundingClientRect(); ctx.lineTo(e.clientX - r.left, e.clientY - r.top); ctx.stroke(); });
+    canv.addEventListener('mouseup', () => { aktif = false; ctx.beginPath(); });
+    function hapusTTD() { ctx.clearRect(0,0,canv.width,canv.height); ctx.beginPath(); }
 
-    // Upload & Profil
-    document.getElementById('file-in').onchange = (e) => { 
-        const r = new FileReader(); r.onload = () => { document.getElementById('preview-img').src = r.result; document.getElementById('preview-img').style.display='block'; }; r.readAsDataURL(e.target.files[0]); 
+    // --- LOGIKA GAMBAR ---
+    document.getElementById('inp-foto').onchange = (e) => { 
+        const r = new FileReader(); r.onload = () => { document.getElementById('prev-img').src = r.result; document.getElementById('prev-img').classList.remove('hidden'); }; r.readAsDataURL(e.target.files[0]); 
     };
-    document.getElementById('up-profil').onchange = (e) => { 
-        const r = new FileReader(); r.onload = () => { document.getElementById('profile-pic').src = r.result; }; r.readAsDataURL(e.target.files[0]); 
+    document.getElementById('up-avatar').onchange = (e) => { 
+        const r = new FileReader(); r.onload = () => { document.getElementById('img-avatar').src = r.result; }; r.readAsDataURL(e.target.files[0]); 
     };
 
-    async function prosesSimpan() {
-        const db = firebase.database(); let data = { timestamp: Date.now() };
-        if(currentMode === 'PENGATURAN') {
-            data.nama_bisnis = document.getElementById('p-nama').value;
-            data.wa = document.getElementById('p-wa').value;
-            data.stok = { peyek: document.getElementById('p-stok-peyek').value, slondok: document.getElementById('p-stok-slondok').value };
-            data.operasional = document.getElementById('p-operasional').value;
-            data.qc = { rusak: document.getElementById('p-rusak').value, expired: document.getElementById('p-expired').value };
-            data.foto_profil = document.getElementById('profile-pic').src;
-        } else if(currentMode === 'GUDANG') {
-            data.barang = document.getElementById('g-nama').value; data.ttd = canvas.toDataURL();
-        } else {
-            data.nama = document.getElementById('inp-nama').value; data.foto = document.getElementById('preview-img').src; data.ttd = canvas.toDataURL();
-        }
-        try { await db.ref(currentMode.toLowerCase()).push(data); alert("✅ Berhasil Simpan!"); } catch(e) { alert("Error!"); }
+    function setKe(n) { kepada = n; document.getElementById('pilih-tati').classList.toggle('active', n === 'Bu Tati'); document.getElementById('pilih-ami').classList.toggle('active', n === 'Bu Ami'); }
+
+    // --- PROSES SIMPAN FINAL ---
+    async function simpanSemua() {
+        const db = firebase.database();
+        let payload = { tgl_input: new Date().toLocaleString() };
+
+        try {
+            if(mode === 'PENGATURAN') {
+                payload.nama = document.getElementById('set-nama').value;
+                payload.wa = document.getElementById('set-wa').value;
+                payload.peyek = document.getElementById('set-peyek').value;
+                payload.slondok = document.getElementById('set-slondok').value;
+                payload.foto_profil = document.getElementById('img-avatar').src;
+            } else if(mode === 'GUDANG') {
+                payload.barang = document.getElementById('g-nama-barang').value;
+                payload.stok = document.getElementById('g-stok').value;
+                payload.ttd = canv.toDataURL();
+            } else {
+                payload.user = document.getElementById('inp-nama-user').value;
+                payload.tgl = document.getElementById('inp-tanggal').value;
+                payload.tujuan = kepada;
+                payload.bukti = document.getElementById('prev-img').src;
+                payload.ttd = canv.toDataURL();
+            }
+
+            await db.ref(mode.toLowerCase()).push(payload);
+            alert("✅ BERHASIL! Data Masuk ke Firebase " + mode);
+            location.reload();
+        } catch(e) { alert("❌ GAGAL: " + e.message); }
     }
 </script>
 </body>
