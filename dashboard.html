@@ -1284,6 +1284,187 @@
   </div>
 </div>
 
+<!-- ===================== PAGE: ABSEN ===================== -->
+<div class="page" id="page-absen">
+  <div class="topbar">
+    <div class="back-btn" onclick="showPage('dashboard')">
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+    </div>
+    <div class="topbar-title">Absen & Jualan Hari Ini</div>
+    <div class="topbar-right">
+      <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+    </div>
+  </div>
+
+  <div class="scroll-content" style="padding-bottom:160px;">
+
+    <!-- FOTO ABSEN -->
+    <div onclick="document.getElementById('fotoAbsenInput').click()" id="fotoAbsenBox"
+      style="background:var(--card);border:1.5px solid var(--border);border-radius:20px;padding:32px 20px;display:flex;flex-direction:column;align-items:center;gap:14px;margin-bottom:20px;cursor:pointer;transition:border-color 0.2s;overflow:hidden;position:relative;">
+      <img id="fotoAbsenPreview" src="" style="display:none;width:100%;max-height:240px;object-fit:cover;border-radius:14px;">
+      <div id="fotoAbsenContent" style="display:flex;flex-direction:column;align-items:center;gap:14px;">
+        <div style="width:80px;height:80px;background:var(--purple);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px rgba(124,58,237,0.5);">
+          <svg width="36" height="36" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><circle cx="12" cy="13" r="3"/></svg>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:17px;font-weight:800;">Ambil Foto Absen</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:4px;">Pastikan wajah terlihat jelas</div>
+        </div>
+      </div>
+    </div>
+    <input type="file" id="fotoAbsenInput" accept="image/*" capture="user" style="display:none" onchange="handleFotoAbsen(this)">
+
+    <!-- JAM BERANGKAT & PULANG -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;">
+      <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px;">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="var(--purple-light)" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span style="font-size:10px;font-weight:800;letter-spacing:1px;color:var(--purple-light);">JAM BERANGKAT</span>
+        </div>
+        <div id="jamBerangkat" style="font-size:26px;font-weight:800;">--:--</div>
+        <button onclick="setJamBerangkat()" id="btnBerangkat" style="margin-top:10px;background:var(--purple-dim);border:1px solid var(--border);border-radius:8px;padding:6px 12px;color:var(--purple-light);font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;width:100%;">Tandai Berangkat</button>
+      </div>
+      <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px;">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="var(--text3)" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+          <span style="font-size:10px;font-weight:800;letter-spacing:1px;color:var(--text3);">JAM PULANG</span>
+        </div>
+        <div id="jamPulang" style="font-size:26px;font-weight:800;color:var(--text3);">--:--</div>
+        <button onclick="setJamPulang()" id="btnPulang" style="margin-top:10px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 12px;color:var(--text3);font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;width:100%;">Tandai Pulang</button>
+      </div>
+    </div>
+
+    <!-- HASIL JUALAN -->
+    <div style="font-size:17px;font-weight:800;margin-bottom:14px;">Hasil Jualan Hari Ini</div>
+
+    <!-- TOMBOL PILIH PRODUK -->
+    <div onclick="openProdukPicker()" style="background:var(--card);border:1.5px dashed var(--border);border-radius:16px;padding:18px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;margin-bottom:16px;transition:border-color 0.2s;" id="btnPilihProduk">
+      <div style="width:44px;height:44px;background:var(--purple-dim);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="var(--purple-light)" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path stroke-linecap="round" stroke-linejoin="round" d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:14px;font-weight:700;">Pilih Produk yang Laku</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:2px;">Klik untuk menambah item jualan</div>
+      </div>
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="var(--text3)" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+    </div>
+
+    <!-- PRODUK LIST -->
+    <div id="produkList">
+      <!-- empty state -->
+      <div id="produkEmpty" style="display:flex;flex-direction:column;align-items:center;padding:24px 0;gap:10px;">
+        <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="var(--text3)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+        <div style="font-size:13px;color:var(--text3);">Belum ada produk yang dipilih</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM STICKY: TOTAL + SIMPAN -->
+  <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--bg2);border-top:1px solid var(--border);z-index:100;">
+    <!-- Total row -->
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px 10px;">
+      <span style="font-size:14px;color:var(--text2);font-weight:600;">Total Laku Hari Ini</span>
+      <span id="totalLaku" style="font-size:16px;font-weight:800;color:var(--purple-light);">Rp 0</span>
+    </div>
+    <!-- Nav tabs -->
+    <div style="display:flex;border-top:1px solid var(--border);">
+      <div class="nav-item" onclick="showPage('dashboard')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Home
+      </div>
+      <div class="nav-item active">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><circle cx="12" cy="13" r="3"/></svg>
+        Absen
+      </div>
+      <div class="nav-item" onclick="showPage('riwayat-absen')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Riwayat
+      </div>
+      <div class="nav-item" onclick="showToast('Profil segera hadir','info')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Profil
+      </div>
+    </div>
+    <!-- Simpan button -->
+    <div style="padding:0 20px 16px;">
+      <button class="submit-btn" id="btnSimpanAbsen" onclick="simpanAbsenJualan()" style="margin-bottom:0;">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+        <span id="btnSimpanAbsenText">Simpan Absen & Jualan</span>
+        <div class="spinner" id="spinnerAbsen"></div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: PILIH PRODUK ===================== -->
+<div id="modalProduk" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);">
+  <div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--bg2);border-radius:24px 24px 0 0;border-top:1px solid var(--border);max-height:80vh;display:flex;flex-direction:column;">
+    <!-- Header -->
+    <div style="padding:20px 20px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);">
+      <div style="font-size:16px;font-weight:800;">Tambah Produk</div>
+      <div onclick="closeModal()" style="width:32px;height:32px;background:var(--card);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </div>
+    </div>
+    <!-- Form tambah manual -->
+    <div style="padding:16px 20px;border-bottom:1px solid var(--border);">
+      <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:10px;">TAMBAH PRODUK BARU</div>
+      <div style="display:flex;gap:8px;margin-bottom:8px;">
+        <input type="text" id="newProdukNama" class="input-field" placeholder="Nama produk..." style="flex:2;padding:10px 12px;font-size:13px;">
+        <input type="number" id="newProdukHarga" class="input-field" placeholder="Harga (Rp)" style="flex:1.5;padding:10px 12px;font-size:13px;" min="0">
+      </div>
+      <button onclick="addProdukToList()" style="width:100%;background:var(--purple);border:none;border-radius:10px;padding:11px;color:white;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Tambah Produk
+      </button>
+    </div>
+    <!-- Produk tersimpan -->
+    <div style="padding:14px 20px 8px;">
+      <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:10px;">PRODUK TERSIMPAN</div>
+    </div>
+    <div id="savedProdukList" style="overflow-y:auto;padding:0 20px 24px;flex:1;">
+      <div style="text-align:center;padding:20px;color:var(--text3);font-size:13px;" id="savedProdukEmpty">Belum ada produk tersimpan</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PAGE: RIWAYAT ABSEN ===================== -->
+<div class="page" id="page-riwayat-absen">
+  <div class="topbar">
+    <div class="back-btn" onclick="showPage('absen')">
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+    </div>
+    <div class="topbar-title">Riwayat Absen & Jualan</div>
+    <div style="width:36px"></div>
+  </div>
+  <div class="scroll-content" style="padding-bottom:80px;">
+    <div id="riwayatList">
+      <div style="text-align:center;padding:40px 20px;color:var(--text3);">
+        <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" style="margin:0 auto 12px;display:block;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Memuat riwayat...
+      </div>
+    </div>
+  </div>
+  <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:var(--bg2);border-top:1px solid var(--border);display:flex;z-index:100;">
+    <div class="nav-item" onclick="showPage('dashboard')">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </div>
+    <div class="nav-item" onclick="showPage('absen')">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><circle cx="12" cy="13" r="3"/></svg>
+      Absen
+    </div>
+    <div class="nav-item active">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Riwayat
+    </div>
+    <div class="nav-item" onclick="showToast('Profil segera hadir','info')">
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profil
+    </div>
+  </div>
+</div>
+
 </div><!-- end app-wrapper -->
 
 <!-- Firebase SDKs -->
@@ -1323,14 +1504,26 @@ const fbPengaturan = initializeApp({
   appId: "1:341046321280:web:29f9e0ea8dc7ae64198665"
 }, 'pengaturan-app');
 
+const fbAbsen = initializeApp({
+  apiKey: "AIzaSyBqbjaMrKE-tHTkHIqVcAcFpUOom1Y2Lh0",
+  authDomain: "laku-berapa-jualan-nya.firebaseapp.com",
+  databaseURL: "https://laku-berapa-jualan-nya-default-rtdb.firebaseio.com",
+  projectId: "laku-berapa-jualan-nya",
+  storageBucket: "laku-berapa-jualan-nya.firebasestorage.app",
+  messagingSenderId: "515604827740",
+  appId: "1:515604827740:web:a991cbe63aa8c452c4a099"
+}, 'absen-app');
+
 const dbSetoran = getDatabase(fbSetoran);
 const dbGudang = getDatabase(fbGudang);
 const dbPengaturan = getDatabase(fbPengaturan);
+const dbAbsen = getDatabase(fbAbsen);
 const stgSetoran = getStorage(fbSetoran);
 const stgPengaturan = getStorage(fbPengaturan);
+const stgAbsen = getStorage(fbAbsen);
 
 // Expose to window
-window._db = { dbSetoran, dbGudang, dbPengaturan, stgSetoran, stgPengaturan };
+window._db = { dbSetoran, dbGudang, dbPengaturan, dbAbsen, stgSetoran, stgPengaturan, stgAbsen };
 window._fb = { push, ref, set, onValue, storageRef, uploadString, getDownloadURL };
 
 window._firebaseReady = true;
@@ -2201,19 +2394,322 @@ function renderRecent(setoran, laporan) {
   }).join('');
 }
 
-// Refresh dashboard when switching to it
-const origShowPage = window.showPage;
-window.showPage = function(pageId) {
-  origShowPage(pageId);
-  if (pageId === 'dashboard') {
-    setTimeout(renderDashboard, 100);
+// ===================== ABSEN & JUALAN =====================
+let fotoAbsenData = null;
+let jamBerangkatVal = null;
+let jamPulangVal = null;
+let selectedProduk = []; // [{nama, harga, qty}]
+let savedProdukMaster = JSON.parse(localStorage.getItem('produk_master') || '[]');
+
+function padZ(n) { return String(n).padStart(2,'0'); }
+function nowTime() {
+  const d = new Date();
+  return padZ(d.getHours()) + ':' + padZ(d.getMinutes());
+}
+
+window.handleFotoAbsen = function(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    fotoAbsenData = e.target.result;
+    document.getElementById('fotoAbsenPreview').src = fotoAbsenData;
+    document.getElementById('fotoAbsenPreview').style.display = 'block';
+    document.getElementById('fotoAbsenContent').style.display = 'none';
+    showToast('Foto absen berhasil diambil ✅', 'success');
+  };
+  reader.readAsDataURL(file);
+};
+
+window.setJamBerangkat = function() {
+  jamBerangkatVal = nowTime();
+  document.getElementById('jamBerangkat').textContent = jamBerangkatVal;
+  document.getElementById('jamBerangkat').style.color = 'var(--purple-light)';
+  const btn = document.getElementById('btnBerangkat');
+  btn.textContent = '✓ Tercatat';
+  btn.style.background = 'rgba(34,197,94,0.15)';
+  btn.style.color = 'var(--success)';
+  btn.style.borderColor = 'var(--success)';
+  showToast('Jam berangkat dicatat: ' + jamBerangkatVal, 'success');
+};
+
+window.setJamPulang = function() {
+  if (!jamBerangkatVal) { showToast('Tandai berangkat dulu!', 'error'); return; }
+  jamPulangVal = nowTime();
+  document.getElementById('jamPulang').textContent = jamPulangVal;
+  document.getElementById('jamPulang').style.color = 'var(--text)';
+  const header = document.querySelector('#page-absen .topbar + .scroll-content .grid2 > div:last-child > div:first-child span:last-child');
+  document.getElementById('btnPulang').textContent = '✓ Tercatat';
+  document.getElementById('btnPulang').style.background = 'rgba(34,197,94,0.15)';
+  document.getElementById('btnPulang').style.color = 'var(--success)';
+  document.getElementById('btnPulang').style.borderColor = 'var(--success)';
+  showToast('Jam pulang dicatat: ' + jamPulangVal, 'success');
+};
+
+window.openProdukPicker = function() {
+  renderSavedProduk();
+  document.getElementById('modalProduk').style.display = 'block';
+};
+
+window.closeModal = function() {
+  document.getElementById('modalProduk').style.display = 'none';
+};
+
+// Close modal on backdrop click
+document.getElementById('modalProduk').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+function renderSavedProduk() {
+  const el = document.getElementById('savedProdukList');
+  const emptyEl = document.getElementById('savedProdukEmpty');
+  if (savedProdukMaster.length === 0) {
+    emptyEl.style.display = 'block';
+    return;
+  }
+  emptyEl.style.display = 'none';
+  el.innerHTML = savedProdukMaster.map((p, i) => `
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);">
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:700;">${p.nama}</div>
+        <div style="font-size:12px;color:var(--purple-light);">Rp ${parseInt(p.harga).toLocaleString('id')}</div>
+      </div>
+      <button onclick="pilihProduk(${i})" style="background:var(--purple);border:none;border-radius:8px;padding:7px 14px;color:white;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;">Pilih</button>
+      <button onclick="hapusProdukMaster(${i})" style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:7px 10px;color:#ef4444;font-family:inherit;font-size:12px;cursor:pointer;">✕</button>
+    </div>`).join('') + `<div id="savedProdukEmpty" style="display:none"></div>`;
+}
+
+window.addProdukToList = function() {
+  const nama = document.getElementById('newProdukNama').value.trim();
+  const harga = parseInt(document.getElementById('newProdukHarga').value) || 0;
+  if (!nama) { showToast('Nama produk harus diisi!', 'error'); return; }
+  if (harga <= 0) { showToast('Harga harus lebih dari 0!', 'error'); return; }
+  
+  // Save to master
+  const exists = savedProdukMaster.findIndex(p => p.nama.toLowerCase() === nama.toLowerCase());
+  if (exists === -1) {
+    savedProdukMaster.push({ nama, harga });
+    try { localStorage.setItem('produk_master', JSON.stringify(savedProdukMaster)); } catch(e) {}
+  }
+  
+  // Add to selected
+  pilihProdukByNama(nama, harga);
+  
+  document.getElementById('newProdukNama').value = '';
+  document.getElementById('newProdukHarga').value = '';
+  renderSavedProduk();
+  closeModal();
+};
+
+window.pilihProduk = function(idx) {
+  const p = savedProdukMaster[idx];
+  pilihProdukByNama(p.nama, p.harga);
+  closeModal();
+};
+
+function pilihProdukByNama(nama, harga) {
+  const exists = selectedProduk.findIndex(p => p.nama === nama);
+  if (exists >= 0) {
+    selectedProduk[exists].qty++;
+  } else {
+    selectedProduk.push({ nama, harga, qty: 1 });
+  }
+  renderProdukList();
+  showToast(nama + ' ditambahkan', 'success');
+}
+
+window.hapusProdukMaster = function(idx) {
+  savedProdukMaster.splice(idx, 1);
+  try { localStorage.setItem('produk_master', JSON.stringify(savedProdukMaster)); } catch(e) {}
+  renderSavedProduk();
+};
+
+window.removeSelectedProduk = function(idx) {
+  selectedProduk.splice(idx, 1);
+  renderProdukList();
+};
+
+window.changeQty = function(idx, delta) {
+  selectedProduk[idx].qty = Math.max(1, selectedProduk[idx].qty + delta);
+  renderProdukList();
+};
+
+function renderProdukList() {
+  const el = document.getElementById('produkList');
+  const emptyEl = document.getElementById('produkEmpty');
+  
+  if (selectedProduk.length === 0) {
+    el.innerHTML = `<div id="produkEmpty" style="display:flex;flex-direction:column;align-items:center;padding:24px 0;gap:10px;">
+      <svg width="40" height="40" fill="none" viewBox="0 0 24 24" stroke="var(--text3)" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>
+      <div style="font-size:13px;color:var(--text3);">Belum ada produk yang dipilih</div>
+    </div>`;
+    document.getElementById('totalLaku').textContent = 'Rp 0';
+    return;
+  }
+
+  let total = 0;
+  el.innerHTML = selectedProduk.map((p, i) => {
+    const subtotal = p.harga * p.qty;
+    total += subtotal;
+    return `
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:10px;">
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.nama}</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:2px;">Rp ${parseInt(p.harga).toLocaleString('id')} / pcs</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <button onclick="changeQty(${i},-1)" style="width:28px;height:28px;background:var(--purple-dim);border:1px solid var(--border);border-radius:7px;color:var(--purple-light);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;">−</button>
+        <span style="font-size:14px;font-weight:700;min-width:24px;text-align:center;">${p.qty}</span>
+        <button onclick="changeQty(${i},1)" style="width:28px;height:28px;background:var(--purple);border:none;border-radius:7px;color:white;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;">+</button>
+      </div>
+      <div style="text-align:right;min-width:72px;">
+        <div style="font-size:13px;font-weight:700;color:var(--purple-light);">Rp ${subtotal.toLocaleString('id')}</div>
+        <button onclick="removeSelectedProduk(${i})" style="background:none;border:none;color:var(--danger);font-size:11px;cursor:pointer;font-family:inherit;margin-top:2px;">Hapus</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('totalLaku').textContent = 'Rp ' + total.toLocaleString('id');
+}
+
+window.simpanAbsenJualan = async function() {
+  if (!fotoAbsenData) { showToast('Foto absen harus diambil dulu!', 'error'); return; }
+  if (!jamBerangkatVal) { showToast('Tandai jam berangkat dulu!', 'error'); return; }
+
+  const btn = document.getElementById('btnSimpanAbsen');
+  btn.disabled = true;
+  document.getElementById('spinnerAbsen').style.display = 'block';
+  document.getElementById('btnSimpanAbsenText').style.opacity = '0.5';
+
+  try {
+    await waitFirebase();
+    const { dbAbsen, stgAbsen } = window._db;
+    const { push, ref, set, storageRef, uploadString, getDownloadURL } = window._fb;
+
+    // Upload foto
+    let fotoURL = null;
+    try {
+      const imgRef = storageRef(stgAbsen, `absen/${Date.now()}.jpg`);
+      await uploadString(imgRef, fotoAbsenData, 'data_url');
+      fotoURL = await getDownloadURL(imgRef);
+    } catch(e) { console.warn('Upload foto gagal:', e); }
+
+    const total = selectedProduk.reduce((s, p) => s + p.harga * p.qty, 0);
+    const today = new Date().toISOString().split('T')[0];
+
+    const data = {
+      tanggal: today,
+      jam_berangkat: jamBerangkatVal,
+      jam_pulang: jamPulangVal || null,
+      foto_absen_url: fotoURL,
+      produk_terjual: selectedProduk,
+      total_laku: total,
+      timestamp: new Date().toISOString(),
+      created_at: Date.now()
+    };
+
+    const newRef = push(ref(dbAbsen, 'absen'));
+    await set(newRef, data);
+
+    showToast('Absen & jualan berhasil disimpan! ✅', 'success');
+
+    // Reset
+    fotoAbsenData = null;
+    jamBerangkatVal = null;
+    jamPulangVal = null;
+    selectedProduk = [];
+    document.getElementById('fotoAbsenPreview').style.display = 'none';
+    document.getElementById('fotoAbsenContent').style.display = 'flex';
+    document.getElementById('jamBerangkat').textContent = '--:--';
+    document.getElementById('jamBerangkat').style.color = '';
+    document.getElementById('jamPulang').textContent = '--:--';
+    document.getElementById('btnBerangkat').textContent = 'Tandai Berangkat';
+    document.getElementById('btnBerangkat').style.cssText = '';
+    document.getElementById('btnPulang').textContent = 'Tandai Pulang';
+    document.getElementById('btnPulang').style.cssText = '';
+    renderProdukList();
+
+    // Refresh riwayat
+    loadRiwayat();
+
+  } catch(e) {
+    console.error(e);
+    showToast('Gagal menyimpan: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    document.getElementById('spinnerAbsen').style.display = 'none';
+    document.getElementById('btnSimpanAbsenText').style.opacity = '1';
   }
 };
+
+// ===================== RIWAYAT ABSEN =====================
+function loadRiwayat() {
+  const tryLoad = () => {
+    if (!window._firebaseReady) { setTimeout(tryLoad, 300); return; }
+    const { dbAbsen } = window._db;
+    const { ref, onValue } = window._fb;
+    onValue(ref(dbAbsen, 'absen'), snap => {
+      const items = [];
+      snap.forEach(c => items.push({ id: c.key, ...c.val() }));
+      items.sort((a,b) => (b.created_at||0) - (a.created_at||0));
+      renderRiwayat(items);
+    });
+  };
+  tryLoad();
+}
+
+function renderRiwayat(items) {
+  const el = document.getElementById('riwayatList');
+  if (items.length === 0) {
+    el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text3);font-size:13px;">Belum ada riwayat absen</div>';
+    return;
+  }
+  el.innerHTML = items.map(item => {
+    const total = item.total_laku || 0;
+    const produkCount = (item.produk_terjual || []).length;
+    const produkNames = (item.produk_terjual || []).map(p => p.nama + ' x' + p.qty).join(', ') || 'Tidak ada';
+    return `
+    <div style="background:var(--card);border:1.5px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+        <div>
+          <div style="font-size:14px;font-weight:800;">${item.tanggal || '—'}</div>
+          <div style="font-size:12px;color:var(--text2);margin-top:2px;">
+            🕐 Berangkat: <b>${item.jam_berangkat || '—'}</b>
+            ${item.jam_pulang ? ' &nbsp;🏠 Pulang: <b>' + item.jam_pulang + '</b>' : ''}
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:15px;font-weight:800;color:var(--purple-light);">Rp ${parseInt(total).toLocaleString('id')}</div>
+          <div style="font-size:11px;color:var(--text2);">${produkCount} produk</div>
+        </div>
+      </div>
+      ${item.foto_absen_url ? `<img src="${item.foto_absen_url}" style="width:100%;max-height:120px;object-fit:cover;border-radius:10px;margin-bottom:10px;">` : ''}
+      <div style="font-size:12px;color:var(--text2);line-height:1.6;">
+        <span style="color:var(--text3);font-weight:600;">Terjual:</span> ${produkNames}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Load riwayat when page shown
+const origShowPage2 = window.showPage;
+window.showPage = function(pageId) {
+  origShowPage2(pageId);
+  if (pageId === 'riwayat-absen') loadRiwayat();
+};
+
+// Also init savedProduk from localStorage
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    savedProdukMaster = JSON.parse(localStorage.getItem('produk_master') || '[]');
+  } catch(e) { savedProdukMaster = []; }
+});
 </script>
 
 <!-- DEMO NAVIGATION BUTTONS (for testing) -->
 <div style="position:fixed;bottom:70px;right:10px;display:flex;flex-direction:column;gap:6px;z-index:200">
   <button onclick="showPage('dashboard')" style="background:rgba(124,58,237,0.9);border:none;color:white;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">🏠 Dashboard</button>
+  <button onclick="showPage('absen')" style="background:rgba(124,58,237,0.9);border:none;color:white;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">📷 Absen</button>
   <button onclick="showPage('setoran')" style="background:rgba(124,58,237,0.9);border:none;color:white;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">📤 Setoran</button>
   <button onclick="showPage('laporan')" style="background:rgba(124,58,237,0.9);border:none;color:white;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">📋 Laporan</button>
   <button onclick="showPage('gudang')" style="background:rgba(124,58,237,0.9);border:none;color:white;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">📦 Gudang</button>
