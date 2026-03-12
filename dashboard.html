@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Bukti dan Laporan</title>
+    <title>Dashboard</title>
     <script type="module">
-        // Import the functions you need from the SDKs you need
+        // Import Firebase functions
         import { initializeApp } from "firebase/app";
         import { getDatabase, ref, set } from "firebase/database"; 
         import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage"; 
@@ -27,19 +27,17 @@
         const database = getDatabase(app);
         const storage = getStorage(app);
 
-        // Function to upload bukti setor
+        // Upload Bukti Setor Function
         window.uploadBuktiSetor = function(nama, tanggal, file) {
             const storageReference = storageRef(storage, 'bukti_setor/' + file.name);
             uploadBytes(storageReference, file).then((snapshot) => {
                 console.log("Bukti setor berhasil diunggah!");
-
                 snapshot.ref.getDownloadURL().then((downloadURL) => {
                     const data = {
                         nama: nama,
                         tanggal: tanggal,
                         fileUrl: downloadURL
                     };
-
                     set(ref(database, 'bukti_setor/' + nama), data)
                         .then(() => {
                             console.log("Data bukti setor berhasil disimpan!");
@@ -53,14 +51,13 @@
             });
         };
 
-        // Function to submit laporan
+        // Submit Laporan Function
         window.submitLaporan = function(namaPenerima, tanggalLapor, laporan) {
             const data = {
                 nama: namaPenerima,
                 tanggal: tanggalLapor,
                 laporan: laporan
             };
-            
             set(ref(database, 'laporan/' + namaPenerima), data)
                 .then(() => {
                     console.log("Laporan berhasil dikirim!");
@@ -70,7 +67,7 @@
                 });
         };
 
-        // Handle upload bukti
+        // Handle Upload Bukti
         window.handleUploadBukti = function() {
             const nama = document.getElementById('namaSetor').value;
             const tanggal = document.getElementById('tanggalSetor').value;
@@ -78,7 +75,7 @@
             uploadBuktiSetor(nama, tanggal, file);
         };
 
-        // Handle submit laporan
+        // Handle Submit Laporan
         window.handleSubmitLaporan = function() {
             const nama = document.getElementById('namaPelapor').value;
             const tanggal = document.getElementById('tanggalLapor').value;
@@ -88,16 +85,22 @@
     </script>
 </head>
 <body>
-    <h1>Upload Bukti Setor</h1>
-    <input type="text" id="namaSetor" placeholder="Nama Lengkap" required>
-    <input type="date" id="tanggalSetor" required>
-    <input type="file" id="fileBukti" required>
-    <button onclick="handleUploadBukti()">Kirim Setoran</button>
+    <h1>Dashboard</h1>
 
-    <h1>Kirim Laporan</h1>
-    <input type="text" id="namaPelapor" placeholder="Nama Pelapor" required>
-    <input type="date" id="tanggalLapor" required>
-    <textarea id="laporan" placeholder="Detail Laporan" required></textarea>
-    <button onclick="handleSubmitLaporan()">Kirim Laporan</button>
+    <section>
+        <h2>Upload Bukti Setor</h2>
+        <input type="text" id="namaSetor" placeholder="Nama Lengkap" required>
+        <input type="date" id="tanggalSetor" required>
+        <input type="file" id="fileBukti" required>
+        <button onclick="handleUploadBukti()">Kirim Setoran</button>
+    </section>
+
+    <section>
+        <h2>Kirim Laporan</h2>
+        <input type="text" id="namaPelapor" placeholder="Nama Pelapor" required>
+        <input type="date" id="tanggalLapor" required>
+        <textarea id="laporan" placeholder="Detail Laporan" required></textarea>
+        <button onclick="handleSubmitLaporan()">Kirim Laporan</button>
+    </section>
 </body>
 </html>
