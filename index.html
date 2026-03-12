@@ -424,7 +424,8 @@
 <!-- Firebase -->
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getDatabase, ref, push, set, get, query, orderByChild, equalTo } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+import { getDatabase, ref, push, set, get } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
 
 // Firebase Daftar
 const fbDaftar = initializeApp({
@@ -452,7 +453,7 @@ const dbDaftar = getDatabase(fbDaftar);
 const dbLogin  = getDatabase(fbLogin);
 
 window._db = { dbDaftar, dbLogin };
-window._fb = { ref, push, set, get, query, orderByChild, equalTo };
+window._fb = { ref, push, set, get };
 window._fbReady = true;
 window.dispatchEvent(new Event('fbReady'));
 </script>
@@ -556,6 +557,19 @@ window.goToDaftar = function() {
   daf.style.pointerEvents = 'auto';
 };
 
+// ── HELPER: ambil semua akun lalu cari by WA (tanpa index/query) ──
+async function cariAkunByWA(db, fbRef, wa62) {
+  const snap = await fbRef.get(fbRef.ref(db, 'akun'));
+  const hasil = [];
+  if (snap.exists()) {
+    snap.forEach(c => {
+      const v = c.val();
+      if (v.nomor_wa === wa62) hasil.push({ ...v, id: c.key });
+    });
+  }
+  return hasil;
+}
+
 // ── DAFTAR ──
 window.daftar = async function() {
   clearErr();
@@ -565,55 +579,58 @@ window.daftar = async function() {
   const pw     = document.getElementById('dPW').value;
 
   let ok = true;
-  if (!nama)       { showErr('eDNama','dNama');   ok = false; }
+  if (!nama)       { showErr('eDNama','dNama');    ok = false; }
   if (wa.length<9) { showErr('eDWA',null); document.getElementById('dWARow').classList.add('invalid'); ok = false; }
   if (!alamat)     { showErr('eDAlamat','dAlamat'); ok = false; }
-  if (pw.length<8) { showErr('eDPW','dPW');        ok = false; }
+  if (pw.length<8) { showErr('eDPW','dPW');         ok = false; }
   if (!ok) return;
 
   setBtnLoad('btnDaftar','tDaftar','sDaftar', true);
   try {
     await waitFB();
     const { dbDaftar } = window._db;
-    const { ref, push, set, get, query, orderByChild, equalTo } = window._fb;
+    const { ref, push, set, get } = window._fb;
+    const wa62 = '62' + wa;
 
-    // cek duplikat WA
-    const snap = await get(query(ref(dbDaftar,'akun'), orderByChild('nomor_wa'), equalTo('62'+wa)));
+    // cek duplikat — ambil semua lalu filter JS
+    const snap = await get(ref(dbDaftar, 'akun'));
+    let sudahAda = false;
     if (snap.exists()) {
-      toast('Nomor WhatsApp sudah terdaftar!','e');
+      snap.forEach(c => { if (c.val().nomor_wa === wa62) sudahAda = true; });
+    }
+    if (sudahAda) {
+      toast('Nomor WhatsApp sudah terdaftar!', 'e');
       document.getElementById('dWARow').classList.add('invalid');
+      setBtnLoad('btnDaftar','tDaftar','sDaftar', false);
       return;
     }
 
     const pwHash = await sha256(pw);
-    await set(push(ref(dbDaftar,'akun')), {
+    await set(push(ref(dbDaftar, 'akun')), {
       nama_lengkap: nama,
-      nomor_wa: '62'+wa,
+      nomor_wa: wa62,
       alamat,
       password_hash: pwHash,
       created_at: Date.now(),
       timestamp: new Date().toISOString()
     });
 
-    toast('Akun berhasil dibuat! 🎉','s');
+    toast('Akun berhasil dibuat! 🎉', 's');
 
     // pre-fill login
     document.getElementById('lNama').value = nama;
     document.getElementById('lWA').value   = wa;
 
-    // reset daftar form
+    // reset form
     ['dNama','dWA','dAlamat','dPW'].forEach(id => document.getElementById(id).value = '');
 
-    // animasi loading lalu slide ke login
     setBtnLoad('btnDaftar','tDaftar','sDaftar', false);
     showLoading('Daftar berhasil!\nMengarahkan ke Login...');
-    setTimeout(() => {
-      hideLoading(() => { goToLogin(); });
-    }, 1800);
+    setTimeout(() => { hideLoading(() => { goToLogin(); }); }, 1800);
 
   } catch(e) {
     console.error(e);
-    toast('Gagal mendaftar: '+e.message,'e');
+    toast('Gagal mendaftar: ' + e.message, 'e');
     setBtnLoad('btnDaftar','tDaftar','sDaftar', false);
   }
 };
@@ -633,36 +650,33 @@ window.login = async function() {
   try {
     await waitFB();
     const { dbDaftar, dbLogin } = window._db;
-    const { ref, push, set, get, query, orderByChild, equalTo } = window._fb;
+    const { ref, push, set, get } = window._fb;
+    const wa62 = '62' + wa;
 
-    // cari akun berdasar WA
-    const snap = await get(query(ref(dbDaftar,'akun'), orderByChild('nomor_wa'), equalTo('62'+wa)));
-    if (!snap.exists()) {
+    // ambil semua akun lalu filter by WA + nama
+    const snap = await get(ref(dbDaftar, 'akun'));
+    let userData = null;
+
+    if (snap.exists()) {
+      snap.forEach(c => {
+        const v = c.val();
+        if (v.nomor_wa === wa62 && v.nama_lengkap && v.nama_lengkap.toLowerCase() === nama.toLowerCase()) {
+          userData = { ...v, id: c.key };
+        }
+      });
+    }
+
+    if (!userData) {
+      showErr('eLNama','lNama');
       showErr('eLWA', null);
       document.getElementById('lWARow').classList.add('invalid');
-      toast('Nomor WA tidak ditemukan!','e');
+      toast('Nama atau nomor WA tidak cocok!', 'e');
       setBtnLoad('btnLogin','tLogin','sLogin', false);
       return;
     }
 
-    let found = false, userData = null;
-    snap.forEach(c => {
-      const v = c.val();
-      if (v.nama_lengkap && v.nama_lengkap.toLowerCase() === nama.toLowerCase()) {
-        found = true;
-        userData = { ...v, id: c.key };
-      }
-    });
-
-    if (!found) {
-      showErr('eLNama','lNama');
-      toast('Nama tidak cocok dengan nomor WA!','e');
-      setBtnLoad('btnLogin','tLogin','sLogin', false);
-      return;
-    }
-
-    // simpan sesi ke dbLogin
-    await set(push(ref(dbLogin,'sesi_login')), {
+    // simpan sesi login ke dbLogin
+    await set(push(ref(dbLogin, 'sesi_login')), {
       nama: userData.nama_lengkap,
       nomor_wa: userData.nomor_wa,
       user_id: userData.id,
@@ -670,21 +684,20 @@ window.login = async function() {
       created_at: Date.now()
     });
 
-    toast(`Selamat datang, ${userData.nama_lengkap}! 👋`,'s');
+    toast(`Selamat datang, ${userData.nama_lengkap}! 👋`, 's');
     setBtnLoad('btnLogin','tLogin','sLogin', false);
 
     showLoading(`Selamat datang,\n${userData.nama_lengkap}! 👋`);
     setTimeout(() => {
       hideLoading(() => {
-        // ← Ganti URL di sini jika ingin redirect ke halaman dashboard
-        // window.location.href = 'dashboard.html';
-        toast('Login berhasil! Mengarahkan ke dashboard...','i');
+        // window.location.href = 'app.html'; // ← aktifkan jika mau redirect
+        toast('Login berhasil! ✅', 'i');
       });
     }, 2000);
 
   } catch(e) {
     console.error(e);
-    toast('Gagal login: '+e.message,'e');
+    toast('Gagal login: ' + e.message, 'e');
     setBtnLoad('btnLogin','tLogin','sLogin', false);
   }
 };
