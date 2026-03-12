@@ -2,127 +2,108 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Kirim Setoran - Gibran Hub</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Dashboard Bisnis | Gibran</title>
+
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
   
   :root {
-    --bg: #0d0b14;
-    --card: #1e1830;
-    --purple: #7c3aed;
-    --text: #f1f0f5;
-    --text-dim: #a09abd;
-    --border: rgba(124,58,237,0.25);
+    --bg: #0d0b14; --card: #1e1830; --purple: #7c3aed; --text: #f1f0f5; --text-dim: #a09abd;
+    --border: rgba(124,58,237,0.2);
   }
 
-  body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    margin: 0;
-    padding: 20px;
-  }
-
-  .container { max-width: 450px; margin: auto; }
-
-  h2 { font-weight: 800; margin-bottom: 5px; color: var(--purple); }
-  p { font-size: 13px; color: var(--text-dim); margin-bottom: 25px; }
-
-  /* Upload Box */
-  .upload-box {
-    border: 2px dashed var(--purple);
-    background: rgba(124, 58, 237, 0.05);
-    border-radius: 20px;
-    padding: 40px 20px;
-    text-align: center;
-    cursor: pointer;
-    margin-bottom: 20px;
-  }
-
-  .upload-box b { display: block; margin-top: 10px; font-size: 14px; }
-
-  /* Form */
-  label { display: block; font-size: 12px; font-weight: 700; color: var(--text-dim); margin: 15px 0 8px; text-transform: uppercase; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 100px; }
   
-  input, select {
-    width: 100%;
-    padding: 16px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: #151125;
-    color: white;
-    font-family: inherit;
-    margin-bottom: 15px;
-  }
+  .container { padding: 20px; max-width: 500px; margin: auto; }
+  
+  /* System Page Switching */
+  .page { display: none; }
+  .page.active { display: block; animation: fadeIn 0.3s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* Signature */
-  .sig-wrapper {
-    background: #000;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    position: relative;
-    overflow: hidden;
-  }
-  canvas#sig-canvas { width: 100%; height: 180px; touch-action: none; }
-  .btn-clear {
-    position: absolute; top: 10px; right: 10px;
-    background: rgba(239, 68, 68, 0.2);
-    color: #ef4444; border: none; padding: 5px 12px;
-    border-radius: 8px; font-size: 10px; font-weight: 700; cursor: pointer;
-  }
+  /* Dashboard UI */
+  .hero-card { background: linear-gradient(135deg, var(--purple), #4c1d95); border-radius: 24px; padding: 25px; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
+  .stat-box { background: var(--card); border-radius: 20px; padding: 18px; border: 1px solid var(--border); }
 
-  .btn-submit {
-    width: 100%;
-    padding: 18px;
-    background: var(--purple);
-    color: white;
-    border: none;
-    border-radius: 16px;
-    font-weight: 800;
-    font-size: 16px;
-    margin-top: 25px;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
-  }
+  /* Grid Menu */
+  .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 25px 0; }
+  .menu-item { text-align: center; cursor: pointer; transition: 0.2s; }
+  .menu-item:active { transform: scale(0.9); }
+  .icon-box { width: 55px; height: 55px; background: var(--card); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin: 0 auto 8px; border: 1px solid var(--border); }
+  .menu-item span { font-size: 11px; font-weight: 700; color: var(--text-dim); }
+
+  /* Form UI (Setoran) */
+  label { display: block; font-size: 12px; font-weight: 700; color: var(--text-dim); margin: 15px 0 8px; text-transform: uppercase; }
+  input, select { width: 100%; padding: 16px; border-radius: 14px; border: 1.5px solid var(--border); background: #151125; color: white; font-family: inherit; }
+  .upload-area { border: 2px dashed var(--purple); background: rgba(124,58,237,0.05); border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; }
+
+  /* Navigasi */
+  .nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #13101e; display: flex; border-top: 1px solid var(--border); padding: 15px 0; z-index: 1000; }
+  .nav-item { flex: 1; text-align: center; font-size: 10px; font-weight: 700; color: var(--text-dim); cursor: pointer; }
+  .nav-item.active { color: var(--purple); }
+  .nav-item b { display: block; font-size: 22px; margin-bottom: 4px; }
+
+  .btn-submit { width: 100%; padding: 18px; border-radius: 16px; border: none; background: var(--purple); color: white; font-weight: 800; font-size: 16px; cursor: pointer; margin-top: 20px; }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <h2>Unggah Setoran</h2>
-  <p>Pastikan semua data sudah benar sebelum dikirim.</p>
 
-  <div class="upload-box" onclick="document.getElementById('file-input').click()">
-    <span style="font-size: 40px;">☁️</span>
-    <b>Unggah Bukti Setor</b>
-    <small style="color: var(--text-dim)">Ketuk untuk memilih foto</small>
-    <input type="file" id="file-input" style="display: none">
+  <div id="pg-dash" class="page active">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <h2 style="font-weight:800;">Dashboard</h2>
+      <div style="background:var(--card); padding:10px; border-radius:12px;">🔔</div>
+    </div>
+
+    <div class="hero-card">
+      <small style="opacity:0.8;">Total Saldo (Firebase Realtime)</small>
+      <h1 id="live-saldo" style="font-size: 32px; margin: 8px 0;">Rp 0</h1>
+      <div style="font-size:11px; background:rgba(255,255,255,0.2); display:inline-block; padding:4px 12px; border-radius:20px;">Status: Online</div>
+    </div>
+
+    <div class="menu-grid">
+      <div class="menu-item" onclick="navTo('pg-setoran')"><div class="icon-box">💰</div><span>Setoran</span></div>
+      <div class="menu-item" onclick="navTo('pg-laporan')"><div class="icon-box">📄</div><span>Laporan</span></div>
+      <div class="menu-item"><div class="icon-box">📦</div><span>Stok</span></div>
+      <div class="menu-item"><div class="icon-box">⚙️</div><span>Setting</span></div>
+    </div>
+
+    <h3 style="margin-bottom:15px; font-size:16px;">Grafik Mingguan</h3>
+    <div class="stat-box"><canvas id="chartDashboard"></canvas></div>
   </div>
 
-  <label>Nama Penyetor</label>
-  <input type="text" id="s-nama" placeholder="Masukkan nama lengkap">
-
-  <label>Setor Ke Siapa</label>
-  <select id="s-target">
-    <option value="Bu Tati">Bu Tati</option>
-    <option value="Bu Ami">Bu Ami</option>
-  </select>
-
-  <label>Tanda Tangan Digital</label>
-  <div class="sig-wrapper">
-    <canvas id="sig-canvas"></canvas>
-    <button class="btn-clear" onclick="clearCanvas()">Hapus</button>
+  <div id="pg-setoran" class="page">
+    <h2 style="color:var(--purple); margin-bottom:10px;">Kirim Setoran</h2>
+    <div class="upload-area" onclick="document.getElementById('f-setor').click()">
+      <span style="font-size:35px;">📸</span><br><b>Ambil Foto Bukti</b>
+      <input type="file" id="f-setor" style="display:none">
+    </div>
+    <label>Nama Pengirim</label>
+    <input type="text" id="s-nama" placeholder="Masukkan Nama">
+    <label>Nominal</label>
+    <input type="number" id="s-nominal" placeholder="Contoh: 100000">
+    <label>Tujuan</label>
+    <select id="s-tujuan"><option>Bu Tati</option><option>Bu Ami</option></select>
+    <button class="btn-submit" onclick="pushData('setoran')">Kirim Sekarang ➤</button>
   </div>
 
-  <button class="btn-submit" onclick="submitSetoran()">Kirim Setoran ➤</button>
 </div>
 
+<nav class="nav">
+  <div class="nav-item active" onclick="navTo('pg-dash', this)"><b>🏠</b>Home</div>
+  <div class="nav-item" onclick="navTo('pg-setoran', this)"><b>💰</b>Setoran</div>
+  <div class="nav-item"><b>👤</b>Profil</div>
+</nav>
+
 <script>
-  // -- KONFIGURASI FIREBASE LO --
+  // 1. FIREBASE CONFIG LO
   const firebaseConfig = {
     apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs",
     authDomain: "tempat-masuk-nya-data.firebaseapp.com",
@@ -132,62 +113,53 @@
     messagingSenderId: "918742049565",
     appId: "1:918742049565:web:4490b03c04f5bf75e3f7f4"
   };
-
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
-  // -- LOGIC TANDA TANGAN --
-  const canvas = document.getElementById('sig-canvas');
-  const ctx = canvas.getContext('2d');
-  let drawing = false;
-
-  function getPos(e) {
-    const rect = canvas.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    return { x: clientX - rect.left, y: clientY - rect.top };
+  // 2. NAVIGASI INTERNAL (Anti 404)
+  function navTo(id, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if(el) {
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        el.classList.add('active');
+    }
   }
 
-  function start(e) { drawing = true; ctx.beginPath(); const pos = getPos(e); ctx.moveTo(pos.x, pos.y); }
-  function draw(e) {
-    if(!drawing) return;
-    const pos = getPos(e);
-    ctx.lineWidth = 3;
-    ctx.lineCap = "round";
-    ctx.strokeStyle = "#7c3aed";
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
-  }
-  function stop() { drawing = false; }
-
-  canvas.addEventListener('mousedown', start);
-  canvas.addEventListener('mousemove', draw);
-  canvas.addEventListener('mouseup', stop);
-  canvas.addEventListener('touchstart', (e) => { e.preventDefault(); start(e); });
-  canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e); });
-  canvas.addEventListener('touchend', stop);
-
-  function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
-
-  // -- KIRIM KE DATABASE --
-  function submitSetoran() {
+  // 3. PUSH DATA KE FIREBASE
+  function pushData(type) {
     const nama = document.getElementById('s-nama').value;
-    const target = document.getElementById('s-target').value;
-    const ttd = canvas.toDataURL(); // Mengambil gambar TTD
+    const nominal = Number(document.getElementById('s-nominal').value);
+    
+    if(!nama || !nominal) return alert("Isi data dengan lengkap!");
 
-    if(!nama) return alert("Tolong isi Nama Penyetor!");
-
-    db.ref('setoran_masuk').push({
+    db.ref('bisnis_gibran/' + type).push({
       nama: nama,
-      target: target,
-      tanda_tangan: ttd,
-      waktu: new Date().toLocaleString()
+      nominal: nominal,
+      tujuan: document.getElementById('s-tujuan').value,
+      waktu: new Date().toISOString()
     }).then(() => {
-      alert("✅ Setoran berhasil dikirim!");
-      location.reload();
-    }).catch((err) => alert("Gagal: " + err.message));
+      alert("✅ Data Berhasil Masuk!");
+      navTo('pg-dash');
+    });
   }
-</script>
 
+  // 4. REALTIME MONITORING (Update Saldo di Dashboard)
+  db.ref('bisnis_gibran/setoran').on('value', snap => {
+    let total = 0;
+    snap.forEach(c => { total += (c.val().nominal || 0); });
+    document.getElementById('live-saldo').innerText = "Rp " + total.toLocaleString();
+  });
+
+  // 5. CHART JS
+  new Chart(document.getElementById('chartDashboard'), {
+    type: 'bar',
+    data: {
+      labels: ['S','S','R','K','J','S','M'],
+      datasets: [{ data: [10, 25, 15, 30, 20, 40, 25], backgroundColor: '#7c3aed', borderRadius: 6 }]
+    },
+    options: { plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { grid: { display: false } } } }
+  });
+</script>
 </body>
 </html>
