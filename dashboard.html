@@ -1,106 +1,264 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <script type="module">
-        // Import Firebase functions
-        import { initializeApp } from "firebase/app";
-        import { getDatabase, ref, set } from "firebase/database"; 
-        import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage"; 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Super Dashboard | Gibran Business</title>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  :root {
+    --bg: #0d0b14; --bg2: #13101e; --bg3: #1a1628;
+    --card: #1e1830; --purple: #7c3aed; --purple-dim: rgba(124,58,237,0.15);
+    --border: rgba(124,58,237,0.25); --text: #f1f0f5; --text2: #a09abd;
+  }
+  
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 90px; }
+  .container { padding: 24px; max-width: 500px; margin: auto; }
+  
+  /* TAB SYSTEM */
+  .page { display: none; }
+  .page.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs",
-            authDomain: "tempat-masuk-nya-data.firebaseapp.com",
-            databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com",
-            projectId: "tempat-masuk-nya-data",
-            storageBucket: "tempat-masuk-nya-data.appspot.com",
-            messagingSenderId: "918742049565",
-            appId: "1:918742049565:web:4490b03c04f5bf75e3f7f4",
-            measurementId: "G-C0EBFBVVVJ"
-        };
+  /* CARDS */
+  .card { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid var(--border); margin-bottom: 16px; }
+  .main-card { background: linear-gradient(135deg, var(--purple), #4c1d95); border-radius: 24px; padding: 24px; margin-bottom: 20px; }
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-        const storage = getStorage(app);
+  /* FORMS */
+  label { display: block; font-size: 13px; font-weight: 700; margin: 15px 0 8px; color: var(--text2); }
+  input, select { width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg3); color: white; font-family: inherit; margin-bottom: 12px; }
+  
+  .upload-area { border: 2px dashed var(--purple); background: var(--bg2); border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; }
+  
+  /* TANDA TANGAN */
+  .sig-container { background: #000; border: 1px solid var(--border); border-radius: 15px; overflow: hidden; position: relative; }
+  canvas { width: 100%; height: 180px; touch-action: none; cursor: crosshair; }
+  .btn-clear { position: absolute; top: 10px; right: 10px; background: rgba(239, 68, 68, 0.2); color: #ef4444; border: none; padding: 5px 10px; border-radius: 6px; font-size: 10px; font-weight: 700; }
 
-        // Upload Bukti Setor Function
-        window.uploadBuktiSetor = function(nama, tanggal, file) {
-            const storageReference = storageRef(storage, 'bukti_setor/' + file.name);
-            uploadBytes(storageReference, file).then((snapshot) => {
-                console.log("Bukti setor berhasil diunggah!");
-                snapshot.ref.getDownloadURL().then((downloadURL) => {
-                    const data = {
-                        nama: nama,
-                        tanggal: tanggal,
-                        fileUrl: downloadURL
-                    };
-                    set(ref(database, 'bukti_setor/' + nama), data)
-                        .then(() => {
-                            console.log("Data bukti setor berhasil disimpan!");
-                        })
-                        .catch((error) => {
-                            console.error("Error menyimpan data: ", error);
-                        });
-                });
-            }).catch((error) => {
-                console.error("Error mengupload bukti setor: ", error);
-            });
-        };
+  /* NAVIGASI */
+  .nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg2); display: flex; border-top: 1px solid var(--border); padding: 12px 0; z-index: 1000; }
+  .nav-item { flex: 1; text-align: center; color: var(--text3); cursor: pointer; font-size: 10px; font-weight: 700; }
+  .nav-item.active { color: var(--purple); }
+  .nav-item b { display: block; font-size: 22px; margin-bottom: 2px; }
 
-        // Submit Laporan Function
-        window.submitLaporan = function(namaPenerima, tanggalLapor, laporan) {
-            const data = {
-                nama: namaPenerima,
-                tanggal: tanggalLapor,
-                laporan: laporan
-            };
-            set(ref(database, 'laporan/' + namaPenerima), data)
-                .then(() => {
-                    console.log("Laporan berhasil dikirim!");
-                })
-                .catch((error) => {
-                    console.error("Error mengirim laporan: ", error);
-                });
-        };
-
-        // Handle Upload Bukti
-        window.handleUploadBukti = function() {
-            const nama = document.getElementById('namaSetor').value;
-            const tanggal = document.getElementById('tanggalSetor').value;
-            const file = document.getElementById('fileBukti').files[0];
-            uploadBuktiSetor(nama, tanggal, file);
-        };
-
-        // Handle Submit Laporan
-        window.handleSubmitLaporan = function() {
-            const nama = document.getElementById('namaPelapor').value;
-            const tanggal = document.getElementById('tanggalLapor').value;
-            const laporan = document.getElementById('laporan').value;
-            submitLaporan(nama, tanggal, laporan);
-        };
-    </script>
+  .btn-primary { width: 100%; padding: 18px; border-radius: 16px; border: none; background: var(--purple); color: white; font-weight: 800; font-size: 16px; cursor: pointer; margin-top: 10px; }
+</style>
 </head>
 <body>
-    <h1>Dashboard</h1>
 
-    <section>
-        <h2>Upload Bukti Setor</h2>
-        <input type="text" id="namaSetor" placeholder="Nama Lengkap" required>
-        <input type="date" id="tanggalSetor" required>
-        <input type="file" id="fileBukti" required>
-        <button onclick="handleUploadBukti()">Kirim Setoran</button>
-    </section>
+<div id="p-home" class="page active">
+  <div class="container">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <h2 style="font-weight:800;">Overview</h2>
+      <div style="background:var(--bg3); padding:10px; border-radius:12px;">🔔</div>
+    </div>
+    
+    <div class="main-card">
+      <small style="opacity:0.8;">Total Keuangan (Setoran)</small>
+      <h1 id="dash-setoran" style="font-size:32px; margin-top:8px;">Rp 0</h1>
+    </div>
 
-    <section>
-        <h2>Kirim Laporan</h2>
-        <input type="text" id="namaPelapor" placeholder="Nama Pelapor" required>
-        <input type="date" id="tanggalLapor" required>
-        <textarea id="laporan" placeholder="Detail Laporan" required></textarea>
-        <button onclick="handleSubmitLaporan()">Kirim Laporan</button>
-    </section>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div class="card">
+        <small style="color:var(--text2);">Laporan</small>
+        <h2 id="dash-laporan" style="margin-top:5px;">0</h2>
+      </div>
+      <div class="card">
+        <small style="color:var(--text2);">Stok Gudang</small>
+        <h2 id="dash-stok" style="margin-top:5px;">0</h2>
+      </div>
+    </div>
+
+    <h3 style="margin:20px 0 12px; font-size:16px;">Performance Trends</h3>
+    <div class="card"><canvas id="mainChart"></canvas></div>
+  </div>
+</div>
+
+<div id="p-setoran" class="page">
+  <div class="container">
+    <h2 style="color:var(--purple); margin-bottom:5px;">Kirim Setoran</h2>
+    <p style="color:var(--text2); font-size:13px; margin-bottom:20px;">Catat setoran masuk harian.</p>
+
+    <div class="upload-area" onclick="document.getElementById('f-setoran').click()">
+      <div style="font-size:35px;">💰</div>
+      <b>Upload Bukti Setor</b><br>
+      <small style="color:var(--text2)">Ketuk untuk ambil foto</small>
+      <input type="file" id="f-setoran" style="display:none">
+    </div>
+
+    <label>Nama Penyetor</label>
+    <input type="text" id="s-nama" placeholder="Masukkan nama">
+    
+    <label>Nominal (Rp)</label>
+    <input type="number" id="s-nominal" placeholder="Contoh: 50000">
+
+    <label>Setor Ke</label>
+    <select id="s-tujuan">
+      <option>Bu Tati</option>
+      <option>Bu Ami</option>
+    </select>
+
+    <button class="btn-primary" onclick="kirimData('setoran')">Kirim Setoran ➤</button>
+  </div>
+</div>
+
+<div id="p-laporan" class="page">
+  <div class="container">
+    <h2 style="margin-bottom:5px;">Kirim Laporan</h2>
+    <p style="color:var(--text2); font-size:13px; margin-bottom:20px;">Laporkan hasil kerja atau kendala.</p>
+
+    <div class="upload-area" onclick="document.getElementById('f-laporan').click()">
+      <div style="font-size:35px;">📁</div>
+      <b>Upload Dokumen Laporan</b><br>
+      <input type="file" id="f-laporan" style="display:none">
+    </div>
+
+    <label>Nama Pelapor</label>
+    <input type="text" id="l-nama" placeholder="Nama Anda">
+
+    <label>Tanggal Laporan</label>
+    <input type="date" id="l-tgl">
+
+    <label>Lapor Ke</label>
+    <select id="l-tujuan">
+      <option>Bu Tati</option>
+      <option>Bu Ami</option>
+    </select>
+
+    <label>Tanda Tangan Digital</label>
+    <div class="sig-container">
+      <canvas id="sig-pad"></canvas>
+      <button class="btn-clear" onclick="clearCanvas()">Hapus TTD</button>
+    </div>
+
+    <button class="btn-primary" onclick="kirimData('laporan')">Kirim Laporan ➤</button>
+  </div>
+</div>
+
+<div id="p-settings" class="page">
+  <div class="container">
+    <h2 style="margin-bottom:20px;">Settings</h2>
+    <div class="card" style="text-align:center;">
+        <img src="https://via.placeholder.com/80" style="border-radius:50%; margin-bottom:10px; border:2px solid var(--purple);">
+        <h3 id="set-display-nama">Admin Gibran</h3>
+    </div>
+    
+    <label>Nama Pengusaha</label>
+    <input type="text" id="set-nama" placeholder="Ubah Nama">
+    
+    <label>Kalkulator HPP</label>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+        <input type="number" placeholder="Tepung">
+        <input type="number" placeholder="Kacang">
+    </div>
+    
+    <button class="btn-primary" onclick="alert('Profil Diupdate!')">Simpan Perubahan</button>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="nav-item active" onclick="showPage('p-home', this)"><b>🏠</b>Home</div>
+  <div class="nav-item" onclick="showPage('p-setoran', this)"><b>💰</b>Setoran</div>
+  <div class="nav-item" onclick="showPage('p-laporan', this)"><b>📄</b>Laporan</div>
+  <div class="nav-item" onclick="showPage('p-settings', this)"><b>⚙️</b>Settings</div>
+</nav>
+
+<script>
+  // 1. FIREBASE CONFIG
+  const firebaseConfig = {
+    apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs",
+    authDomain: "tempat-masuk-nya-data.firebaseapp.com",
+    databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com",
+    projectId: "tempat-masuk-nya-data",
+    storageBucket: "tempat-masuk-nya-data.firebasestorage.app",
+    messagingSenderId: "918742049565",
+    appId: "1:918742049565:web:4490b03c04f5bf75e3f7f4"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  // 2. NAVIGASI
+  function showPage(pageId, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  // 3. TANDA TANGAN (SIGNATURE)
+  const canvas = document.getElementById('sig-pad');
+  const ctx = canvas.getContext('2d');
+  let drawing = false;
+
+  canvas.addEventListener('mousedown', startDraw);
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', () => drawing = false);
+  canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDraw(e.touches[0]); });
+  canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e.touches[0]); });
+
+  function startDraw(e) {
+    drawing = true;
+    ctx.beginPath();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#7c3aed';
+    draw(e);
+  }
+
+  function draw(e) {
+    if (!drawing) return;
+    const rect = canvas.getBoundingClientRect();
+    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+    ctx.stroke();
+  }
+
+  function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+  // 4. KIRIM DATA
+  function kirimData(type) {
+    const data = { waktu: new Date().toISOString() };
+    if(type === 'setoran') {
+      data.nama = document.getElementById('s-nama').value;
+      data.nominal = Number(document.getElementById('s-nominal').value);
+      data.tujuan = document.getElementById('s-tujuan').value;
+    } else {
+      data.nama = document.getElementById('l-nama').value;
+      data.tanggal = document.getElementById('l-tgl').value;
+      data.tujuan = document.getElementById('l-tujuan').value;
+      data.ttd = canvas.toDataURL(); // Ambil TTD sebagai Gambar
+    }
+
+    if(!data.nama) return alert("Wajib isi nama!");
+
+    db.ref('db_gibran/' + type).push(data).then(() => {
+      alert(type.toUpperCase() + " Berhasil dikirim!");
+      location.reload();
+    });
+  }
+
+  // 5. DASHBOARD SYNC
+  db.ref('db_gibran/setoran').on('value', snap => {
+    let total = 0;
+    snap.forEach(c => { total += (c.val().nominal || 0); });
+    document.getElementById('dash-setoran').innerText = "Rp " + total.toLocaleString();
+  });
+
+  db.ref('db_gibran/laporan').on('value', snap => {
+    document.getElementById('dash-laporan').innerText = snap.numChildren();
+  });
+
+  // 6. CHART
+  new Chart(document.getElementById('mainChart'), {
+    type: 'bar',
+    data: { labels: ['M','T','W','T','F','S','S'], datasets: [{ data: [5,10,15,7,20,25,10], backgroundColor: '#7c3aed', borderRadius: 6 }] },
+    options: { plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { grid: { display: false } } } }
+  });
+</script>
 </body>
 </html>
