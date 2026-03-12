@@ -669,8 +669,7 @@ window.login = async function() {
     showLoading(`Selamat datang,\n${userData.nama_lengkap}! 👋`);
     setTimeout(() => {
       hideLoading(() => {
-        // window.location.href = 'app.html'; // ← aktifkan jika mau redirect
-        toast('Login berhasil! ✅', 'i');
+        window.location.href = 'app.html';
       });
     }, 2000);
 
