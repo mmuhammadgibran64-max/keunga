@@ -1,264 +1,198 @@
-<!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Super Dashboard | Gibran Business</title>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-  
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  
-  :root {
-    --bg: #0d0b14; --bg2: #13101e; --bg3: #1a1628;
-    --card: #1e1830; --purple: #7c3aed; --purple-dim: rgba(124,58,237,0.15);
-    --border: rgba(124,58,237,0.25); --text: #f1f0f5; --text2: #a09abd;
-  }
-  
-  body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 90px; }
-  .container { padding: 24px; max-width: 500px; margin: auto; }
-  
-  /* TAB SYSTEM */
-  .page { display: none; }
-  .page.active { display: block; animation: fadeIn 0.3s ease; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gibran Hub - Triple System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 
-  /* CARDS */
-  .card { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid var(--border); margin-bottom: 16px; }
-  .main-card { background: linear-gradient(135deg, var(--purple), #4c1d95); border-radius: 24px; padding: 24px; margin-bottom: 20px; }
+    <style>
+        :root { --purple: #8b5cf6; --dark-bg: #0f0a19; --card-bg: #1a1425; --text: #ffffff; }
+        body { margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--dark-bg); color: var(--text); padding-bottom: 90px; }
+        
+        .header { display: flex; align-items: center; padding: 20px; background: #150e21; border-bottom: 1px solid #251b36; position: sticky; top: 0; z-index: 100; }
+        .header h3 { flex: 1; text-align: center; margin: 0; font-size: 16px; font-weight: 800; }
 
-  /* FORMS */
-  label { display: block; font-size: 13px; font-weight: 700; margin: 15px 0 8px; color: var(--text2); }
-  input, select { width: 100%; padding: 16px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg3); color: white; font-family: inherit; margin-bottom: 12px; }
-  
-  .upload-area { border: 2px dashed var(--purple); background: var(--bg2); border-radius: 20px; padding: 30px; text-align: center; cursor: pointer; }
-  
-  /* TANDA TANGAN */
-  .sig-container { background: #000; border: 1px solid var(--border); border-radius: 15px; overflow: hidden; position: relative; }
-  canvas { width: 100%; height: 180px; touch-action: none; cursor: crosshair; }
-  .btn-clear { position: absolute; top: 10px; right: 10px; background: rgba(239, 68, 68, 0.2); color: #ef4444; border: none; padding: 5px 10px; border-radius: 6px; font-size: 10px; font-weight: 700; }
+        .container { padding: 20px; max-width: 500px; margin: auto; }
+        .title-large { color: #c084fc; font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+        .subtitle { color: #94a3b8; font-size: 12px; margin-bottom: 20px; }
 
-  /* NAVIGASI */
-  .nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg2); display: flex; border-top: 1px solid var(--border); padding: 12px 0; z-index: 1000; }
-  .nav-item { flex: 1; text-align: center; color: var(--text3); cursor: pointer; font-size: 10px; font-weight: 700; }
-  .nav-item.active { color: var(--purple); }
-  .nav-item b { display: block; font-size: 22px; margin-bottom: 2px; }
+        label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 10px; color: #cbd5e1; }
 
-  .btn-primary { width: 100%; padding: 18px; border-radius: 16px; border: none; background: var(--purple); color: white; font-weight: 800; font-size: 16px; cursor: pointer; margin-top: 10px; }
-</style>
+        /* UPLOAD BOX (Screen 6 & 7) */
+        .upload-card { border: 2px dashed #4c1d95; border-radius: 20px; padding: 30px 20px; text-align: center; background: rgba(139, 92, 246, 0.05); margin-bottom: 20px; }
+        .btn-pilih { background: #7c3aed; color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; }
+
+        /* INPUTS */
+        .input-pro { width: 100%; padding: 16px; border-radius: 14px; border: 1.5px solid #2d243d; background: #1a1425; color: white; font-family: inherit; box-sizing: border-box; font-size: 14px; margin-bottom: 15px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        /* TARGET ITEM */
+        .target-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .target-item { padding: 15px; border-radius: 12px; border: 1.5px solid #2d243d; text-align: center; background: #1a1425; cursor: pointer; font-weight: 700; color: #64748b; }
+        .target-item.active { border-color: var(--purple); background: rgba(139, 92, 246, 0.1); color: white; }
+
+        /* CANVAS */
+        .canvas-box { background: #1a1425; border-radius: 18px; border: 1.5px solid #2d243d; margin-bottom: 5px; }
+        #canvas { width: 100%; height: 160px; touch-action: none; }
+        .clear-btn { text-align: right; color: #f43f5e; font-size: 11px; font-weight: 800; cursor: pointer; margin-bottom: 20px; }
+
+        .btn-action { width: 100%; padding: 18px; border-radius: 16px; border: none; background: #7c3aed; color: white; font-weight: 800; font-size: 15px; cursor: pointer; }
+
+        /* NAVIGASI BAWAH (3 Menu) */
+        .nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #150e21; display: flex; border-top: 1px solid #251b36; padding: 15px 0; }
+        .nav-item { flex: 1; text-align: center; font-size: 10px; font-weight: 700; color: #4b5563; cursor: pointer; }
+        .nav-item.active { color: var(--purple); }
+        .nav-item b { font-size: 18px; display: block; margin-bottom: 2px; }
+
+        .hidden { display: none; }
+    </style>
 </head>
 <body>
 
-<div id="p-home" class="page active">
-  <div class="container">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-      <h2 style="font-weight:800;">Overview</h2>
-      <div style="background:var(--bg3); padding:10px; border-radius:12px;">🔔</div>
-    </div>
+<header class="header">
+    <div onclick="location.reload()">←</div>
+    <h3 id="head-label">KIRIM SETORAN</h3>
+    <div style="font-size: 18px;">🔔</div>
+</header>
+
+<div class="container">
     
-    <div class="main-card">
-      <small style="opacity:0.8;">Total Keuangan (Setoran)</small>
-      <h1 id="dash-setoran" style="font-size:32px; margin-top:8px;">Rp 0</h1>
+    <div id="view-setoran">
+        <h1 class="title-large">Unggah Setoran</h1>
+        <p class="subtitle">Pastikan data setoran Anda sudah benar.</p>
+        <label>Bukti Setor</label>
+        <div class="upload-card">
+            <span style="font-size: 30px; display: block; margin-bottom: 10px;">☁️</span>
+            <button class="btn-pilih">Pilih File Bukti</button>
+        </div>
+        <label>Nama Penyetor</label>
+        <input type="text" id="s-nama" class="input-pro" placeholder="Nama Lengkap">
+        <label>Setor Ke Siapa</label>
+        <div class="target-grid">
+            <div class="target-item active" onclick="setTarget(this, 'Bu Tati')">Bu Tati</div>
+            <div class="target-item" onclick="setTarget(this, 'Bu Ami')">Bu Ami</div>
+        </div>
     </div>
 
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-      <div class="card">
-        <small style="color:var(--text2);">Laporan</small>
-        <h2 id="dash-laporan" style="margin-top:5px;">0</h2>
-      </div>
-      <div class="card">
-        <small style="color:var(--text2);">Stok Gudang</small>
-        <h2 id="dash-stok" style="margin-top:5px;">0</h2>
-      </div>
+    <div id="view-laporan" class="hidden">
+        <h1 class="title-large">Kirim Laporan</h1>
+        <p class="subtitle">Laporkan kejadian harian di sini.</p>
+        <label>Bukti Laporan</label>
+        <div class="upload-card">
+            <span style="font-size: 30px; display: block; margin-bottom: 10px;">📸</span>
+            <button class="btn-pilih">Pilih Foto Laporan</button>
+        </div>
+        <label>Nama Pelapor</label>
+        <input type="text" id="l-nama" class="input-pro" placeholder="Nama Pelapor">
+        <label>Lapor Ke Siapa</label>
+        <div class="target-grid">
+            <div class="target-item active" onclick="setTarget(this, 'Bu Tati')">Bu Tati</div>
+            <div class="target-item" onclick="setTarget(this, 'Bu Ami')">Bu Ami</div>
+        </div>
     </div>
 
-    <h3 style="margin:20px 0 12px; font-size:16px;">Performance Trends</h3>
-    <div class="card"><canvas id="mainChart"></canvas></div>
-  </div>
-</div>
-
-<div id="p-setoran" class="page">
-  <div class="container">
-    <h2 style="color:var(--purple); margin-bottom:5px;">Kirim Setoran</h2>
-    <p style="color:var(--text2); font-size:13px; margin-bottom:20px;">Catat setoran masuk harian.</p>
-
-    <div class="upload-area" onclick="document.getElementById('f-setoran').click()">
-      <div style="font-size:35px;">💰</div>
-      <b>Upload Bukti Setor</b><br>
-      <small style="color:var(--text2)">Ketuk untuk ambil foto</small>
-      <input type="file" id="f-setoran" style="display:none">
+    <div id="view-gudang" class="hidden">
+        <h1 class="title-large">Tambah Data Barang</h1>
+        <p class="subtitle">Input stok inventaris baru.</p>
+        <label>Nama Barang</label>
+        <input type="text" id="g-nama" class="input-pro" placeholder="Contoh: Laptop Pro X15">
+        <div class="grid-2">
+            <div><label>Jenis Barang</label>
+                <select id="g-jenis" class="input-pro"><option>Elektronik</option><option>Bahan Baku</option></select>
+            </div>
+            <div><label>Tipe Barang</label>
+                <select id="g-tipe" class="input-pro"><option>Premium</option><option>Standar</option></select>
+            </div>
+        </div>
+        <div class="grid-2">
+            <div><label>Jumlah Barang</label><input type="number" id="g-jumlah" class="input-pro" value="0"></div>
+            <div><label>Stok Barang</label><input type="number" id="g-stok" class="input-pro" value="0"></div>
+        </div>
     </div>
-
-    <label>Nama Penyetor</label>
-    <input type="text" id="s-nama" placeholder="Masukkan nama">
-    
-    <label>Nominal (Rp)</label>
-    <input type="number" id="s-nominal" placeholder="Contoh: 50000">
-
-    <label>Setor Ke</label>
-    <select id="s-tujuan">
-      <option>Bu Tati</option>
-      <option>Bu Ami</option>
-    </select>
-
-    <button class="btn-primary" onclick="kirimData('setoran')">Kirim Setoran ➤</button>
-  </div>
-</div>
-
-<div id="p-laporan" class="page">
-  <div class="container">
-    <h2 style="margin-bottom:5px;">Kirim Laporan</h2>
-    <p style="color:var(--text2); font-size:13px; margin-bottom:20px;">Laporkan hasil kerja atau kendala.</p>
-
-    <div class="upload-area" onclick="document.getElementById('f-laporan').click()">
-      <div style="font-size:35px;">📁</div>
-      <b>Upload Dokumen Laporan</b><br>
-      <input type="file" id="f-laporan" style="display:none">
-    </div>
-
-    <label>Nama Pelapor</label>
-    <input type="text" id="l-nama" placeholder="Nama Anda">
-
-    <label>Tanggal Laporan</label>
-    <input type="date" id="l-tgl">
-
-    <label>Lapor Ke</label>
-    <select id="l-tujuan">
-      <option>Bu Tati</option>
-      <option>Bu Ami</option>
-    </select>
 
     <label>Tanda Tangan Digital</label>
-    <div class="sig-container">
-      <canvas id="sig-pad"></canvas>
-      <button class="btn-clear" onclick="clearCanvas()">Hapus TTD</button>
-    </div>
+    <div class="canvas-box"><canvas id="canvas"></canvas></div>
+    <div class="clear-btn" onclick="clearSign()">HAPUS TANDA TANGAN</div>
 
-    <button class="btn-primary" onclick="kirimData('laporan')">Kirim Laporan ➤</button>
-  </div>
-</div>
-
-<div id="p-settings" class="page">
-  <div class="container">
-    <h2 style="margin-bottom:20px;">Settings</h2>
-    <div class="card" style="text-align:center;">
-        <img src="https://via.placeholder.com/80" style="border-radius:50%; margin-bottom:10px; border:2px solid var(--purple);">
-        <h3 id="set-display-nama">Admin Gibran</h3>
-    </div>
-    
-    <label>Nama Pengusaha</label>
-    <input type="text" id="set-nama" placeholder="Ubah Nama">
-    
-    <label>Kalkulator HPP</label>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-        <input type="number" placeholder="Tepung">
-        <input type="number" placeholder="Kacang">
-    </div>
-    
-    <button class="btn-primary" onclick="alert('Profil Diupdate!')">Simpan Perubahan</button>
-  </div>
+    <button class="btn-action" onclick="sendData()">Simpan & Kirim Sekarang ➔</button>
 </div>
 
 <nav class="nav">
-  <div class="nav-item active" onclick="showPage('p-home', this)"><b>🏠</b>Home</div>
-  <div class="nav-item" onclick="showPage('p-setoran', this)"><b>💰</b>Setoran</div>
-  <div class="nav-item" onclick="showPage('p-laporan', this)"><b>📄</b>Laporan</div>
-  <div class="nav-item" onclick="showPage('p-settings', this)"><b>⚙️</b>Settings</div>
+    <div class="nav-item active" onclick="switchMode('setoran', this)"><b>💰</b>SETORAN</div>
+    <div class="nav-item" onclick="switchMode('laporan', this)"><b>📝</b>LAPORAN</div>
+    <div class="nav-item" onclick="switchMode('gudang', this)"><b>📦</b>GUDANG</div>
 </nav>
 
 <script>
-  // 1. FIREBASE CONFIG
-  const firebaseConfig = {
-    apiKey: "AIzaSyDj1f5YlwkT8ZraW9l7QZe6cQTgjsTSPBs",
-    authDomain: "tempat-masuk-nya-data.firebaseapp.com",
-    databaseURL: "https://tempat-masuk-nya-data-default-rtdb.firebaseio.com",
-    projectId: "tempat-masuk-nya-data",
-    storageBucket: "tempat-masuk-nya-data.firebasestorage.app",
-    messagingSenderId: "918742049565",
-    appId: "1:918742049565:web:4490b03c04f5bf75e3f7f4"
-  };
+    // CONFIG FIREBASE BARU DARI USER
+    const firebaseConfig = {
+        apiKey: "AIzaSyDLlsp7eBXRtWXDdnww8TcBrD7iFyfVj-k",
+        databaseURL: "https://gudang-barang-893cd-default-rtdb.firebaseio.com"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
+    let mode = 'setoran';
+    let targetPerson = 'Bu Tati';
 
-  // 2. NAVIGASI
-  function showPage(pageId, el) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.getElementById(pageId).classList.add('active');
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    el.classList.add('active');
-  }
-
-  // 3. TANDA TANGAN (SIGNATURE)
-  const canvas = document.getElementById('sig-pad');
-  const ctx = canvas.getContext('2d');
-  let drawing = false;
-
-  canvas.addEventListener('mousedown', startDraw);
-  canvas.addEventListener('mousemove', draw);
-  canvas.addEventListener('mouseup', () => drawing = false);
-  canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDraw(e.touches[0]); });
-  canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e.touches[0]); });
-
-  function startDraw(e) {
-    drawing = true;
-    ctx.beginPath();
-    ctx.lineWidth = 2;
-    ctx.strokeStyle = '#7c3aed';
-    draw(e);
-  }
-
-  function draw(e) {
-    if (!drawing) return;
-    const rect = canvas.getBoundingClientRect();
-    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-    ctx.stroke();
-  }
-
-  function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
-
-  // 4. KIRIM DATA
-  function kirimData(type) {
-    const data = { waktu: new Date().toISOString() };
-    if(type === 'setoran') {
-      data.nama = document.getElementById('s-nama').value;
-      data.nominal = Number(document.getElementById('s-nominal').value);
-      data.tujuan = document.getElementById('s-tujuan').value;
-    } else {
-      data.nama = document.getElementById('l-nama').value;
-      data.tanggal = document.getElementById('l-tgl').value;
-      data.tujuan = document.getElementById('l-tujuan').value;
-      data.ttd = canvas.toDataURL(); // Ambil TTD sebagai Gambar
+    function switchMode(m, el) {
+        mode = m;
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+        
+        document.getElementById('view-setoran').classList.add('hidden');
+        document.getElementById('view-laporan').classList.add('hidden');
+        document.getElementById('view-gudang').classList.add('hidden');
+        
+        document.getElementById('view-' + m).classList.remove('hidden');
+        document.getElementById('head-label').innerText = 'KIRIM ' + m.toUpperCase();
     }
 
-    if(!data.nama) return alert("Wajib isi nama!");
+    function setTarget(el, name) {
+        document.querySelectorAll('.target-item').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        targetPerson = name;
+    }
 
-    db.ref('db_gibran/' + type).push(data).then(() => {
-      alert(type.toUpperCase() + " Berhasil dikirim!");
-      location.reload();
+    // Canvas Logic
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+    canvas.width = canvas.offsetWidth;
+    canvas.height = 160;
+
+    canvas.addEventListener('mousedown', () => drawing = true);
+    canvas.addEventListener('mousemove', (e) => {
+        if(!drawing) return;
+        const r = canvas.getBoundingClientRect();
+        ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.strokeStyle = '#c084fc';
+        ctx.lineTo(e.clientX - r.left, e.clientY - r.top); ctx.stroke();
     });
-  }
+    canvas.addEventListener('mouseup', () => { drawing = false; ctx.beginPath(); });
+    function clearSign() { ctx.clearRect(0,0,canvas.width,canvas.height); ctx.beginPath(); }
 
-  // 5. DASHBOARD SYNC
-  db.ref('db_gibran/setoran').on('value', snap => {
-    let total = 0;
-    snap.forEach(c => { total += (c.val().nominal || 0); });
-    document.getElementById('dash-setoran').innerText = "Rp " + total.toLocaleString();
-  });
+    async function sendData() {
+        let payload = { time: Date.now(), sign: canvas.toDataURL() };
+        
+        if(mode === 'setoran') {
+            payload.nama = document.getElementById('s-nama').value;
+            payload.target = targetPerson;
+        } else if(mode === 'laporan') {
+            payload.nama = document.getElementById('l-nama').value;
+            payload.target = targetPerson;
+        } else {
+            payload.barang = document.getElementById('g-nama').value;
+            payload.stok = document.getElementById('g-stok').value;
+        }
 
-  db.ref('db_gibran/laporan').on('value', snap => {
-    document.getElementById('dash-laporan').innerText = snap.numChildren();
-  });
-
-  // 6. CHART
-  new Chart(document.getElementById('mainChart'), {
-    type: 'bar',
-    data: { labels: ['M','T','W','T','F','S','S'], datasets: [{ data: [5,10,15,7,20,25,10], backgroundColor: '#7c3aed', borderRadius: 6 }] },
-    options: { plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { grid: { display: false } } } }
-  });
+        try {
+            await db.ref('data_' + mode).push(payload);
+            alert('✅ Data ' + mode + ' Berhasil Disimpan!');
+            location.reload();
+        } catch(e) { alert('Gagal!'); }
+    }
 </script>
 </body>
-</html>
