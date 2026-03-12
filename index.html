@@ -58,7 +58,7 @@
   /* ── PAGES ── */
   .page {
     position: absolute;
-    inset: 0;
+    top: 0; left: 0; right: 0; bottom: 0;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -66,38 +66,22 @@
     padding: 60px 28px 48px;
     z-index: 1;
     will-change: transform, opacity;
-    transition: transform 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.45s ease;
   }
   .page::-webkit-scrollbar { width: 0; }
 
-  /* Initial states */
-  .page-daftar { transform: translateX(0); opacity: 1; }
-  .page-login  { transform: translateX(100%); opacity: 0; pointer-events: none; }
-
-  /* Animate OUT daftar → left */
-  .page-daftar.slide-out {
-    transform: translateX(-40%);
-    opacity: 0;
-    pointer-events: none;
-  }
-  /* Animate IN login ← right */
-  .page-login.slide-in {
+  /* Daftar: visible by default */
+  #pageDaftar {
     transform: translateX(0);
     opacity: 1;
     pointer-events: auto;
+    transition: transform 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.45s ease;
   }
-
-  /* Animate OUT login → right */
-  .page-login.slide-out-right {
+  /* Login: hidden off-screen to the right */
+  #pageLogin {
     transform: translateX(100%);
     opacity: 0;
     pointer-events: none;
-  }
-  /* Animate IN daftar ← */
-  .page-daftar.slide-in-right {
-    transform: translateX(0);
-    opacity: 1;
-    pointer-events: auto;
+    transition: transform 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.45s ease;
   }
 
   /* ── HERO ── */
@@ -307,8 +291,8 @@
   .toast.e { border: 1px solid var(--danger); color: var(--danger); }
   .toast.i { border: 1px solid var(--purple2); color: var(--purple2); }
 
-  /* Login page spacer */
-  .login-spacer { flex: 1; min-height: 60px; }
+  /* Login page top padding bigger */
+  #pageLogin { padding-top: 100px; }
 </style>
 </head>
 <body>
@@ -330,7 +314,7 @@
 <div class="scene">
 
   <!-- ══════════ PAGE DAFTAR ══════════ -->
-  <div class="page page-daftar" id="pageDaftar">
+  <div class="page" id="pageDaftar">
 
     <div class="hero-title">Buat Akun Baru</div>
     <div class="hero-sub">Lengkapi data diri Anda untuk memulai perjalanan finansial yang lebih baik.</div>
@@ -385,10 +369,7 @@
   </div>
 
   <!-- ══════════ PAGE LOGIN ══════════ -->
-  <div class="page page-login" id="pageLogin">
-
-    <div class="login-spacer"></div>
-
+  <div class="page" id="pageLogin">
     <div class="hero-title">Login</div>
     <div class="hero-sub">Lengkapi data diri Anda untuk memulai perjalanan finansial yang lebih baik.</div>
 
@@ -524,36 +505,34 @@ window.togglePW = function(id, btn) {
 };
 
 // ── PAGE TRANSITIONS ──
+// ── PAGE TRANSITIONS ──
 window.goToLogin = function() {
   const daf = document.getElementById('pageDaftar');
   const log = document.getElementById('pageLogin');
-  // slide daftar left, login in from right
-  daf.classList.add('slide-out');
-  log.style.transform = 'translateX(100%)';
-  log.style.opacity = '0';
-  log.style.pointerEvents = 'none';
-  // force reflow
-  log.offsetHeight;
-  log.style.transition = 'transform 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.45s ease';
+
+  // Daftar geser ke kiri
+  daf.style.transform = 'translateX(-40%)';
+  daf.style.opacity   = '0';
+  daf.style.pointerEvents = 'none';
+
+  // Login masuk dari kanan
   log.style.transform = 'translateX(0)';
-  log.style.opacity = '1';
+  log.style.opacity   = '1';
   log.style.pointerEvents = 'auto';
-  setTimeout(() => { daf.style.pointerEvents = 'none'; }, 460);
 };
 
 window.goToDaftar = function() {
   const daf = document.getElementById('pageDaftar');
   const log = document.getElementById('pageLogin');
-  // slide login right out, daftar back in from left
-  log.style.transition = 'transform 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.45s ease';
+
+  // Login keluar ke kanan
   log.style.transform = 'translateX(100%)';
-  log.style.opacity = '0';
+  log.style.opacity   = '0';
   log.style.pointerEvents = 'none';
 
-  daf.classList.remove('slide-out');
-  daf.style.transition = 'transform 0.45s cubic-bezier(0.4,0,0.2,1), opacity 0.45s ease';
+  // Daftar balik dari kiri
   daf.style.transform = 'translateX(0)';
-  daf.style.opacity = '1';
+  daf.style.opacity   = '1';
   daf.style.pointerEvents = 'auto';
 };
 
